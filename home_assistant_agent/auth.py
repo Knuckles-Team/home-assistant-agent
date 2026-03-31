@@ -1,8 +1,7 @@
 #!/usr/bin/python
-               
+
 
 import os
-import requests
 import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -18,7 +17,11 @@ def get_client():
     if _client is None:
         base_url = os.getenv("HOME_ASSISTANT_URL", "http://localhost:8123")
         token = os.getenv("HOME_ASSISTANT_TOKEN", "")
-        verify = os.getenv("HOME_ASSISTANT_AGENT_VERIFY", "True").lower() in ("true", "1", "yes")
+        verify = os.getenv("HOME_ASSISTANT_AGENT_VERIFY", "True").lower() in (
+            "true",
+            "1",
+            "yes",
+        )
 
         try:
             _client = HomeAssistantApi(

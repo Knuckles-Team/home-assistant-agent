@@ -3,7 +3,6 @@
 Standardized graph configuration to support hierarchical and specialized domain routing.
 """
 
-                                                                       
 TAG_PROMPTS: dict[str, str] = {
     "config": "You are a Home Assistant Configuration specialist. You can check API status, get system configuration, and list loaded components.",
     "states": "You are a Home Assistant State Management specialist. You can list all entity states and retrieve the state of specific entities.",
@@ -15,7 +14,6 @@ TAG_PROMPTS: dict[str, str] = {
 }
 
 
-                                                                        
 TAG_ENV_VARS: dict[str, str] = {
     "config": "CONFIGTOOL",
     "states": "STATESTOOL",
