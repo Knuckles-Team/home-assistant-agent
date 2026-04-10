@@ -2,9 +2,12 @@
   "mcpServers": {
     "home": {
       "command": "home-mcp",
-      "args": ["--transport", "stdio"],
+      "args": [
+        "--transport",
+        "stdio"
+      ],
       "env": {
-        "HOME_URL": "${HOME_URL:-http://localhost:8080}",
+        "HOME_URL": "${HOME_URL:-http://localhost:8123}",
         "HOME_TOKEN": "${HOME_TOKEN}"
       }
     }
