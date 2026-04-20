@@ -28,8 +28,8 @@ all = [
     "agent-utilities[mcp,agent,logfire]>=0.2.12"]
 
 [project.scripts]
-home-mcp = "home_assistant_agent.mcp_server:mcp_server"
-home-agent = "home_assistant_agent.agent_server:agent_server"
+home-assistant-mcp = "home_assistant_agent.mcp_server:mcp_server"
+home-assistant-agent = "home_assistant_agent.agent_server:agent_server"
 
 [tool.setuptools.packages.find]
 where = ["."]
