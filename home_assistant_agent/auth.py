@@ -2,12 +2,14 @@
 
 
 import os
+
 import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-from home_assistant_agent.home_assistant_api import HomeAssistantApi
 from agent_utilities.exceptions import AuthError, UnauthorizedError
+
+from home_assistant_agent.home_assistant_api import HomeAssistantApi
 
 _client = None
 

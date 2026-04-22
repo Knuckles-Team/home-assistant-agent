@@ -1,26 +1,27 @@
 import json
+import logging
+from typing import Any
+
 import requests
 import urllib3
-import logging
-from typing import Any, Dict, List, Optional, Union
-from websockets.sync.client import connect
-from websockets.exceptions import ConnectionClosed
-
 from agent_utilities.api_utilities import require_auth
-from agent_utilities.exceptions import UnauthorizedError, ParameterError, ApiError
+from agent_utilities.exceptions import ApiError, ParameterError, UnauthorizedError
+from websockets.exceptions import ConnectionClosed
+from websockets.sync.client import connect
+
 from .home_assistant_models import (
-    HAState,
-    HAConfig,
-    HAService,
-    HAEvent,
-    HALogbookEntry,
     HACalendar,
     HACalendarEvent,
-    HAPanel,
+    HAConfig,
     HAEntityRegistryDisplay,
+    HAEvent,
     HAExposedEntities,
-    HAValidateConfigResult,
     HAExtractFromTargetResult,
+    HALogbookEntry,
+    HAPanel,
+    HAService,
+    HAState,
+    HAValidateConfigResult,
 )
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -53,7 +54,7 @@ class HomeAssistantApi:
             if isinstance(e, UnauthorizedError):
                 raise e
 
-    def get_api_status(self) -> Dict[str, str]:
+    def get_api_status(self) -> dict[str, str]:
         response = self.session.get(f"{self.base_url}/")
         if response.status_code == 401:
             raise UnauthorizedError("Invalid token")
@@ -69,13 +70,13 @@ class HomeAssistantApi:
         return HAConfig(**response.json())
 
     @require_auth
-    def get_components(self) -> List[str]:
+    def get_components(self) -> list[str]:
         response = self.session.get(f"{self.base_url}/components")
         response.raise_for_status()
         return response.json()
 
     @require_auth
-    def get_states(self) -> List[HAState]:
+    def get_states(self) -> list[HAState]:
         response = self.session.get(f"{self.base_url}/states")
         response.raise_for_status()
         return [HAState(**s) for s in response.json()]
@@ -90,7 +91,7 @@ class HomeAssistantApi:
 
     @require_auth
     def update_state(
-        self, entity_id: str, state: str, attributes: Optional[Dict[str, Any]] = None
+        self, entity_id: str, state: str, attributes: dict[str, Any] | None = None
     ) -> HAState:
         url = f"{self.base_url}/states/{entity_id}"
         data = {"state": state}
@@ -101,20 +102,20 @@ class HomeAssistantApi:
         return HAState(**response.json())
 
     @require_auth
-    def delete_state(self, entity_id: str) -> Dict[str, str]:
+    def delete_state(self, entity_id: str) -> dict[str, str]:
         url = f"{self.base_url}/states/{entity_id}"
         response = self.session.delete(url)
         response.raise_for_status()
         return response.json()
 
     @require_auth
-    def get_services(self) -> List[HAService]:
+    def get_services(self) -> list[HAService]:
         response = self.session.get(f"{self.base_url}/services")
         response.raise_for_status()
         return [HAService(**s) for s in response.json()]
 
     @require_auth
-    def get_events(self) -> List[HAEvent]:
+    def get_events(self) -> list[HAEvent]:
         response = self.session.get(f"{self.base_url}/events")
         response.raise_for_status()
         return [HAEvent(**s) for s in response.json()]
@@ -124,11 +125,11 @@ class HomeAssistantApi:
         self,
         domain: str,
         service: str,
-        service_data: Optional[Dict[str, Any]] = None,
+        service_data: dict[str, Any] | None = None,
         return_response: bool = False,
-    ) -> Union[List[HAState], Dict[str, Any]]:
+    ) -> list[HAState] | dict[str, Any]:
         url = f"{self.base_url}/services/{domain}/{service}"
-        params = {}
+        params: dict[str, Any] = {}
         if return_response:
             params["return_response"] = ""
         response = self.session.post(url, json=service_data or {}, params=params)
@@ -137,8 +138,8 @@ class HomeAssistantApi:
 
     @require_auth
     def fire_event(
-        self, event_type: str, event_data: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, str]:
+        self, event_type: str, event_data: dict[str, Any] | None = None
+    ) -> dict[str, str]:
         url = f"{self.base_url}/events/{event_type}"
         response = self.session.post(url, json=event_data or {})
         response.raise_for_status()
@@ -148,9 +149,9 @@ class HomeAssistantApi:
     def get_history(
         self,
         entity_id: str,
-        timestamp: Optional[str] = None,
-        end_time: Optional[str] = None,
-    ) -> List[List[HAState]]:
+        timestamp: str | None = None,
+        end_time: str | None = None,
+    ) -> list[list[HAState]]:
         url = f"{self.base_url}/history/period"
         if timestamp:
             url = f"{url}/{timestamp}"
@@ -169,15 +170,15 @@ class HomeAssistantApi:
     @require_auth
     def get_logbook(
         self,
-        timestamp: Optional[str] = None,
-        entity_id: Optional[str] = None,
-        end_time: Optional[str] = None,
-    ) -> List[HALogbookEntry]:
+        timestamp: str | None = None,
+        entity_id: str | None = None,
+        end_time: str | None = None,
+    ) -> list[HALogbookEntry]:
         url = f"{self.base_url}/logbook"
         if timestamp:
             url = f"{url}/{timestamp}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if entity_id:
             params["entity"] = entity_id
         if end_time:
@@ -194,9 +195,9 @@ class HomeAssistantApi:
         return response.text
 
     @require_auth
-    def get_camera_proxy(self, entity_id: str, time: Optional[str] = None) -> bytes:
+    def get_camera_proxy(self, entity_id: str, time: str | None = None) -> bytes:
         url = f"{self.base_url}/camera_proxy/{entity_id}"
-        params = {}
+        params: dict[str, Any] = {}
         if time:
             params["time"] = time
         response = self.session.get(url, params=params)
@@ -204,7 +205,7 @@ class HomeAssistantApi:
         return response.content
 
     @require_auth
-    def get_calendars(self) -> List[HACalendar]:
+    def get_calendars(self) -> list[HACalendar]:
         response = self.session.get(f"{self.base_url}/calendars")
         response.raise_for_status()
         return [HACalendar(**c) for c in response.json()]
@@ -212,7 +213,7 @@ class HomeAssistantApi:
     @require_auth
     def get_calendar_events(
         self, entity_id: str, start: str, end: str
-    ) -> List[HACalendarEvent]:
+    ) -> list[HACalendarEvent]:
         url = f"{self.base_url}/calendars/{entity_id}"
         params = {"start": start, "end": end}
         response = self.session.get(url, params=params)
@@ -227,7 +228,7 @@ class HomeAssistantApi:
         return response.text
 
     @require_auth
-    def check_config(self) -> Dict[str, Any]:
+    def check_config(self) -> dict[str, Any]:
         url = f"{self.base_url}/config/core/check_config"
         response = self.session.post(url)
         response.raise_for_status()
@@ -235,8 +236,8 @@ class HomeAssistantApi:
 
     @require_auth
     def handle_intent(
-        self, name: str, data: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, name: str, data: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         url = f"{self.base_url}/intent/handle"
         response = self.session.post(url, json={"name": name, "data": data or {}})
         response.raise_for_status()
@@ -244,7 +245,7 @@ class HomeAssistantApi:
 
     # --- WebSocket API Methods ---
 
-    def _ws_call(self, message: Dict[str, Any]) -> Any:
+    def _ws_call(self, message: dict[str, Any]) -> Any:
         ws_url = self.raw_url.replace("http", "ws", 1) + "/api/websocket"
         try:
             with connect(ws_url) as websocket:
@@ -283,7 +284,7 @@ class HomeAssistantApi:
             raise ApiError(f"WS Error: {str(e)}")
 
     @require_auth
-    def get_panels(self) -> List[HAPanel]:
+    def get_panels(self) -> list[HAPanel]:
         res = self._ws_call({"type": "get_panels"})
         return [HAPanel(url_path=k, **v) for k, v in res.items()]
 
@@ -294,9 +295,9 @@ class HomeAssistantApi:
     @require_auth
     def validate_config(
         self,
-        trigger: Optional[Any] = None,
-        condition: Optional[Any] = None,
-        action: Optional[Any] = None,
+        trigger: Any | None = None,
+        condition: Any | None = None,
+        action: Any | None = None,
     ) -> HAValidateConfigResult:
         msg = {"type": "validate_config"}
         if trigger:
@@ -310,7 +311,7 @@ class HomeAssistantApi:
 
     @require_auth
     def extract_from_target(
-        self, target: Dict[str, Any], expand_group: bool = False
+        self, target: dict[str, Any], expand_group: bool = False
     ) -> HAExtractFromTargetResult:
         res = self._ws_call(
             {
@@ -323,8 +324,8 @@ class HomeAssistantApi:
 
     @require_auth
     def get_triggers_for_target(
-        self, target: Dict[str, Any], expand_group: bool = True
-    ) -> List[str]:
+        self, target: dict[str, Any], expand_group: bool = True
+    ) -> list[str]:
         return self._ws_call(
             {
                 "type": "get_triggers_for_target",
@@ -335,8 +336,8 @@ class HomeAssistantApi:
 
     @require_auth
     def get_conditions_for_target(
-        self, target: Dict[str, Any], expand_group: bool = True
-    ) -> List[str]:
+        self, target: dict[str, Any], expand_group: bool = True
+    ) -> list[str]:
         return self._ws_call(
             {
                 "type": "get_conditions_for_target",
@@ -347,8 +348,8 @@ class HomeAssistantApi:
 
     @require_auth
     def get_services_for_target(
-        self, target: Dict[str, Any], expand_group: bool = True
-    ) -> List[str]:
+        self, target: dict[str, Any], expand_group: bool = True
+    ) -> list[str]:
         return self._ws_call(
             {
                 "type": "get_services_for_target",
@@ -369,7 +370,7 @@ class HomeAssistantApi:
 
     @require_auth
     def expose_or_unexpose_entities(
-        self, assistants: List[str], entity_ids: List[str], should_expose: bool
+        self, assistants: list[str], entity_ids: list[str], should_expose: bool
     ) -> Any:
         return self._ws_call(
             {
@@ -381,7 +382,7 @@ class HomeAssistantApi:
         )
 
     @require_auth
-    def subscribe_events(self, event_type: Optional[str] = None) -> Any:
+    def subscribe_events(self, event_type: str | None = None) -> Any:
         msg = {"type": "subscribe_events"}
         if event_type:
             msg["event_type"] = event_type

@@ -1,9 +1,10 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
+
 from pydantic import BaseModel
 
 
 class HAConfig(BaseModel):
-    components: List[str]
+    components: list[str]
     config_dir: str
     elevation: int
     latitude: float
@@ -11,21 +12,21 @@ class HAConfig(BaseModel):
     longitude: float
     time_zone: str
     version: str
-    whitelist_external_dirs: List[str]
-    unit_system: Dict[str, str]
+    whitelist_external_dirs: list[str]
+    unit_system: dict[str, str]
 
 
 class HAState(BaseModel):
     entity_id: str
     state: str
-    attributes: Dict[str, Any]
-    last_changed: Optional[str] = None
-    last_updated: Optional[str] = None
+    attributes: dict[str, Any]
+    last_changed: str | None = None
+    last_updated: str | None = None
 
 
 class HAService(BaseModel):
     domain: str
-    services: List[str]
+    services: list[str]
 
 
 class HAEvent(BaseModel):
@@ -39,7 +40,7 @@ class HALogbookEntry(BaseModel):
     message: str
     entity_id: str
     domain: str
-    context_user_id: Optional[str] = None
+    context_user_id: str | None = None
 
 
 class HACalendar(BaseModel):
@@ -49,67 +50,67 @@ class HACalendar(BaseModel):
 
 class HACalendarEvent(BaseModel):
     summary: str
-    start: Dict[str, str]
-    end: Dict[str, str]
-    location: Optional[str] = None
-    description: Optional[str] = None
+    start: dict[str, str]
+    end: dict[str, str]
+    location: str | None = None
+    description: str | None = None
 
 
 class HAPanel(BaseModel):
     component_name: str
-    icon: Optional[str] = None
-    title: Optional[str] = None
+    icon: str | None = None
+    title: str | None = None
     url_path: str
-    config: Optional[Dict[str, Any]] = None
+    config: dict[str, Any] | None = None
 
 
 class HAEntityRegistryEntry(BaseModel):
     ei: str  # Entity ID
     pl: str  # Platform
-    ai: Optional[str] = None  # Area ID
-    lb: Optional[List[str]] = None  # Labels
-    di: Optional[str] = None  # Device ID
-    ic: Optional[str] = None  # Icon
-    tk: Optional[str] = None  # Translation Key
-    ec: Optional[int] = None  # Entity Category
-    hb: Optional[bool] = None  # Hidden By
-    hn: Optional[bool] = None  # Has Entity Name
-    en: Optional[str] = None  # Entity Name
-    dp: Optional[int] = None  # Display Precision
+    ai: str | None = None  # Area ID
+    lb: list[str] | None = None  # Labels
+    di: str | None = None  # Device ID
+    ic: str | None = None  # Icon
+    tk: str | None = None  # Translation Key
+    ec: int | None = None  # Entity Category
+    hb: bool | None = None  # Hidden By
+    hn: bool | None = None  # Has Entity Name
+    en: str | None = None  # Entity Name
+    dp: int | None = None  # Display Precision
 
 
 class HAEntityRegistryDisplay(BaseModel):
-    entity_categories: Dict[int, str]
-    entities: List[HAEntityRegistryEntry]
+    entity_categories: dict[int, str]
+    entities: list[HAEntityRegistryEntry]
 
 
 class HAExposedEntities(BaseModel):
-    exposed_entities: Dict[str, Dict[str, bool]]
+    exposed_entities: dict[str, dict[str, bool]]
 
 
 class HAValidateConfigItem(BaseModel):
     valid: bool
-    error: Optional[str] = None
+    error: str | None = None
 
 
 class HAValidateConfigResult(BaseModel):
-    trigger: Optional[HAValidateConfigItem] = None
-    condition: Optional[HAValidateConfigItem] = None
-    action: Optional[HAValidateConfigItem] = None
+    trigger: HAValidateConfigItem | None = None
+    condition: HAValidateConfigItem | None = None
+    action: HAValidateConfigItem | None = None
 
 
 class HAExtractFromTargetResult(BaseModel):
-    referenced_entities: List[str]
-    referenced_devices: List[str]
-    referenced_areas: List[str]
-    missing_devices: List[str]
-    missing_areas: List[str]
-    missing_floors: List[str]
-    missing_labels: List[str]
+    referenced_entities: list[str]
+    referenced_devices: list[str]
+    referenced_areas: list[str]
+    missing_devices: list[str]
+    missing_areas: list[str]
+    missing_floors: list[str]
+    missing_labels: list[str]
 
 
 class HAResponse(BaseModel):
-    message: Optional[str] = None
-    changed_states: Optional[List[HAState]] = None
-    service_response: Optional[Dict[str, Any]] = None
-    result: Optional[Union[Dict[str, Any], List[Any], str, bool, int]] = None
+    message: str | None = None
+    changed_states: list[HAState] | None = None
+    service_response: dict[str, Any] | None = None
+    result: dict[str, Any] | list[Any] | str | bool | int | None = None
