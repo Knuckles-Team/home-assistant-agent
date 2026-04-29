@@ -94,7 +94,7 @@ class HomeAssistantApi:
         self, entity_id: str, state: str, attributes: dict[str, Any] | None = None
     ) -> HAState:
         url = f"{self.base_url}/states/{entity_id}"
-        data = {"state": state}
+        data: dict[str, Any] = {"state": state}
         if attributes:
             data["attributes"] = attributes
         response = self.session.post(url, json=data)
@@ -279,9 +279,9 @@ class HomeAssistantApi:
                     elif resp.get("type") in ["event", "auth_invalid"]:
                         return resp
         except ConnectionClosed as e:
-            raise ApiError(f"WS Connection closed: {str(e)}")
+            raise ApiError(f"WS Connection closed: {str(e)}") from e
         except Exception as e:
-            raise ApiError(f"WS Error: {str(e)}")
+            raise ApiError(f"WS Error: {str(e)}") from e
 
     @require_auth
     def get_panels(self) -> list[HAPanel]:
