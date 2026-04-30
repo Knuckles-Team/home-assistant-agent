@@ -5,7 +5,7 @@ from typing import Any
 import requests
 import urllib3
 from agent_utilities.api_utilities import require_auth
-from agent_utilities.exceptions import ApiError, ParameterError, UnauthorizedError
+from agent_utilities.core.exceptions import ApiError, ParameterError, UnauthorizedError
 from websockets.exceptions import ConnectionClosed
 from websockets.sync.client import connect
 
