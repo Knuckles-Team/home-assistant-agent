@@ -21,7 +21,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/home-assistant-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/home-assistant-agent)
 
-*Version: 0.6.0*
+*Version: 0.7.0*
 
 ## Overview
 
@@ -138,3 +138,60 @@ uv pip install home-assistant-agent
 
 ![GitHub followers](https://img.shields.io/github/followers/Knucklessg1)
 ![GitHub User's stars](https://img.shields.io/github/stars/Knucklessg1)
+
+
+## MCP Configuration Examples
+
+### 1. Standard IO (stdio) Deployment
+
+```json
+{
+  "mcpServers": {
+    "home-assistant-agent": {
+      "command": "uv",
+      "args": [
+        "run",
+        "home-assistant-mcp"
+      ],
+      "env": {
+        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
+        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
+        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
+        "HOME_ASSISTANT_AGENT_VERIFY": "<YOUR_HOME_ASSISTANT_AGENT_VERIFY>",
+        "HOME_ASSISTANT_TOKEN": "<YOUR_HOME_ASSISTANT_TOKEN>",
+        "HOME_ASSISTANT_URL": "<YOUR_HOME_ASSISTANT_URL>"
+      }
+    }
+  }
+}
+```
+
+### 2. Streamable HTTP (SSE) Deployment
+
+```json
+{
+  "mcpServers": {
+    "home-assistant-agent": {
+      "command": "uv",
+      "args": [
+        "run",
+        "home-assistant-mcp",
+        "--transport",
+        "http",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "env": {
+        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
+        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
+        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
+        "HOME_ASSISTANT_AGENT_VERIFY": "<YOUR_HOME_ASSISTANT_AGENT_VERIFY>",
+        "HOME_ASSISTANT_TOKEN": "<YOUR_HOME_ASSISTANT_TOKEN>",
+        "HOME_ASSISTANT_URL": "<YOUR_HOME_ASSISTANT_URL>"
+      }
+    }
+  }
+}
+```
