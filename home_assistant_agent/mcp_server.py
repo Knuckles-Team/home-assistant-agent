@@ -32,7 +32,7 @@ from pydantic import Field
 
 from home_assistant_agent.auth import get_client
 
-__version__ = "0.8.1"
+__version__ = "0.9.0"
 
 logger = get_logger(name="MCP_Server")
 logger.setLevel(logging.INFO)
