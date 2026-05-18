@@ -195,3 +195,21 @@ uv pip install home-assistant-agent
   }
 }
 ```
+
+## Available MCP Tools
+
+This server utilizes dynamic Action-Routed tools to optimize token overhead and maximize IDE compatibility.
+
+| Tool Name | Description |
+|-----------|-------------|
+| `ha_calendar` | Consolidated Action-Routed tool for calendar. Methods: list_calendars, get_calendar_events |
+| `ha_config` | Consolidated Action-Routed tool for config. Methods: status, config, components, check_config |
+| `ha_entities` | Consolidated Action-Routed tool for entities. Methods: get_entity_registry_display, extract_from_target, get_triggers_for_target, get_conditions_for_target, get_services_for_target |
+| `ha_events` | Consolidated Action-Routed tool for events. Methods: list_events, fire_event, subscribe_events |
+| `ha_history` | Consolidated Action-Routed tool for history. Methods: get_history |
+| `ha_logbook` | Consolidated Action-Routed tool for logbook. Methods: get_logbook, get_error_log |
+| `ha_panels` | Consolidated Action-Routed tool for panels. Methods: get_panels |
+| `ha_services` | Consolidated Action-Routed tool for services. Methods: list_services, call_service |
+| `ha_states` | Consolidated Action-Routed tool for states. Methods: list_states, get_state, update_state, delete_state |
+| `ha_system` | Consolidated Action-Routed tool for system. Methods: render_template, ping, handle_intent, validate_config |
+| `ha_voice` | Consolidated Action-Routed tool for voice. Methods: list_exposed_entities, expose_entities |

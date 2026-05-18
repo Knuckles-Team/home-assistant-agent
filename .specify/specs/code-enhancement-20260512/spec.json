@@ -1,0 +1,187 @@
+{
+  "feature_id": "code-enhancement-20260512",
+  "title": "Code Enhancement: home-assistant-agent",
+  "created": "2026-05-12T14:14:40.995358+00:00",
+  "overview": "Automated code enhancement review for home-assistant-agent. Covers 17 analysis domains.",
+  "user_stories": [
+    {
+      "role": "developer",
+      "action": "address Project Analysis findings (grade: C, score: 74)",
+      "value": "improve project project analysis from C to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Test Coverage findings (grade: C, score: 70)",
+      "value": "improve project test coverage from C to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Architecture & Design Patterns findings (grade: D, score: 65)",
+      "value": "improve project architecture & design patterns from D to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Concept Traceability findings (grade: F, score: 44)",
+      "value": "improve project concept traceability from F to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Linting & Formatting findings (grade: F, score: 0)",
+      "value": "improve project linting & formatting from F to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Changelog Audit findings (grade: C, score: 75)",
+      "value": "improve project changelog audit from C to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Environment Variables findings (grade: D, score: 64)",
+      "value": "improve project environment variables from D to at least B (80+)"
+    }
+  ],
+  "functional_requirements": [
+    {
+      "id": "FR-001",
+      "description": "Needs attention: mcp_server.py (540L) \u2014 Low cohesion: 16 distinct concepts in one file",
+      "testable": true
+    },
+    {
+      "id": "FR-002",
+      "description": "Test suite lacks intent diversity (only one type)",
+      "testable": true
+    },
+    {
+      "id": "FR-003",
+      "description": "17 potential doc-test drift items",
+      "testable": true
+    },
+    {
+      "id": "FR-004",
+      "description": "README.md missing sections: installation, usage|quick start",
+      "testable": true
+    },
+    {
+      "id": "FR-005",
+      "description": "README.md is short (197 lines) \u2014 consider expanding",
+      "testable": true
+    },
+    {
+      "id": "FR-006",
+      "description": "README missing: MCP tools mapping table with descriptions",
+      "testable": true
+    },
+    {
+      "id": "FR-007",
+      "description": "README missing: Has a Table of Contents",
+      "testable": true
+    },
+    {
+      "id": "FR-008",
+      "description": "README missing: Has usage examples with code blocks",
+      "testable": true
+    },
+    {
+      "id": "FR-009",
+      "description": "README missing: References /docs directory material",
+      "testable": true
+    },
+    {
+      "id": "FR-010",
+      "description": "README missing: Has MCP tools mapping table with descriptions",
+      "testable": true
+    },
+    {
+      "id": "FR-011",
+      "description": "SRP: 1 modules exceed 500 lines (god modules)",
+      "testable": true
+    },
+    {
+      "id": "FR-012",
+      "description": "SRP: 1 classes have >15 methods",
+      "testable": true
+    },
+    {
+      "id": "FR-013",
+      "description": "No discernible layer architecture (no domain/service/adapter separation)",
+      "testable": true
+    },
+    {
+      "id": "FR-014",
+      "description": "Low dependency injection ratio: 6%",
+      "testable": true
+    },
+    {
+      "id": "FR-015",
+      "description": "Low traceability ratio: 0% concepts fully traced",
+      "testable": true
+    },
+    {
+      "id": "FR-016",
+      "description": "3 test functions missing concept markers",
+      "testable": true
+    },
+    {
+      "id": "FR-017",
+      "description": "32 significant functions (>10 lines) missing concept markers in docstrings",
+      "testable": true
+    },
+    {
+      "id": "FR-018",
+      "description": "Total lint findings: 30 (high/error: 30, medium/warning: 0, low: 0)",
+      "testable": true
+    },
+    {
+      "id": "FR-019",
+      "description": "2 hook(s) may be outdated: ruff-pre-commit, uv-pre-commit",
+      "testable": true
+    },
+    {
+      "id": "FR-020",
+      "description": "CHANGELOG.md exists but could not be parsed \u2014 check format compliance",
+      "testable": true
+    },
+    {
+      "id": "FR-021",
+      "description": "No changelog entries within the last 30 days",
+      "testable": true
+    },
+    {
+      "id": "FR-022",
+      "description": "keepachangelog not installed \u2014 pip install 'universal-skills[code-enhancer]'",
+      "testable": true
+    },
+    {
+      "id": "FR-023",
+      "description": "Only 21% of env vars documented in README.md",
+      "testable": true
+    },
+    {
+      "id": "FR-024",
+      "description": "Undocumented env vars: ALLOWED_CLIENT_REDIRECT_URIS, AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_REMOTE_URL, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, OAUTH_BASE_URL",
+      "testable": true
+    },
+    {
+      "id": "FR-025",
+      "description": "3 Python env vars not in .env.example: HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL",
+      "testable": true
+    }
+  ],
+  "success_criteria": [
+    {
+      "metric": "Overall GPA",
+      "current": 2.71,
+      "target": 3.0
+    },
+    {
+      "metric": "Domains at B or above",
+      "current": 10,
+      "target": 17
+    },
+    {
+      "metric": "Actionable findings",
+      "current": 25,
+      "target": 0
+    }
+  ]
+}
