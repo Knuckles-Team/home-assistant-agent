@@ -1,6 +1,11 @@
 #!/usr/bin/python
 import warnings
 
+from fastmcp import Context, FastMCP
+from fastmcp.dependencies import Depends
+from fastmcp.utilities.logging import get_logger
+from pydantic import Field
+
 # Filter RequestsDependencyWarning early to prevent log spam
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
@@ -22,16 +27,12 @@ from typing import Any
 from agent_utilities.base_utilities import to_boolean
 from agent_utilities.mcp_utilities import create_mcp_server
 from dotenv import find_dotenv, load_dotenv
-from fastmcp import FastMCP
-from fastmcp.dependencies import Depends
-from fastmcp.utilities.logging import get_logger
-from pydantic import Field
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from home_assistant_agent.auth import get_client
 
-__version__ = "0.12.0"
+__version__ = "0.12.1"
 
 logger = get_logger(name="home-assistant-agent")
 logger.setLevel(logging.INFO)
@@ -43,36 +44,35 @@ def register_config_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'status', 'config', 'components', 'check_config'"
         ),
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
+        ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage config operations.
+        """Manage home assistant config operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'status': Call status
-          - 'config': Call config
-          - 'components': Call components
-          - 'check_config': Call check_config
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "status":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.status(**kwargs)
         if action == "config":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.config(**kwargs)
         if action == "components":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.components(**kwargs)
         if action == "check_config":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.check_config(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: status', 'config', 'components', 'check_config"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_states_tools(mcp: FastMCP):
@@ -81,45 +81,35 @@ def register_states_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'list_states', 'get_state', 'update_state', 'delete_state'"
         ),
-        entity_id: str | None = Field(default=None, description="entity id"),
-        state: str | None = Field(default=None, description="state"),
-        attributes: dict[str, Any] | None = Field(
-            default=None, description="attributes"
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
         ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage states operations.
+        """Manage home assistant states operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'list_states': Call list_states
-          - 'get_state': Call get_state
-          - 'update_state': Call update_state
-          - 'delete_state': Call delete_state
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "list_states":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.list_states(**kwargs)
         if action == "get_state":
-            kwargs = {"entity_id": entity_id}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_state(**kwargs)
         if action == "update_state":
-            kwargs = {
-                "entity_id": entity_id,
-                "state": state,
-                "attributes": attributes,
-            }
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.update_state(**kwargs)
         if action == "delete_state":
-            kwargs = {"entity_id": entity_id}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.delete_state(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: list_states', 'get_state', 'update_state', 'delete_state"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_services_tools(mcp: FastMCP):
@@ -128,39 +118,31 @@ def register_services_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'list_services', 'call_service'"
         ),
-        domain: str | None = Field(default=None, description="domain"),
-        service: str | None = Field(default=None, description="service"),
-        service_data: dict[str, Any] | None = Field(
-            default=None, description="service data"
-        ),
-        return_response: bool | None = Field(
-            default=None, description="return response"
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
         ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage services operations.
+        """Manage home assistant services operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'list_services': Call list_services
-          - 'call_service': Call call_service
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "list_services":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.list_services(**kwargs)
         if action == "call_service":
-            kwargs = {
-                "domain": domain,
-                "service": service,
-                "service_data": service_data,
-                "return_response": return_response,
-            }
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.call_service(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: list_services', 'call_service"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_events_tools(mcp: FastMCP):
@@ -169,38 +151,33 @@ def register_events_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'list_events', 'fire_event', 'subscribe_events'"
         ),
-        event_type: Any | None = Field(default=None, description="event type"),
-        event_data: dict[str, Any] | None = Field(
-            default=None, description="event data"
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
         ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage events operations.
+        """Manage home assistant events operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'list_events': Call list_events
-          - 'fire_event': Call fire_event
-          - 'subscribe_events': Call subscribe_events
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "list_events":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.list_events(**kwargs)
         if action == "fire_event":
-            kwargs = {
-                "event_type": event_type,
-                "event_data": event_data,
-            }
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.fire_event(**kwargs)
         if action == "subscribe_events":
-            kwargs = {"event_type": event_type}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.subscribe_events(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: list_events', 'fire_event', 'subscribe_events"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_history_tools(mcp: FastMCP):
@@ -209,26 +186,29 @@ def register_history_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'get_history'"
         ),
-        entity_id: str | None = Field(default=None, description="entity id"),
-        timestamp: str | None = Field(default=None, description="timestamp"),
-        end_time: str | None = Field(default=None, description="end time"),
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
+        ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage history operations.
+        """Manage home assistant history operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'get_history': Call get_history
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "get_history":
-            kwargs = {
-                "entity_id": entity_id,
-                "timestamp": timestamp,
-                "end_time": end_time,
-            }
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_history(**kwargs)
-        raise ValueError(f"Unknown action: {action}. Must be one of: get_history")
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_logbook_tools(mcp: FastMCP):
@@ -237,33 +217,31 @@ def register_logbook_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'get_logbook', 'get_error_log'"
         ),
-        timestamp: str | None = Field(default=None, description="timestamp"),
-        entity_id: str | None = Field(default=None, description="entity id"),
-        end_time: str | None = Field(default=None, description="end time"),
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
+        ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage logbook operations.
+        """Manage home assistant logbook operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'get_logbook': Call get_logbook
-          - 'get_error_log': Call get_error_log
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "get_logbook":
-            kwargs = {
-                "timestamp": timestamp,
-                "entity_id": entity_id,
-                "end_time": end_time,
-            }
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_logbook(**kwargs)
         if action == "get_error_log":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_error_log(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: get_logbook', 'get_error_log"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_calendar_tools(mcp: FastMCP):
@@ -272,33 +250,31 @@ def register_calendar_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'list_calendars', 'get_calendar_events'"
         ),
-        entity_id: str | None = Field(default=None, description="entity id"),
-        start: str | None = Field(default=None, description="start"),
-        end: str | None = Field(default=None, description="end"),
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
+        ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage calendar operations.
+        """Manage home assistant calendar operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'list_calendars': Call list_calendars
-          - 'get_calendar_events': Call get_calendar_events
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "list_calendars":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.list_calendars(**kwargs)
         if action == "get_calendar_events":
-            kwargs = {
-                "entity_id": entity_id,
-                "start": start,
-                "end": end,
-            }
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_calendar_events(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: list_calendars', 'get_calendar_events"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_panels_tools(mcp: FastMCP):
@@ -307,19 +283,29 @@ def register_panels_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'get_panels'"
         ),
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
+        ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage panels operations.
+        """Manage home assistant panels operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'get_panels': Call get_panels
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "get_panels":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_panels(**kwargs)
-        raise ValueError(f"Unknown action: {action}. Must be one of: get_panels")
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_voice_tools(mcp: FastMCP):
@@ -328,26 +314,31 @@ def register_voice_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'list_exposed_entities', 'expose_entities'"
         ),
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
+        ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage voice operations.
+        """Manage home assistant voice operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'list_exposed_entities': Call list_exposed_entities
-          - 'expose_entities': Call expose_entities
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "list_exposed_entities":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.list_exposed_entities(**kwargs)
         if action == "expose_entities":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.expose_entities(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: list_exposed_entities', 'expose_entities"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_entities_tools(mcp: FastMCP):
@@ -356,43 +347,37 @@ def register_entities_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'get_entity_registry_display', 'extract_from_target', 'get_triggers_for_target', 'get_conditions_for_target', 'get_services_for_target'"
         ),
-        target: dict[str, Any] | None = Field(default=None, description="target"),
-        expand_group: bool | None = Field(default=None, description="expand group"),
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
+        ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage entities operations.
+        """Manage home assistant entities operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'get_entity_registry_display': Call get_entity_registry_display
-          - 'extract_from_target': Call extract_from_target
-          - 'get_triggers_for_target': Call get_triggers_for_target
-          - 'get_conditions_for_target': Call get_conditions_for_target
-          - 'get_services_for_target': Call get_services_for_target
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "get_entity_registry_display":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_entity_registry_display(**kwargs)
         if action == "extract_from_target":
-            kwargs = {"target": target, "expand_group": expand_group}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.extract_from_target(**kwargs)
         if action == "get_triggers_for_target":
-            kwargs = {"target": target, "expand_group": expand_group}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_triggers_for_target(**kwargs)
         if action == "get_conditions_for_target":
-            kwargs = {"target": target, "expand_group": expand_group}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_conditions_for_target(**kwargs)
         if action == "get_services_for_target":
-            kwargs = {"target": target, "expand_group": expand_group}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.get_services_for_target(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: get_entity_registry_display', 'extract_from_target', 'get_triggers_for_target', 'get_conditions_for_target', 'get_services_for_target"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def register_system_tools(mcp: FastMCP):
@@ -401,46 +386,35 @@ def register_system_tools(mcp: FastMCP):
         action: str = Field(
             description="Action to perform. Must be one of: 'render_template', 'ping', 'handle_intent', 'validate_config'"
         ),
-        template: str | None = Field(default=None, description="template"),
-        name: str | None = Field(default=None, description="name"),
-        data: dict[str, Any] | None = Field(default=None, description="data"),
-        trigger: Any | None = Field(default=None, description="trigger"),
-        condition: Any | None = Field(default=None, description="condition"),
-        action_data: Any | None = Field(default=None, description="action"),
+        params_json: str = Field(
+            default="{}", description="JSON string of parameters to pass to the action."
+        ),
         client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
     ) -> dict:
-        """Manage system operations.
+        """Manage home assistant system operations."""
+        if ctx:
+            ctx.info("Executing tool...")
+        import json
 
-        Actions:
-          - 'render_template': Call render_template
-          - 'ping': Call ping
-          - 'handle_intent': Call handle_intent
-          - 'validate_config': Call validate_config
-        """
-        kwargs: dict[str, Any]
+        try:
+            kwargs = json.loads(params_json)
+        except Exception as e:
+            return {"error": f"Invalid params_json: {e}"}
+
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
         if action == "render_template":
-            kwargs = {"template": template}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.render_template(**kwargs)
         if action == "ping":
-            kwargs = {}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.ping(**kwargs)
         if action == "handle_intent":
-            kwargs = {"name": name, "data": data}
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.handle_intent(**kwargs)
         if action == "validate_config":
-            kwargs = {
-                "trigger": trigger,
-                "condition": condition,
-                "action": action_data,
-            }
-            kwargs = {k: v for k, v in kwargs.items() if v is not None}
             return client.validate_config(**kwargs)
-        raise ValueError(
-            f"Unknown action: {action}. Must be one of: render_template', 'ping', 'handle_intent', 'validate_config"
-        )
+        raise ValueError(f"Unknown action: {action}")
 
 
 def get_mcp_instance() -> tuple[Any, ...]:
