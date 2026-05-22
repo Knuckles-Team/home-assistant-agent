@@ -95,33 +95,7 @@ Configure your IDE's `mcp.json` to launch the MCP server via `uvx`:
 ```
 
 #### Streamable-HTTP Transport (Recommended for production deployments)
-Configure your client's `mcp.json` to launch the Streamable-HTTP server via `uvx` with explicit host and port definition:
-
-```json
-{
-  "mcpServers": {
-    "home-assistant-agent": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "home-assistant-agent",
-        "home-assistant-mcp"
-      ],
-      "env": {
-        "TRANSPORT": "streamable-http",
-        "HOST": "0.0.0.0",
-        "PORT": "8000",
-        "HASS_HOST": "your_hass_host_here",
-        "HASS_USERNAME": "your_hass_username_here",
-        "HASS_PASSWORD": "your_hass_password_here",
-        "HASS_TOKEN": "your_hass_token_here"
-      }
-    }
-  }
-}
-```
-
-Alternatively, connect to a pre-deployed remote or local Streamable-HTTP instance:
+To run the server as a long-running Streamable-HTTP service:
 
 ```json
 {
