@@ -43,7 +43,7 @@
 
 This agent wraps the Agent for interacting with Home Assistant REST API API. You can interact with it programmatically or via its integrated execution entrypoints.
 
-Detailed instructions on how to use the underlying API wrappers, extended schema bindings, and developer SDK references are maintained in [docs/index.md](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/docs/index.md).
+Detailed instructions on how to use the underlying API wrappers, extended schema bindings, and developer SDK references are maintained in [docs/index.md](docs/index.md).
 
 ---
 
@@ -54,19 +54,40 @@ This server utilizes dynamic Action-Routed tools to optimize token overhead and 
 ### Available MCP Tools
 | Tool Module | Toggle Env Var | Enabled by Default | Description & Nested Methods |
 |-------------|----------------|--------------------|------------------------------|
-| **Config** | `CONFIGTOOL` | `True` | Manage home assistant config operations. Action-routed methods: `status`, `config`, `components`, `check_config`. |
-| **States** | `STATESTOOL` | `True` | Manage home assistant states operations. Action-routed methods: `list_states`, `get_state`, `update_state`, `delete_state`. |
-| **Services** | `SERVICESTOOL` | `True` | Manage home assistant services operations. Action-routed methods: `list_services`, `call_service`. |
-| **Events** | `EVENTSTOOL` | `True` | Manage home assistant events operations. Action-routed methods: `list_events`, `fire_event`, `subscribe_events`. |
-| **History** | `HISTORYTOOL` | `True` | Manage home assistant history operations. Action-routed methods: `get_history`. |
-| **Logbook** | `LOGBOOKTOOL` | `True` | Manage home assistant logbook operations. Action-routed methods: `get_logbook`, `get_error_log`. |
-| **Calendar** | `CALENDARTOOL` | `True` | Manage home assistant calendar operations. Action-routed methods: `list_calendars`, `get_calendar_events`. |
-| **Panels** | `PANELSTOOL` | `True` | Manage home assistant panels operations. Action-routed methods: `get_panels`. |
-| **Voice** | `VOICETOOL` | `True` | Manage home assistant voice operations. Action-routed methods: `list_exposed_entities`, `expose_entities`. |
-| **Entities** | `ENTITIESTOOL` | `True` | Manage home assistant entities operations. Action-routed methods: `get_entity_registry_display`, `extract_from_target`, `get_triggers_for_target`, `get_conditions_for_target`, `get_services_for_target`. |
-| **System** | `SYSTEMTOOL` | `True` | Manage home assistant system operations. Action-routed methods: `render_template`, `ping`, `handle_intent`, `validate_config`. |
+| **Config** | `CONFIG_TOOL` | `True` | Register config tools. CONCEPT:ECO-4.0 Action-routed methods: `check_config`, `components`, `config`, `status`. |
+| **States** | `STATES_TOOL` | `True` | Register states tools. CONCEPT:ECO-4.0 Action-routed methods: `delete_state`, `get_state`, `list_states`, `update_state`. |
+| **Services** | `SERVICES_TOOL` | `True` | Register services tools. CONCEPT:ECO-4.0 Action-routed methods: `call_service`, `list_services`. |
+| **Events** | `EVENTS_TOOL` | `True` | Register events tools. CONCEPT:ECO-4.0 Action-routed methods: `fire_event`, `list_events`, `subscribe_events`. |
+| **History** | `HISTORY_TOOL` | `True` | Register history tools. CONCEPT:ECO-4.0 Action-routed methods: `get_history`. |
+| **Logbook** | `LOGBOOK_TOOL` | `True` | Register logbook tools. CONCEPT:ECO-4.0 Action-routed methods: `get_error_log`, `get_logbook`. |
+| **Calendar** | `CALENDAR_TOOL` | `True` | Register calendar tools. CONCEPT:ECO-4.0 Action-routed methods: `get_calendar_events`, `list_calendars`. |
+| **Panels** | `PANELS_TOOL` | `True` | Register panels tools. CONCEPT:ECO-4.0 Action-routed methods: `get_panels`. |
+| **Voice** | `VOICE_TOOL` | `True` | Register voice tools. CONCEPT:ECO-4.0 Action-routed methods: `expose_entities`, `list_exposed_entities`. |
+| **Entities** | `ENTITIES_TOOL` | `True` | Register entities tools. CONCEPT:ECO-4.0 Action-routed methods: `extract_from_target`, `get_conditions_for_target`, `get_entity_registry_display`, `get_services_for_target`, `get_triggers_for_target`. |
+| **System** | `SYSTEM_TOOL` | `True` | Register system tools. CONCEPT:ECO-4.0 Action-routed methods: `handle_intent`, `ping`, `render_template`, `validate_config`. |
 
-Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/docs/mcp.md).
+Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](docs/mcp.md).
+
+### Dynamic Tool Selection & Visibility
+
+This MCP server supports dynamic toolset selection and visibility filtering at runtime. This allows you to restrict the set of exposed tools in order to prevent blowing up the LLM's context window.
+
+You can configure tool filtering via multiple input channels:
+
+- **CLI Arguments:** Pass `--tools` or `--toolsets` (or their disabled counterparts `--disabled-tools` and `--disabled-toolsets`) during startup.
+- **Environment Variables:** Define standard environment variables:
+  - `MCP_ENABLED_TOOLS` / `MCP_DISABLED_TOOLS`
+  - `MCP_ENABLED_TAGS` / `MCP_DISABLED_TAGS`
+- **HTTP SSE Request Headers:** Pass custom headers during transport initialization:
+  - `x-mcp-enabled-tools` / `x-mcp-disabled-tools`
+  - `x-mcp-enabled-tags` / `x-mcp-disabled-tags`
+- **HTTP SSE Request Query Parameters:** Append query parameters directly to your transport connection URL:
+  - `?tools=tool1,tool2`
+  - `?tags=tag1`
+
+When query strings or parameters are supplied, an LLM-free **Knowledge Graph resolution layer** (using `DynamicToolOrchestrator`) matches query intents against known tool tags, names, or descriptions, with safe fallback and automated 24-hour background cache refreshing.
+
+---
 
 ### MCP Configuration Examples
 
@@ -84,10 +105,9 @@ Configure your IDE's `mcp.json` to launch the MCP server via `uvx`:
         "home-assistant-mcp"
       ],
       "env": {
-        "HASS_HOST": "your_hass_host_here",
-        "HASS_USERNAME": "your_hass_username_here",
-        "HASS_PASSWORD": "your_hass_password_here",
-        "HASS_TOKEN": "your_hass_token_here"
+        "HOME_ASSISTANT_URL": "http://localhost:8123",
+        "HOME_ASSISTANT_TOKEN": "your_long_lived_token_here",
+        "HOME_ASSISTANT_AGENT_VERIFY": "True"
       }
     }
   }
@@ -111,10 +131,9 @@ Configure your client's `mcp.json` to launch the Streamable-HTTP server via `uvx
         "TRANSPORT": "streamable-http",
         "HOST": "0.0.0.0",
         "PORT": "8000",
-        "HASS_HOST": "your_hass_host_here",
-        "HASS_USERNAME": "your_hass_username_here",
-        "HASS_PASSWORD": "your_hass_password_here",
-        "HASS_TOKEN": "your_hass_token_here"
+        "HOME_ASSISTANT_URL": "http://localhost:8123",
+        "HOME_ASSISTANT_TOKEN": "your_long_lived_token_here",
+        "HOME_ASSISTANT_AGENT_VERIFY": "True"
       }
     }
   }
@@ -141,10 +160,9 @@ docker run -d \
   -p 8000:8000 \
   -e TRANSPORT=streamable-http \
   -e PORT=8000 \
-  -e HASS_HOST="your_value" \
-  -e HASS_USERNAME="your_value" \
-  -e HASS_PASSWORD="your_value" \
-  -e HASS_TOKEN="your_value" \
+  -e HOME_ASSISTANT_URL="http://localhost:8123" \
+  -e HOME_ASSISTANT_TOKEN="your_token_here" \
+  -e HOME_ASSISTANT_AGENT_VERIFY="True" \
   knucklessg1/home-assistant-agent:latest
 ```
 
@@ -159,10 +177,9 @@ To start the interactive command-line agent:
 
 ```bash
 # Set credentials
-export HASS_HOST="your_value"
-export HASS_USERNAME="your_value"
-export HASS_PASSWORD="your_value"
-export HASS_TOKEN="your_value"
+export HOME_ASSISTANT_URL="http://localhost:8123"
+export HOME_ASSISTANT_TOKEN="your_token_here"
+export HOME_ASSISTANT_AGENT_VERIFY="True"
 
 # Run the agent server
 home-assistant-agent --provider openai --model-id gpt-4o
@@ -236,7 +253,33 @@ services:
 
 ```
 
-Detailed graph node architecture explanations, custom skill configurations, and agentic trace guides are available in [docs/agent.md](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/docs/agent.md).
+Detailed graph node architecture explanations, custom skill configurations, and agentic trace guides are available in [docs/agent.md](docs/agent.md).
+
+---
+
+## Configuration & Environment Variables
+
+The Home Assistant Agent supports **17 environment variables** to fine-tune the client wrapper, agent configuration, and modular tools toggles.
+
+| # | Environment Variable | Default | Description |
+|---|----------------------|---------|-------------|
+| 1 | `HOME_ASSISTANT_URL` | `http://localhost:8123` | Base URL of the Home Assistant instance |
+| 2 | `HOME_ASSISTANT_TOKEN` | *None* | Long-Lived Access Token generated in Home Assistant |
+| 3 | `HOME_ASSISTANT_AGENT_VERIFY` | `True` | Toggle SSL certificate verification (True/False) |
+| 4 | `DEFAULT_AGENT_NAME` | `HomeAssistantAgent` | Default name/display identifier for the agent |
+| 5 | `AGENT_DESCRIPTION` | *Multi-line* | Description of the agent's smart home duties |
+| 6 | `AGENT_SYSTEM_PROMPT` | *Multi-line* | Core Pydantic AI system prompt for agent instructions |
+| 7 | `CONFIGTOOL` | `True` | Toggle Config management tool (`True`/`False`) |
+| 8 | `STATESTOOL` | `True` | Toggle State inspection tool (`True`/`False`) |
+| 9 | `SERVICESTOOL` | `True` | Toggle Service execution tool (`True`/`False`) |
+| 10 | `EVENTSTOOL` | `True` | Toggle Event monitoring tool (`True`/`False`) |
+| 11 | `HISTORYTOOL` | `True` | Toggle State history tool (`True`/`False`) |
+| 12 | `LOGBOOKTOOL` | `True` | Toggle Logbook & error log tool (`True`/`False`) |
+| 13 | `CALENDARTOOL` | `True` | Toggle Calendar scheduling tool (`True`/`False`) |
+| 14 | `PANELSTOOL` | `True` | Toggle HA custom panels tool (`True`/`False`) |
+| 15 | `VOICETOOL` | `True` | Toggle Voice & entity exposition tool (`True`/`False`) |
+| 16 | `ENTITIESTOOL` | `True` | Toggle Entity registry lookup tool (`True`/`False`) |
+| 17 | `SYSTEMTOOL` | `True` | Toggle Template & health systems tool (`True`/`False`) |
 
 ---
 

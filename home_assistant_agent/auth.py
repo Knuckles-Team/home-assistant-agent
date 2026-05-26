@@ -13,12 +13,20 @@ _client = None
 
 
 def get_client():
-    """Get or create a singleton API client instance."""
+    """Get or create a singleton API client instance.
+
+    CONCEPT:OS-5.1
+    """
     global _client
     if _client is None:
         base_url = os.getenv("HOME_ASSISTANT_URL", "http://localhost:8123")
         token = os.getenv("HOME_ASSISTANT_TOKEN", "")
-        verify = os.getenv("HOME_ASSISTANT_AGENT_VERIFY", "True").lower() in (
+        verify_env = (
+            os.getenv("HOME_ASSISTANT_SSL_VERIFY")
+            or os.getenv("HOME_ASSISTANT_AGENT_VERIFY")
+            or "True"
+        )
+        verify = verify_env.lower() in (
             "true",
             "1",
             "yes",

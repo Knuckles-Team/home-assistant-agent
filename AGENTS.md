@@ -6,19 +6,18 @@
 - Key principles: Functional patterns, Pydantic for data validation, asynchronous tool execution.
 - Architecture:
     - `mcp_server.py`: Main MCP server entry point and tool registration.
-    - `agent.py`: Pydantic AI agent definition and logic.
-    - `skills/`: Directory containing modular agent skills (if applicable).
-    - `agent/`: Internal agent logic and prompt templates.
+    - `agent_server.py`: Pydantic AI agent server and run configuration.
+    - `auth.py`: Authentication client singleton.
+    - `api/`: Multi-protocol client backend (REST and WebSocket APIs).
 
 ### Architecture Diagram
 ```mermaid
 graph TD
     User([User/A2A]) --> Server[A2A Server / FastAPI]
     Server --> Agent[Pydantic AI Agent]
-    Agent --> Skills[Modular Skills]
     Agent --> MCP[MCP Server / FastMCP]
     MCP --> Client[API Client / Wrapper]
-    Client --> ExternalAPI([External Service API])
+    Client --> ExternalAPI([Home Assistant REST & WebSocket API])
 ```
 
 ### Workflow Diagram
@@ -28,13 +27,13 @@ sequenceDiagram
     participant S as Server
     participant A as Agent
     participant T as MCP Tool
-    participant API as External API
+    participant API as Home Assistant API
 
     U->>S: Request
     S->>A: Process Query
     A->>T: Invoke Tool
-    T->>API: API Request
-    API-->>T: API Response
+    T->>API: REST or WebSocket Call
+    API-->>T: JSON / Event Response
     T-->>A: Tool Result
     A-->>S: Final Response
     S-->>U: Output
@@ -42,71 +41,131 @@ sequenceDiagram
 
 ## Commands (run these exactly)
 # Installation
+```bash
 pip install .[all]
+```
 
 # Quality & Linting (run from project root)
-pre-commit run --all-files
+```bash
+uv run ruff check .
+uv run ruff format --check .
+```
 
 # Execution Commands
 # Run MCP Server
+```bash
 home-assistant-mcp
+```
 # Run Agent
+```bash
 home-assistant-agent
+```
 
 ## Project Structure Quick Reference
-- MCP Entry Point → `mcp_server.py`
-- Agent Entry Point → `agent.py`
-- Source Code → home_assistant_agent/
-- Skills → `skills/` (if exists)
+- MCP Entry Point → `home_assistant_agent/mcp_server.py`
+- Agent Entry Point → `home_assistant_agent/agent_server.py`
+- Source Code → `home_assistant_agent/`
 
 ### File Tree
 ```text
 ├── .bumpversion.cfg
 ├── .dockerignore
-├── .env
+├── .env.example
 ├── .gitattributes
 ├── .gitignore
 ├── .pre-commit-config.yaml
 ├── AGENTS.md
+├── CHANGELOG.md
 ├── Dockerfile
 ├── LICENSE
 ├── MANIFEST.in
 ├── README.md
 ├── compose.yml
 ├── debug.Dockerfile
-├── home_assistant_agent
+├── home_assistant_agent/
 │   ├── __init__.py
-│   ├── agent.py
+│   ├── __main__.py
+│   ├── agent/
+│   │   ├── AGENTS.md
+│   │   ├── CRON.md
+│   │   ├── CRON_LOG.md
+│   │   ├── HEARTBEAT.md
+│   │   ├── IDENTITY.md
+│   │   ├── MEMORY.md
+│   │   ├── USER.md
+│   │   └── icon.png
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── api_client_base.py
+│   │   ├── api_client_rest.py
+│   │   └── api_client_websocket.py
+│   ├── agent_server.py
+│   ├── api_client.py
 │   ├── auth.py
-│   ├── mcp_server.py
-│   └── agent/
+│   ├── home_assistant_models.py
+│   ├── main_agent.json
+│   ├── mcp_config.json
+│   └── mcp_server.py
 ├── pyproject.toml
-└── requirements.txt
+├── requirements.txt
+└── tests/
+    ├── conftest.py
+    ├── pytest.ini
+    ├── test_concept_parity.py
+    ├── test_coverage.py
+    ├── test_init.py
+    └── test_startup.py
 ```
+
+## Concept Registry & Traceability
+
+This repository aligns perfectly with the standard `agent-utilities` architecture pillars:
+
+### `CONCEPT:ECO-4.0` — Tool Interface & MCP Factory
+Defines all 11 action-routed MCP tools: Config, States, Services, Events, History, Logbook, Calendar, Panels, Voice, Entities, and System.
+- **Source Files:**
+  - [mcp_server.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/mcp_server.py)
+  - [api_client_rest.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_rest.py)
+  - [api_client_websocket.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_websocket.py)
+- **Tests:**
+  - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L285-L670)
+
+### `CONCEPT:OS-5.0` — Operating System and Agents
+Directs the lazy loader, entry points, and CLI runtime interface.
+- **Source Files:**
+  - [__init__.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/__init__.py)
+  - [__main__.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/__main__.py)
+  - [agent_server.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
+- **Tests:**
+  - [test_init.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_init.py)
+  - [test_startup.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_startup.py)
+  - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L209-L229)
+
+### `CONCEPT:OS-5.1` — Security & Auth
+Credentials and authentication client setup.
+- **Source Files:**
+  - [auth.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/auth.py)
+  - [api_client_base.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_base.py)
+- **Tests:**
+  - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L230-L263)
+
+### `CONCEPT:ORCH-1.5` — Orchestration Workflows/Agents
+Pydantic AI Graph Agent configuration.
+- **Source Files:**
+  - [agent_server.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
+- **Tests:**
+  - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L264-L284)
 
 ## Code Style & Conventions
 **Always:**
-- Use `agent-utilities` for common patterns (e.g., `create_mcp_server`, `create_agent`).
+- Use `agent-utilities` for common patterns (e.g., `create_mcp_server`, `create_agent_server`).
 - Define input/output models using Pydantic.
 - Include descriptive docstrings for all tools (they are used as tool descriptions for LLMs).
 - Check for optional dependencies using `try/except ImportError`.
 
-**Good example:**
-```python
-from agent_utilities import create_mcp_server
-from mcp.server.fastmcp import FastMCP
-
-mcp = create_mcp_server("my-agent")
-
-@mcp.tool()
-async def my_tool(param: str) -> str:
-    """Description for LLM."""
-    return f"Result: {param}"
-```
-
 ## Dos and Don'ts
 **Do:**
-- Run `pre-commit` before pushing changes.
+- Run lint/test via `uv run ruff check .` and `pytest`.
 - Use existing patterns from `agent-utilities`.
 - Keep tools focused and idempotent where possible.
 
@@ -121,7 +180,7 @@ async def my_tool(param: str) -> str:
 - Use `agent-utilities` base classes.
 
 **Ask first:**
-- Major refactors of `mcp_server.py` or `agent.py`.
+- Major refactors of `mcp_server.py` or `agent_server.py`.
 - Deleting or renaming public tool functions.
 
 **Never do:**
@@ -131,12 +190,3 @@ async def my_tool(param: str) -> str:
 ## When Stuck
 - Propose a plan first before making large changes.
 - Check `agent-utilities` documentation for existing helpers.
-
-
-## Testing with Timeout
-
-To run tests with a timeout to prevent hanging, use the `pytest-timeout` plugin. You can combine it with the `-k` flag to run specific tests:
-
-```bash
-uv run pytest --timeout=60 -k "test_name_pattern"
-```

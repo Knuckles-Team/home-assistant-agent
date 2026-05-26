@@ -20,6 +20,11 @@ DEFAULT_AGENT_SYSTEM_PROMPT = None
 
 
 def agent_server():
+    """Start the Home Assistant Agent Server.
+
+    CONCEPT:OS-5.0
+    CONCEPT:ORCH-1.5
+    """
     from agent_utilities import (
         build_system_prompt_from_workspace,
         create_agent_parser,
@@ -82,4 +87,5 @@ def agent_server():
 
 
 if __name__ == "__main__":
-    agent_server()
+    if "pytest" not in sys.modules:
+        agent_server()

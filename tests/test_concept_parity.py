@@ -59,6 +59,8 @@ def test_concept_parity():
     """
     Enforces that all concepts documented or used in home-assistant-agent
     exist in the master agent-utilities registry.
+
+    CONCEPT:OS-5.0
     """
     master_concepts = extract_concepts_from_overview(MASTER_OVERVIEW_PATH)
 

@@ -1,5 +1,8 @@
 def test_server_startup():
-    """Validates that the server module can start successfully."""
+    """Validates that the server module can start successfully.
+
+    CONCEPT:OS-5.0
+    """
     # If this is not an agent, just pass
     import os
 
