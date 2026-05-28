@@ -32,10 +32,11 @@ from starlette.responses import JSONResponse
 
 from home_assistant_agent.auth import get_client
 
-__version__ = "0.15.0"
+__version__ = "0.16.0"
 
 logger = get_logger(name="home-assistant-agent")
 logger.setLevel(logging.INFO)
+
 
 def register_config_tools(mcp: FastMCP):
     """Register config tools."""
@@ -53,8 +54,7 @@ def register_config_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant config operations.
-"""
+        """Manage home assistant config operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -76,6 +76,7 @@ def register_config_tools(mcp: FastMCP):
             return client.check_config(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def register_states_tools(mcp: FastMCP):
     """Register states tools."""
 
@@ -92,8 +93,7 @@ def register_states_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant states operations.
-"""
+        """Manage home assistant states operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -115,6 +115,7 @@ def register_states_tools(mcp: FastMCP):
             return client.delete_state(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def register_services_tools(mcp: FastMCP):
     """Register services tools."""
 
@@ -131,8 +132,7 @@ def register_services_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant services operations.
-"""
+        """Manage home assistant services operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -150,6 +150,7 @@ def register_services_tools(mcp: FastMCP):
             return client.call_service(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def register_events_tools(mcp: FastMCP):
     """Register events tools."""
 
@@ -166,8 +167,7 @@ def register_events_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant events operations.
-"""
+        """Manage home assistant events operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -187,6 +187,7 @@ def register_events_tools(mcp: FastMCP):
             return client.subscribe_events(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def register_history_tools(mcp: FastMCP):
     """Register history tools."""
 
@@ -203,8 +204,7 @@ def register_history_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant history operations.
-"""
+        """Manage home assistant history operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -219,6 +219,7 @@ def register_history_tools(mcp: FastMCP):
         if action == "get_history":
             return client.get_history(**kwargs)
         raise ValueError(f"Unknown action: {action}")
+
 
 def register_logbook_tools(mcp: FastMCP):
     """Register logbook tools."""
@@ -236,8 +237,7 @@ def register_logbook_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant logbook operations.
-"""
+        """Manage home assistant logbook operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -255,6 +255,7 @@ def register_logbook_tools(mcp: FastMCP):
             return client.get_error_log(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def register_calendar_tools(mcp: FastMCP):
     """Register calendar tools."""
 
@@ -271,8 +272,7 @@ def register_calendar_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant calendar operations.
-"""
+        """Manage home assistant calendar operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -290,6 +290,7 @@ def register_calendar_tools(mcp: FastMCP):
             return client.get_calendar_events(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def register_panels_tools(mcp: FastMCP):
     """Register panels tools."""
 
@@ -306,8 +307,7 @@ def register_panels_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant panels operations.
-"""
+        """Manage home assistant panels operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -322,6 +322,7 @@ def register_panels_tools(mcp: FastMCP):
         if action == "get_panels":
             return client.get_panels(**kwargs)
         raise ValueError(f"Unknown action: {action}")
+
 
 def register_voice_tools(mcp: FastMCP):
     """Register voice tools."""
@@ -339,8 +340,7 @@ def register_voice_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant voice operations.
-"""
+        """Manage home assistant voice operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -358,6 +358,7 @@ def register_voice_tools(mcp: FastMCP):
             return client.expose_entities(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def register_entities_tools(mcp: FastMCP):
     """Register entities tools."""
 
@@ -374,8 +375,7 @@ def register_entities_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant entities operations.
-"""
+        """Manage home assistant entities operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -399,6 +399,7 @@ def register_entities_tools(mcp: FastMCP):
             return client.get_services_for_target(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def register_system_tools(mcp: FastMCP):
     """Register system tools."""
 
@@ -415,8 +416,7 @@ def register_system_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> Any:
-        """Manage home assistant system operations.
-"""
+        """Manage home assistant system operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -438,9 +438,9 @@ def register_system_tools(mcp: FastMCP):
             return client.validate_config(**kwargs)
         raise ValueError(f"Unknown action: {action}")
 
+
 def get_mcp_instance() -> tuple[Any, ...]:
-    """Initialize and return the MCP instance.
-"""
+    """Initialize and return the MCP instance."""
     load_dotenv(find_dotenv())
     args, mcp, middlewares = create_mcp_server(
         name="home-assistant-agent MCP",
@@ -490,9 +490,9 @@ def get_mcp_instance() -> tuple[Any, ...]:
         mcp.add_middleware(mw)
     return mcp, args, middlewares
 
+
 def mcp_server() -> None:
-    """Run the MCP server.
-"""
+    """Run the MCP server."""
     mcp, args, middlewares = get_mcp_instance()
     print(f"home-assistant-agent MCP v{__version__}", file=sys.stderr)
     print("\nStarting MCP Server", file=sys.stderr)
@@ -508,6 +508,7 @@ def mcp_server() -> None:
     else:
         logger.error("Invalid transport", extra={"transport": args.transport})
         sys.exit(1)
+
 
 if __name__ == "__main__":
     if "pytest" not in sys.modules:
