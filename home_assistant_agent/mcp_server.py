@@ -32,7 +32,7 @@ from starlette.responses import JSONResponse
 
 from home_assistant_agent.auth import get_client
 
-__version__ = "0.18.1"
+__version__ = "0.19.0"
 
 logger = get_logger(name="home-assistant-agent")
 logger.setLevel(logging.INFO)
