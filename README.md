@@ -22,6 +22,11 @@
 
 *Version: 0.29.0*
 
+> **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
+> interfaces, the optional A2A agent server, and guidance for provisioning the Home
+> Assistant platform are maintained in the
+> [official documentation](https://knuckles-team.github.io/home-assistant-agent/).
+
 ---
 
 ## Overview
@@ -312,6 +317,26 @@ uv pip install home-assistant-agent[all]
 # Using standard pip
 python -m pip install home-assistant-agent[all]
 ```
+
+---
+
+## Documentation
+
+The complete documentation is published as the
+[official documentation site](https://knuckles-team.github.io/home-assistant-agent/)
+and is the recommended reference for installation, deployment, and day-to-day
+operation.
+
+| Page | Contents |
+|---|---|
+| [Installation](https://knuckles-team.github.io/home-assistant-agent/installation/) | pip, source, extras, prebuilt Docker image |
+| [Deployment](https://knuckles-team.github.io/home-assistant-agent/deployment/) | run the MCP server, the agent server, Compose, Caddy + Technitium, env config |
+| [Usage](https://knuckles-team.github.io/home-assistant-agent/usage/) | the MCP tools, the `HomeAssistantApi` client, the CLI |
+| [Backing Platform](https://knuckles-team.github.io/home-assistant-agent/platform/) | deploy Home Assistant with Docker |
+| [Overview](https://knuckles-team.github.io/home-assistant-agent/overview/) | architecture, tool surface, ecosystem role |
+| [Concepts](https://knuckles-team.github.io/home-assistant-agent/concepts/) | concept registry (`CONCEPT:HASS-*`) |
+
+`AGENTS.md` is the canonical contributor/agent guidance.
 
 ---
 
