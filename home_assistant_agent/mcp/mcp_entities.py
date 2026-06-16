@@ -5,6 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
+from agent_utilities.mcp_utilities import resolve_action
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -42,6 +43,18 @@ def register_entities_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        valid_actions = [
+            "get_entity_registry_display",
+            "extract_from_target",
+            "get_triggers_for_target",
+            "get_conditions_for_target",
+            "get_services_for_target",
+        ]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         if action == "get_entity_registry_display":
             return client.get_entity_registry_display(**kwargs)
