@@ -5,7 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
-from agent_utilities.mcp_utilities import resolve_action
+from agent_utilities.mcp_utilities import resolve_action, run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -51,7 +51,7 @@ def register_voice_tools(mcp: FastMCP):
         action = resolved
 
         if action == "list_exposed_entities":
-            return client.list_exposed_entities(**kwargs)
+            return await run_blocking(client.list_exposed_entities, **kwargs)
         if action == "expose_entities":
-            return client.expose_entities(**kwargs)
+            return await run_blocking(client.expose_entities, **kwargs)
         raise ValueError(f"Unknown action: {action}")

@@ -5,7 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
-from agent_utilities.mcp_utilities import resolve_action
+from agent_utilities.mcp_utilities import resolve_action, run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -51,11 +51,11 @@ def register_config_tools(mcp: FastMCP):
         action = resolved
 
         if action == "status":
-            return client.status(**kwargs)
+            return await run_blocking(client.status, **kwargs)
         if action == "config":
-            return client.config(**kwargs)
+            return await run_blocking(client.config, **kwargs)
         if action == "components":
-            return client.components(**kwargs)
+            return await run_blocking(client.components, **kwargs)
         if action == "check_config":
-            return client.check_config(**kwargs)
+            return await run_blocking(client.check_config, **kwargs)
         raise ValueError(f"Unknown action: {action}")

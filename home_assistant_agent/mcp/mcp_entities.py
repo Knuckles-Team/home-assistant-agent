@@ -5,7 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
-from agent_utilities.mcp_utilities import resolve_action
+from agent_utilities.mcp_utilities import resolve_action, run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -57,13 +57,13 @@ def register_entities_tools(mcp: FastMCP):
         action = resolved
 
         if action == "get_entity_registry_display":
-            return client.get_entity_registry_display(**kwargs)
+            return await run_blocking(client.get_entity_registry_display, **kwargs)
         if action == "extract_from_target":
-            return client.extract_from_target(**kwargs)
+            return await run_blocking(client.extract_from_target, **kwargs)
         if action == "get_triggers_for_target":
-            return client.get_triggers_for_target(**kwargs)
+            return await run_blocking(client.get_triggers_for_target, **kwargs)
         if action == "get_conditions_for_target":
-            return client.get_conditions_for_target(**kwargs)
+            return await run_blocking(client.get_conditions_for_target, **kwargs)
         if action == "get_services_for_target":
-            return client.get_services_for_target(**kwargs)
+            return await run_blocking(client.get_services_for_target, **kwargs)
         raise ValueError(f"Unknown action: {action}")
