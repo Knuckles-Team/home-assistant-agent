@@ -20,7 +20,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/home-assistant-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/home-assistant-agent)
 
-*Version: 0.32.0*
+*Version: 0.33.0*
 
 > **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
 > interfaces, the optional A2A agent server, and guidance for provisioning the Home
