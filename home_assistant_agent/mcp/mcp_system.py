@@ -5,7 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
-from agent_utilities.mcp_utilities import resolve_action
+from agent_utilities.mcp_utilities import resolve_action, run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -51,11 +51,11 @@ def register_system_tools(mcp: FastMCP):
         action = resolved
 
         if action == "render_template":
-            return client.render_template(**kwargs)
+            return await run_blocking(client.render_template, **kwargs)
         if action == "ping":
-            return client.ping(**kwargs)
+            return await run_blocking(client.ping, **kwargs)
         if action == "handle_intent":
-            return client.handle_intent(**kwargs)
+            return await run_blocking(client.handle_intent, **kwargs)
         if action == "validate_config":
-            return client.validate_config(**kwargs)
+            return await run_blocking(client.validate_config, **kwargs)
         raise ValueError(f"Unknown action: {action}")

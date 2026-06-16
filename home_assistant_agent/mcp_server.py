@@ -25,7 +25,11 @@ import sys
 from typing import Any
 
 from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server, resolve_action
+from agent_utilities.mcp_utilities import (
+    create_mcp_server,
+    resolve_action,
+    run_blocking,
+)
 from dotenv import find_dotenv, load_dotenv
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -73,13 +77,13 @@ def register_config_tools(mcp: FastMCP):
         action = resolved
 
         if action == "status":
-            return client.status(**kwargs)
+            return await run_blocking(client.status, **kwargs)
         if action == "config":
-            return client.config(**kwargs)
+            return await run_blocking(client.config, **kwargs)
         if action == "components":
-            return client.components(**kwargs)
+            return await run_blocking(client.components, **kwargs)
         if action == "check_config":
-            return client.check_config(**kwargs)
+            return await run_blocking(client.check_config, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -118,13 +122,13 @@ def register_states_tools(mcp: FastMCP):
         action = resolved
 
         if action == "list_states":
-            return client.list_states(**kwargs)
+            return await run_blocking(client.list_states, **kwargs)
         if action == "get_state":
-            return client.get_state(**kwargs)
+            return await run_blocking(client.get_state, **kwargs)
         if action == "update_state":
-            return client.update_state(**kwargs)
+            return await run_blocking(client.update_state, **kwargs)
         if action == "delete_state":
-            return client.delete_state(**kwargs)
+            return await run_blocking(client.delete_state, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -163,9 +167,9 @@ def register_services_tools(mcp: FastMCP):
         action = resolved
 
         if action == "list_services":
-            return client.list_services(**kwargs)
+            return await run_blocking(client.list_services, **kwargs)
         if action == "call_service":
-            return client.call_service(**kwargs)
+            return await run_blocking(client.call_service, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -204,11 +208,11 @@ def register_events_tools(mcp: FastMCP):
         action = resolved
 
         if action == "list_events":
-            return client.list_events(**kwargs)
+            return await run_blocking(client.list_events, **kwargs)
         if action == "fire_event":
-            return client.fire_event(**kwargs)
+            return await run_blocking(client.fire_event, **kwargs)
         if action == "subscribe_events":
-            return client.subscribe_events(**kwargs)
+            return await run_blocking(client.subscribe_events, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -247,7 +251,7 @@ def register_history_tools(mcp: FastMCP):
         action = resolved
 
         if action == "get_history":
-            return client.get_history(**kwargs)
+            return await run_blocking(client.get_history, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -286,9 +290,9 @@ def register_logbook_tools(mcp: FastMCP):
         action = resolved
 
         if action == "get_logbook":
-            return client.get_logbook(**kwargs)
+            return await run_blocking(client.get_logbook, **kwargs)
         if action == "get_error_log":
-            return client.get_error_log(**kwargs)
+            return await run_blocking(client.get_error_log, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -327,9 +331,9 @@ def register_calendar_tools(mcp: FastMCP):
         action = resolved
 
         if action == "list_calendars":
-            return client.list_calendars(**kwargs)
+            return await run_blocking(client.list_calendars, **kwargs)
         if action == "get_calendar_events":
-            return client.get_calendar_events(**kwargs)
+            return await run_blocking(client.get_calendar_events, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -368,7 +372,7 @@ def register_panels_tools(mcp: FastMCP):
         action = resolved
 
         if action == "get_panels":
-            return client.get_panels(**kwargs)
+            return await run_blocking(client.get_panels, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -407,9 +411,9 @@ def register_voice_tools(mcp: FastMCP):
         action = resolved
 
         if action == "list_exposed_entities":
-            return client.list_exposed_entities(**kwargs)
+            return await run_blocking(client.list_exposed_entities, **kwargs)
         if action == "expose_entities":
-            return client.expose_entities(**kwargs)
+            return await run_blocking(client.expose_entities, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -454,15 +458,15 @@ def register_entities_tools(mcp: FastMCP):
         action = resolved
 
         if action == "get_entity_registry_display":
-            return client.get_entity_registry_display(**kwargs)
+            return await run_blocking(client.get_entity_registry_display, **kwargs)
         if action == "extract_from_target":
-            return client.extract_from_target(**kwargs)
+            return await run_blocking(client.extract_from_target, **kwargs)
         if action == "get_triggers_for_target":
-            return client.get_triggers_for_target(**kwargs)
+            return await run_blocking(client.get_triggers_for_target, **kwargs)
         if action == "get_conditions_for_target":
-            return client.get_conditions_for_target(**kwargs)
+            return await run_blocking(client.get_conditions_for_target, **kwargs)
         if action == "get_services_for_target":
-            return client.get_services_for_target(**kwargs)
+            return await run_blocking(client.get_services_for_target, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 
@@ -501,13 +505,13 @@ def register_system_tools(mcp: FastMCP):
         action = resolved
 
         if action == "render_template":
-            return client.render_template(**kwargs)
+            return await run_blocking(client.render_template, **kwargs)
         if action == "ping":
-            return client.ping(**kwargs)
+            return await run_blocking(client.ping, **kwargs)
         if action == "handle_intent":
-            return client.handle_intent(**kwargs)
+            return await run_blocking(client.handle_intent, **kwargs)
         if action == "validate_config":
-            return client.validate_config(**kwargs)
+            return await run_blocking(client.validate_config, **kwargs)
         raise ValueError(f"Unknown action: {action}")
 
 

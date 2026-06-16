@@ -5,7 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
-from agent_utilities.mcp_utilities import resolve_action
+from agent_utilities.mcp_utilities import resolve_action, run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -51,9 +51,9 @@ def register_events_tools(mcp: FastMCP):
         action = resolved
 
         if action == "list_events":
-            return client.list_events(**kwargs)
+            return await run_blocking(client.list_events, **kwargs)
         if action == "fire_event":
-            return client.fire_event(**kwargs)
+            return await run_blocking(client.fire_event, **kwargs)
         if action == "subscribe_events":
-            return client.subscribe_events(**kwargs)
+            return await run_blocking(client.subscribe_events, **kwargs)
         raise ValueError(f"Unknown action: {action}")

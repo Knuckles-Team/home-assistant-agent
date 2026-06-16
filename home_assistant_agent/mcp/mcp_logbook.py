@@ -5,7 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
-from agent_utilities.mcp_utilities import resolve_action
+from agent_utilities.mcp_utilities import resolve_action, run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -51,7 +51,7 @@ def register_logbook_tools(mcp: FastMCP):
         action = resolved
 
         if action == "get_logbook":
-            return client.get_logbook(**kwargs)
+            return await run_blocking(client.get_logbook, **kwargs)
         if action == "get_error_log":
-            return client.get_error_log(**kwargs)
+            return await run_blocking(client.get_error_log, **kwargs)
         raise ValueError(f"Unknown action: {action}")
