@@ -5,6 +5,7 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
+from agent_utilities.mcp_utilities import resolve_action
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -42,6 +43,12 @@ def register_voice_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        valid_actions = ["list_exposed_entities", "expose_entities"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         if action == "list_exposed_entities":
             return client.list_exposed_entities(**kwargs)

@@ -25,7 +25,7 @@ import sys
 from typing import Any
 
 from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server
+from agent_utilities.mcp_utilities import create_mcp_server, resolve_action
 from dotenv import find_dotenv, load_dotenv
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -66,6 +66,12 @@ def register_config_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
+        valid_actions = ["status", "config", "components", "check_config"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
+
         if action == "status":
             return client.status(**kwargs)
         if action == "config":
@@ -104,6 +110,12 @@ def register_states_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        valid_actions = ["list_states", "get_state", "update_state", "delete_state"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         if action == "list_states":
             return client.list_states(**kwargs)
@@ -144,6 +156,12 @@ def register_services_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
+        valid_actions = ["list_services", "call_service"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
+
         if action == "list_services":
             return client.list_services(**kwargs)
         if action == "call_service":
@@ -178,6 +196,12 @@ def register_events_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        valid_actions = ["list_events", "fire_event", "subscribe_events"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         if action == "list_events":
             return client.list_events(**kwargs)
@@ -216,6 +240,12 @@ def register_history_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
+        valid_actions = ["get_history"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
+
         if action == "get_history":
             return client.get_history(**kwargs)
         raise ValueError(f"Unknown action: {action}")
@@ -248,6 +278,12 @@ def register_logbook_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        valid_actions = ["get_logbook", "get_error_log"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         if action == "get_logbook":
             return client.get_logbook(**kwargs)
@@ -284,6 +320,12 @@ def register_calendar_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
+        valid_actions = ["list_calendars", "get_calendar_events"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
+
         if action == "list_calendars":
             return client.list_calendars(**kwargs)
         if action == "get_calendar_events":
@@ -319,6 +361,12 @@ def register_panels_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
+        valid_actions = ["get_panels"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
+
         if action == "get_panels":
             return client.get_panels(**kwargs)
         raise ValueError(f"Unknown action: {action}")
@@ -351,6 +399,12 @@ def register_voice_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        valid_actions = ["list_exposed_entities", "expose_entities"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         if action == "list_exposed_entities":
             return client.list_exposed_entities(**kwargs)
@@ -386,6 +440,18 @@ def register_entities_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        valid_actions = [
+            "get_entity_registry_display",
+            "extract_from_target",
+            "get_triggers_for_target",
+            "get_conditions_for_target",
+            "get_services_for_target",
+        ]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         if action == "get_entity_registry_display":
             return client.get_entity_registry_display(**kwargs)
@@ -427,6 +493,12 @@ def register_system_tools(mcp: FastMCP):
             return {"error": f"Invalid params_json: {e}"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+        valid_actions = ["render_template", "ping", "handle_intent", "validate_config"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         if action == "render_template":
             return client.render_template(**kwargs)
