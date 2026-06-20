@@ -20,20 +20,20 @@ warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
 warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
 import logging
-import os
 import sys
 from typing import Any
 
-from agent_utilities.base_utilities import to_boolean
 from agent_utilities.mcp_utilities import (
     create_mcp_server,
     load_config,
+    register_tool_surface,
     resolve_action,
     run_blocking,
 )
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from home_assistant_agent.api_client import HomeAssistantApi
 from home_assistant_agent.auth import get_client
 
 __version__ = "0.34.0"
@@ -528,39 +528,13 @@ def get_mcp_instance() -> tuple[Any, ...]:
     async def health_check(request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
 
-    DEFAULT_CONFIGTOOL = to_boolean(os.getenv("CONFIGTOOL", "True"))
-    if DEFAULT_CONFIGTOOL:
-        register_config_tools(mcp)
-    DEFAULT_STATESTOOL = to_boolean(os.getenv("STATESTOOL", "True"))
-    if DEFAULT_STATESTOOL:
-        register_states_tools(mcp)
-    DEFAULT_SERVICESTOOL = to_boolean(os.getenv("SERVICESTOOL", "True"))
-    if DEFAULT_SERVICESTOOL:
-        register_services_tools(mcp)
-    DEFAULT_EVENTSTOOL = to_boolean(os.getenv("EVENTSTOOL", "True"))
-    if DEFAULT_EVENTSTOOL:
-        register_events_tools(mcp)
-    DEFAULT_HISTORYTOOL = to_boolean(os.getenv("HISTORYTOOL", "True"))
-    if DEFAULT_HISTORYTOOL:
-        register_history_tools(mcp)
-    DEFAULT_LOGBOOKTOOL = to_boolean(os.getenv("LOGBOOKTOOL", "True"))
-    if DEFAULT_LOGBOOKTOOL:
-        register_logbook_tools(mcp)
-    DEFAULT_CALENDARTOOL = to_boolean(os.getenv("CALENDARTOOL", "True"))
-    if DEFAULT_CALENDARTOOL:
-        register_calendar_tools(mcp)
-    DEFAULT_PANELSTOOL = to_boolean(os.getenv("PANELSTOOL", "True"))
-    if DEFAULT_PANELSTOOL:
-        register_panels_tools(mcp)
-    DEFAULT_VOICETOOL = to_boolean(os.getenv("VOICETOOL", "True"))
-    if DEFAULT_VOICETOOL:
-        register_voice_tools(mcp)
-    DEFAULT_ENTITIESTOOL = to_boolean(os.getenv("ENTITIESTOOL", "True"))
-    if DEFAULT_ENTITIESTOOL:
-        register_entities_tools(mcp)
-    DEFAULT_SYSTEMTOOL = to_boolean(os.getenv("SYSTEMTOOL", "True"))
-    if DEFAULT_SYSTEMTOOL:
-        register_system_tools(mcp)
+    register_tool_surface(
+        mcp,
+        client_cls=HomeAssistantApi,
+        get_client=get_client,
+        service="home-assistant-agent",
+        tools_module=sys.modules[__name__],
+    )
 
     for mw in middlewares:
         mcp.add_middleware(mw)

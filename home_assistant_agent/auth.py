@@ -1,12 +1,11 @@
 #!/usr/bin/python
-import os
-
 import urllib3
 
 from home_assistant_agent.api_client import HomeAssistantApi
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+from agent_utilities.core.config import setting
 from agent_utilities.core.exceptions import AuthError, UnauthorizedError
 
 _client = None
@@ -19,18 +18,12 @@ def get_client():
     """
     global _client
     if _client is None:
-        base_url = os.getenv("HOME_ASSISTANT_URL", "http://localhost:8123")
-        token = os.getenv("HOME_ASSISTANT_TOKEN", "")
-        verify_env = (
-            os.getenv("HOME_ASSISTANT_SSL_VERIFY")
-            or os.getenv("HOME_ASSISTANT_AGENT_VERIFY")
-            or "True"
-        )
-        verify = verify_env.lower() in (
-            "true",
-            "1",
-            "yes",
-        )
+        base_url = setting("HOME_ASSISTANT_URL", "http://localhost:8123")
+        token = setting("HOME_ASSISTANT_TOKEN", "")
+        if setting("HOME_ASSISTANT_SSL_VERIFY", None) is not None:
+            verify = setting("HOME_ASSISTANT_SSL_VERIFY", True)
+        else:
+            verify = setting("HOME_ASSISTANT_AGENT_VERIFY", True)
 
         try:
             _client = HomeAssistantApi(
