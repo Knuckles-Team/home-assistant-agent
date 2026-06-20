@@ -57,19 +57,27 @@ Detailed instructions on how to use the underlying API wrappers, extended schema
 This server utilizes dynamic Action-Routed tools to optimize token overhead and maximize IDE compatibility.
 
 ### Available MCP Tools
-| Tool Module | Toggle Env Var | Enabled by Default | Description & Nested Methods |
-|-------------|----------------|--------------------|------------------------------|
-| **Config** | `CONFIG_TOOL` | `True` | Register config tools. CONCEPT:ECO-4.0 Action-routed methods: `check_config`, `components`, `config`, `status`. |
-| **States** | `STATES_TOOL` | `True` | Register states tools. CONCEPT:ECO-4.0 Action-routed methods: `delete_state`, `get_state`, `list_states`, `update_state`. |
-| **Services** | `SERVICES_TOOL` | `True` | Register services tools. CONCEPT:ECO-4.0 Action-routed methods: `call_service`, `list_services`. |
-| **Events** | `EVENTS_TOOL` | `True` | Register events tools. CONCEPT:ECO-4.0 Action-routed methods: `fire_event`, `list_events`, `subscribe_events`. |
-| **History** | `HISTORY_TOOL` | `True` | Register history tools. CONCEPT:ECO-4.0 Action-routed methods: `get_history`. |
-| **Logbook** | `LOGBOOK_TOOL` | `True` | Register logbook tools. CONCEPT:ECO-4.0 Action-routed methods: `get_error_log`, `get_logbook`. |
-| **Calendar** | `CALENDAR_TOOL` | `True` | Register calendar tools. CONCEPT:ECO-4.0 Action-routed methods: `get_calendar_events`, `list_calendars`. |
-| **Panels** | `PANELS_TOOL` | `True` | Register panels tools. CONCEPT:ECO-4.0 Action-routed methods: `get_panels`. |
-| **Voice** | `VOICE_TOOL` | `True` | Register voice tools. CONCEPT:ECO-4.0 Action-routed methods: `expose_entities`, `list_exposed_entities`. |
-| **Entities** | `ENTITIES_TOOL` | `True` | Register entities tools. CONCEPT:ECO-4.0 Action-routed methods: `extract_from_target`, `get_conditions_for_target`, `get_entity_registry_display`, `get_services_for_target`, `get_triggers_for_target`. |
-| **System** | `SYSTEM_TOOL` | `True` | Register system tools. CONCEPT:ECO-4.0 Action-routed methods: `handle_intent`, `ping`, `render_template`, `validate_config`. |
+
+_Auto-generated from the live MCP server — do not edit by hand._
+
+<!-- MCP-TOOLS-TABLE:START -->
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `home_assistant_calendar` | `CALENDARTOOL` | Manage home assistant calendar operations. |
+| `home_assistant_config` | `CONFIGTOOL` | Manage home assistant config operations. |
+| `home_assistant_entities` | `ENTITIESTOOL` | Manage home assistant entities operations. |
+| `home_assistant_events` | `EVENTSTOOL` | Manage home assistant events operations. |
+| `home_assistant_history` | `HISTORYTOOL` | Manage home assistant history operations. |
+| `home_assistant_logbook` | `LOGBOOKTOOL` | Manage home assistant logbook operations. |
+| `home_assistant_panels` | `PANELSTOOL` | Manage home assistant panels operations. |
+| `home_assistant_services` | `SERVICESTOOL` | Manage home assistant services operations. |
+| `home_assistant_states` | `STATESTOOL` | Manage home assistant states operations. |
+| `home_assistant_system` | `SYSTEMTOOL` | Manage home assistant system operations. |
+| `home_assistant_voice` | `VOICETOOL` | Manage home assistant voice operations. |
+
+_11 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](docs/mcp.md).
 
