@@ -28,10 +28,10 @@ home-assistant-mcp = "home_assistant_agent.mcp_server:mcp_server"
 home-assistant-agent = "home_assistant_agent.agent_server:agent_server"
 
 [project.entry-points."agent_utilities.skill_providers"]
-modular-contrib = "home_assistant_agent.skills"
+home-assistant-agent = "home_assistant_agent.skills"
 
 [project.entry-points."agent_utilities.prompt_providers"]
-modular-contrib = "home_assistant_agent.prompts"
+home-assistant-agent = "home_assistant_agent.prompts"
 
 [tool.setuptools]
 include-package-data = true
