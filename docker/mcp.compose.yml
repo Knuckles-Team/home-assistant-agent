@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   home-assistant-agent-mcp:
-    image: knucklessg1/home-assistant-agent:latest
+    image: knucklessg1/home-assistant-agent:mcp
     container_name: home-assistant-agent-mcp
     hostname: home-assistant-agent-mcp
     restart: always
