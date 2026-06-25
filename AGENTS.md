@@ -88,15 +88,6 @@ home-assistant-agent
 ├── home_assistant_agent/
 │   ├── __init__.py
 │   ├── __main__.py
-│   ├── agent/
-│   │   ├── AGENTS.md
-│   │   ├── CRON.md
-│   │   ├── CRON_LOG.md
-│   │   ├── HEARTBEAT.md
-│   │   ├── IDENTITY.md
-│   │   ├── MEMORY.md
-│   │   ├── USER.md
-│   │   └── icon.png
 │   ├── api/
 │   │   ├── __init__.py
 │   │   ├── api_client_base.py

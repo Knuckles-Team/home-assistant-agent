@@ -104,6 +104,14 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
 
 ### MCP Configuration Examples
 
+> **Install the slim `[mcp]` extra.** All examples below install
+> `home-assistant-agent[mcp]` — the MCP-server extra that pulls only the FastMCP /
+> FastAPI tooling (`agent-utilities[mcp]`). It deliberately **excludes** the heavy
+> agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
+> `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
+> Use the full `[agent]` extra only when you need the integrated Pydantic AI agent
+> (see [Installation](#installation)).
+
 #### stdio Transport (Recommended for local IDEs e.g., Cursor, Claude Desktop)
 Configure your IDE's `mcp.json` to launch the MCP server via `uvx`:
 
@@ -114,7 +122,7 @@ Configure your IDE's `mcp.json` to launch the MCP server via `uvx`:
       "command": "uvx",
       "args": [
         "--from",
-        "home-assistant-agent",
+        "home-assistant-agent[mcp]",
         "home-assistant-mcp"
       ],
       "env": {
@@ -137,7 +145,7 @@ Configure your client's `mcp.json` to launch the Streamable-HTTP server via `uvx
       "command": "uvx",
       "args": [
         "--from",
-        "home-assistant-agent",
+        "home-assistant-agent[mcp]",
         "home-assistant-mcp"
       ],
       "env": {
@@ -176,8 +184,15 @@ docker run -d \
   -e HOME_ASSISTANT_URL="http://localhost:8123" \
   -e HOME_ASSISTANT_TOKEN="your_token_here" \
   -e HOME_ASSISTANT_AGENT_VERIFY="True" \
-  knucklessg1/home-assistant-agent:latest
+  knucklessg1/home-assistant-agent:mcp
 ```
+
+> The `:mcp` tag is the **slim MCP-server image** (built from
+> `docker/Dockerfile --target mcp`, installing `home-assistant-agent[mcp]`). The default
+> `:latest` tag is the **full agent image** (`--target agent`, `home-assistant-agent[agent]`)
+> which also bundles the Pydantic AI agent and the epistemic-graph engine — use it
+> when you run `home-assistant-agent` (the agent), not just the MCP server. See
+> [Container images](#container-images-mcp-vs-agent).
 
 ---
 
@@ -221,7 +236,7 @@ version: '3.8'
 
 services:
   home-assistant-agent-mcp:
-    image: knucklessg1/home-assistant-agent:latest
+    image: knucklessg1/home-assistant-agent:mcp
     container_name: home-assistant-agent-mcp
     hostname: home-assistant-agent-mcp
     restart: always
@@ -285,29 +300,57 @@ Detailed graph node architecture explanations, custom skill configurations, and 
 
 ---
 
-## Configuration & Environment Variables
+## Environment Variables
 
-The Home Assistant Agent supports **17 environment variables** to fine-tune the client wrapper, agent configuration, and modular tools toggles.
+Every variable the server reads, grouped by purpose.
 
-| # | Environment Variable | Default | Description |
-|---|----------------------|---------|-------------|
-| 1 | `HOME_ASSISTANT_URL` | `http://localhost:8123` | Base URL of the Home Assistant instance |
-| 2 | `HOME_ASSISTANT_TOKEN` | *None* | Long-Lived Access Token generated in Home Assistant |
-| 3 | `HOME_ASSISTANT_AGENT_VERIFY` | `True` | Toggle SSL certificate verification (True/False) |
-| 4 | `DEFAULT_AGENT_NAME` | `HomeAssistantAgent` | Default name/display identifier for the agent |
-| 5 | `AGENT_DESCRIPTION` | *Multi-line* | Description of the agent's smart home duties |
-| 6 | `AGENT_SYSTEM_PROMPT` | *Multi-line* | Core Pydantic AI system prompt for agent instructions |
-| 7 | `CONFIGTOOL` | `True` | Toggle Config management tool (`True`/`False`) |
-| 8 | `STATESTOOL` | `True` | Toggle State inspection tool (`True`/`False`) |
-| 9 | `SERVICESTOOL` | `True` | Toggle Service execution tool (`True`/`False`) |
-| 10 | `EVENTSTOOL` | `True` | Toggle Event monitoring tool (`True`/`False`) |
-| 11 | `HISTORYTOOL` | `True` | Toggle State history tool (`True`/`False`) |
-| 12 | `LOGBOOKTOOL` | `True` | Toggle Logbook & error log tool (`True`/`False`) |
-| 13 | `CALENDARTOOL` | `True` | Toggle Calendar scheduling tool (`True`/`False`) |
-| 14 | `PANELSTOOL` | `True` | Toggle HA custom panels tool (`True`/`False`) |
-| 15 | `VOICETOOL` | `True` | Toggle Voice & entity exposition tool (`True`/`False`) |
-| 16 | `ENTITIESTOOL` | `True` | Toggle Entity registry lookup tool (`True`/`False`) |
-| 17 | `SYSTEMTOOL` | `True` | Toggle Template & health systems tool (`True`/`False`) |
+### Connection & Credentials (Home Assistant)
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `HOME_ASSISTANT_URL` | Base URL of the Home Assistant instance | `http://localhost:8123` |
+| `HOME_ASSISTANT_TOKEN` | Long-Lived Access Token generated in Home Assistant | — |
+| `HOME_ASSISTANT_AGENT_VERIFY` | Toggle SSL certificate verification (`True`/`False`) | `True` |
+
+### MCP server / transport
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `TRANSPORT` | `stdio`, `streamable-http`, or `sse` | `stdio` |
+| `HOST` | Bind host (HTTP transports) | `0.0.0.0` |
+| `PORT` | Bind port (HTTP transports) | `8000` |
+| `MCP_TOOL_MODE` | Tool surface: `condensed`, `verbose`, or `both` | `condensed` |
+| `MCP_ENABLED_TOOLS` / `MCP_DISABLED_TOOLS` | Comma-separated tool allow/deny list | — |
+| `MCP_ENABLED_TAGS` / `MCP_DISABLED_TAGS` | Comma-separated tag allow/deny list | — |
+| `PYTHONUNBUFFERED` | Unbuffered stdout (recommended in containers) | `1` |
+
+### Agent runtime (full `[agent]` runtime only)
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DEFAULT_AGENT_NAME` | Default name/display identifier for the agent | `HomeAssistantAgent` |
+| `AGENT_DESCRIPTION` | Description of the agent's smart home duties | built-in |
+| `AGENT_SYSTEM_PROMPT` | Core Pydantic AI system prompt | built-in |
+| `MCP_URL` | URL of the MCP server the agent connects to | `http://localhost:8000/mcp` |
+| `PROVIDER` | LLM provider (e.g. `openai`) | `openai` |
+| `MODEL_ID` | Model id (e.g. `gpt-4o`) | `gpt-4o` |
+| `ENABLE_WEB_UI` | Serve the AG-UI web interface | `True` |
+
+### Telemetry & governance
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ENABLE_OTEL` | Enable OpenTelemetry export | `True` |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP collector endpoint | — |
+| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` / `OTEL_EXPORTER_OTLP_SECRET_KEY` | OTLP auth keys | — |
+| `OTEL_EXPORTER_OTLP_PROTOCOL` | OTLP protocol (e.g. `http/protobuf`) | — |
+| `EUNOMIA_TYPE` | Authorization mode: `none`, `embedded`, `remote` | `none` |
+| `EUNOMIA_POLICY_FILE` | Embedded policy file | `mcp_policies.json` |
+| `EUNOMIA_REMOTE_URL` | Remote Eunomia server URL | — |
+
+### Tool toggles
+Each action-routed tool can be disabled individually via its toggle env var (set to `false`):
+`CONFIGTOOL`, `STATESTOOL`, `SERVICESTOOL`, `EVENTSTOOL`, `HISTORYTOOL`, `LOGBOOKTOOL`,
+`CALENDARTOOL`, `PANELSTOOL`, `VOICETOOL`, `ENTITIESTOOL`, `SYSTEMTOOL`. The full list is in
+the [Available MCP Tools](#available-mcp-tools) table above.
+
+See [`.env.example`](.env.example) for a copy-paste starting point.
 
 ---
 
@@ -331,15 +374,51 @@ Built directly upon the enterprise-ready [`agent-utilities`](https://github.com/
 
 ## Installation
 
-Install the Python package locally:
+Pick the extra that matches what you want to run:
+
+| Extra | Installs | Use when |
+|-------|----------|----------|
+| `home-assistant-agent[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | You only run the **MCP server** (smallest install / image) |
+| `home-assistant-agent[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | You run the **integrated agent** |
+| `home-assistant-agent[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
-# Using uv (highly recommended)
-uv pip install home-assistant-agent[all]
+# MCP server only (recommended for tool hosting — slim deps)
+uv pip install "home-assistant-agent[mcp]"
 
-# Using standard pip
-python -m pip install home-assistant-agent[all]
+# Full agent runtime (Pydantic AI + epistemic-graph engine)
+uv pip install "home-assistant-agent[agent]"
+
+# Everything (development)
+uv pip install "home-assistant-agent[all]"      # or: python -m pip install "home-assistant-agent[all]"
 ```
+
+### Container images (`:mcp` vs `:agent`)
+
+One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+
+| Image tag | Build target | Contents | Entrypoint |
+|-----------|--------------|----------|------------|
+| `knucklessg1/home-assistant-agent:mcp` | `--target mcp` | `home-assistant-agent[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `home-assistant-mcp` |
+| `knucklessg1/home-assistant-agent:latest` | `--target agent` (default) | `home-assistant-agent[agent]` — **full** agent runtime + epistemic-graph engine | `home-assistant-agent` |
+
+```bash
+docker build --target mcp   -t knucklessg1/home-assistant-agent:mcp    docker/   # slim MCP server
+docker build --target agent -t knucklessg1/home-assistant-agent:latest docker/   # full agent
+```
+
+`docker/mcp.compose.yml` runs the slim `:mcp` server; `docker/agent.compose.yml` runs the
+agent (`:latest`) with a co-located `:mcp` sidecar.
+
+### Knowledge-graph database (`epistemic-graph`)
+
+The **full agent** (`[agent]` / `:latest`) embeds the **epistemic-graph** engine (pulled in
+transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
+across multiple agents — run **epistemic-graph as its own database container** and point the
+agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
+config, and the full database architecture (with diagrams) are documented in the
+[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+The slim `[mcp]` server does **not** require the database.
 
 ---
 
