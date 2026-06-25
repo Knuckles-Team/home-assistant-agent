@@ -302,6 +302,61 @@ Detailed graph node architecture explanations, custom skill configurations, and 
 
 ## Environment Variables
 
+<!-- ENV-VARS-TABLE:START -->
+
+#### Package environment variables
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `HOME_ASSISTANT_URL` | `http://localhost:8123` | 1. HOME_ASSISTANT_URL: The base URL of your Home Assistant instance. |
+| `HOME_ASSISTANT_TOKEN` | `your_long_lived_access_token_here` | 2. HOME_ASSISTANT_TOKEN: Long-Lived Access Token generated from Home Assistant profile. |
+| `HOME_ASSISTANT_AGENT_VERIFY` | `True` | 3. HOME_ASSISTANT_AGENT_VERIFY: Toggle SSL certificate verification (True/False). |
+| `DEFAULT_AGENT_NAME` | `HomeAssistantAgent` | 4. DEFAULT_AGENT_NAME: The default name/display identifier for this agent. |
+| `AGENT_DESCRIPTION` | `Expert assistant for interacting with and managing Home Assistant smart home devices.` | 5. AGENT_DESCRIPTION: Brief description of the agent's responsibilities. |
+| `AGENT_SYSTEM_PROMPT` | `You are a helpful, secure home automation AI assistant. You can control home assistant lights, switches, media players, calendars, and query historical data.` | 6. AGENT_SYSTEM_PROMPT: Core system prompt directing the agent's behavior and traits. |
+| `CONFIGTOOL` | `True` | 7. CONFIGTOOL: Enable config management tool. |
+| `STATESTOOL` | `True` | 8. STATESTOOL: Enable state inspection and modification tool. |
+| `SERVICESTOOL` | `True` | 9. SERVICESTOOL: Enable service call tool. |
+| `EVENTSTOOL` | `True` | 10. EVENTSTOOL: Enable event monitoring and subscription tool. |
+| `HISTORYTOOL` | `True` | 11. HISTORYTOOL: Enable historical state query tool. |
+| `LOGBOOKTOOL` | `True` | 12. LOGBOOKTOOL: Enable logbook and error log query tool. |
+| `CALENDARTOOL` | `True` | 13. CALENDARTOOL: Enable calendar schedule querying tool. |
+| `PANELSTOOL` | `True` | 14. PANELSTOOL: Enable HA custom panels list tool. |
+| `VOICETOOL` | `True` | 15. VOICETOOL: Enable voice entity exposition and settings tool. |
+| `ENTITIESTOOL` | `True` | 16. ENTITIESTOOL: Enable entity registry lookup and display tool. |
+| `SYSTEMTOOL` | `True` | 17. SYSTEMTOOL: Enable templates, intents, and system health tools. |
+| `HOST` | `0.0.0.0` |  |
+| `PORT` | `8000` |  |
+| `TRANSPORT` | `stdio` | Options: stdio, streamable-http, sse |
+| `ENABLE_OTEL` | `True` |  |
+| `EUNOMIA_TYPE` | `none` | Options: none, embedded, remote |
+| `EUNOMIA_POLICY_FILE` | `mcp_policies.json` |  |
+
+#### Inherited agent-utilities variables (apply to every connector)
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `MCP_TOOL_MODE` | `condensed` | Tool surface: `condensed` | `verbose` | `both` |
+| `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
+| `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
+| `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
+| `MCP_DISABLED_TAGS` | — | Comma-separated tag deny-list |
+| `EUNOMIA_REMOTE_URL` | — | Remote Eunomia authorization server URL |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | — | OTLP collector endpoint |
+| `MCP_CLIENT_AUTH` | — | Outbound MCP auth (`oidc-client-credentials` for fleet calls) |
+| `OIDC_CLIENT_ID` | — | OIDC client id (service-account auth) |
+| `OIDC_CLIENT_SECRET` | — | OIDC client secret (service-account auth) |
+| `DEBUG` | `False` | Verbose logging |
+| `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
+| `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
+| `PROVIDER` | `openai` | LLM provider for the agent |
+| `MODEL_ID` | `gpt-4o` | Model id for the agent |
+| `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
+
+_23 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+<!-- ENV-VARS-TABLE:END -->
+
+
 Every variable the server reads, grouped by purpose.
 
 ### Connection & Credentials (Home Assistant)
