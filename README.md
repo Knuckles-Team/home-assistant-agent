@@ -62,10 +62,11 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 <!-- MCP-TOOLS-TABLE:START -->
 
+#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
 | `home_assistant_calendar` | `CALENDARTOOL` | Manage home assistant calendar operations. |
-| `home_assistant_config` | `CONFIGTOOL` | Manage home assistant config operations. |
 | `home_assistant_entities` | `ENTITIESTOOL` | Manage home assistant entities operations. |
 | `home_assistant_events` | `EVENTSTOOL` | Manage home assistant events operations. |
 | `home_assistant_history` | `HISTORYTOOL` | Manage home assistant history operations. |
@@ -76,7 +77,59 @@ _Auto-generated from the live MCP server — do not edit by hand._
 | `home_assistant_system` | `SYSTEMTOOL` | Manage home assistant system operations. |
 | `home_assistant_voice` | `VOICETOOL` | Manage home assistant voice operations. |
 
-_11 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+#### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
+
+<details>
+<summary>42 per-operation tools — one per public API method (click to expand)</summary>
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `home_assistant_call_service` | `APITOOL` | Invoke the call_service operation. |
+| `home_assistant_check_config` | `APITOOL` | Invoke the check_config operation. |
+| `home_assistant_components` | `APITOOL` | Invoke the components operation. |
+| `home_assistant_config` | `CONFIGTOOL` | Invoke the config operation. |
+| `home_assistant_delete_state` | `APITOOL` | Invoke the delete_state operation. |
+| `home_assistant_expose_entities` | `APITOOL` | Invoke the expose_entities operation. |
+| `home_assistant_expose_or_unexpose_entities` | `APITOOL` | Invoke the expose_or_unexpose_entities operation. |
+| `home_assistant_extract_from_target` | `APITOOL` | Invoke the extract_from_target operation. |
+| `home_assistant_fire_event` | `APITOOL` | Invoke the fire_event operation. |
+| `home_assistant_get_api_status` | `BASE_API_CLIENTTOOL` | Invoke the get_api_status operation. |
+| `home_assistant_get_calendar_events` | `APITOOL` | Invoke the get_calendar_events operation. |
+| `home_assistant_get_calendars` | `APITOOL` | Invoke the get_calendars operation. |
+| `home_assistant_get_camera_proxy` | `APITOOL` | Invoke the get_camera_proxy operation. |
+| `home_assistant_get_components` | `APITOOL` | Invoke the get_components operation. |
+| `home_assistant_get_conditions_for_target` | `APITOOL` | Invoke the get_conditions_for_target operation. |
+| `home_assistant_get_config` | `APITOOL` | Invoke the get_config operation. |
+| `home_assistant_get_entity_registry_display` | `APITOOL` | Invoke the get_entity_registry_display operation. |
+| `home_assistant_get_entity_registry_list_for_display` | `APITOOL` | Invoke the get_entity_registry_list_for_display operation. |
+| `home_assistant_get_error_log` | `APITOOL` | Invoke the get_error_log operation. |
+| `home_assistant_get_events` | `APITOOL` | Invoke the get_events operation. |
+| `home_assistant_get_history` | `APITOOL` | Invoke the get_history operation. |
+| `home_assistant_get_logbook` | `APITOOL` | Invoke the get_logbook operation. |
+| `home_assistant_get_panels` | `APITOOL` | Invoke the get_panels operation. |
+| `home_assistant_get_services` | `APITOOL` | Invoke the get_services operation. |
+| `home_assistant_get_services_for_target` | `APITOOL` | Invoke the get_services_for_target operation. |
+| `home_assistant_get_state` | `APITOOL` | Invoke the get_state operation. |
+| `home_assistant_get_states` | `APITOOL` | Invoke the get_states operation. |
+| `home_assistant_get_triggers_for_target` | `APITOOL` | Invoke the get_triggers_for_target operation. |
+| `home_assistant_handle_intent` | `APITOOL` | Invoke the handle_intent operation. |
+| `home_assistant_list_calendars` | `APITOOL` | Invoke the list_calendars operation. |
+| `home_assistant_list_events` | `APITOOL` | Invoke the list_events operation. |
+| `home_assistant_list_exposed_entities` | `APITOOL` | Invoke the list_exposed_entities operation. |
+| `home_assistant_list_services` | `APITOOL` | Invoke the list_services operation. |
+| `home_assistant_list_states` | `APITOOL` | Invoke the list_states operation. |
+| `home_assistant_ping` | `APITOOL` | Invoke the ping operation. |
+| `home_assistant_render_template` | `APITOOL` | Invoke the render_template operation. |
+| `home_assistant_status` | `APITOOL` | Invoke the status operation. |
+| `home_assistant_subscribe_events` | `APITOOL` | Invoke the subscribe_events operation. |
+| `home_assistant_subscribe_trigger` | `APITOOL` | Invoke the subscribe_trigger operation. |
+| `home_assistant_unsubscribe_events` | `APITOOL` | Invoke the unsubscribe_events operation. |
+| `home_assistant_update_state` | `APITOOL` | Invoke the update_state operation. |
+| `home_assistant_validate_config` | `APITOOL` | Invoke the validate_config operation. |
+
+</details>
+
+_10 action-routed tool(s) (default) · 42 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](docs/mcp.md).
@@ -311,6 +364,7 @@ Detailed graph node architecture explanations, custom skill configurations, and 
 | `HOME_ASSISTANT_URL` | `http://localhost:8123` | 1. HOME_ASSISTANT_URL: The base URL of your Home Assistant instance. |
 | `HOME_ASSISTANT_TOKEN` | `your_long_lived_access_token_here` | 2. HOME_ASSISTANT_TOKEN: Long-Lived Access Token generated from Home Assistant profile. |
 | `HOME_ASSISTANT_AGENT_VERIFY` | `True` | 3. HOME_ASSISTANT_AGENT_VERIFY: Toggle SSL certificate verification (True/False). |
+| `HOME_ASSISTANT_SSL_VERIFY` | `True` | 3b. HOME_ASSISTANT_SSL_VERIFY: Preferred SSL verification toggle; overrides HOME_ASSISTANT_AGENT_VERIFY when set (True/False). |
 | `DEFAULT_AGENT_NAME` | `HomeAssistantAgent` | 4. DEFAULT_AGENT_NAME: The default name/display identifier for this agent. |
 | `AGENT_DESCRIPTION` | `Expert assistant for interacting with and managing Home Assistant smart home devices.` | 5. AGENT_DESCRIPTION: Brief description of the agent's responsibilities. |
 | `AGENT_SYSTEM_PROMPT` | `You are a helpful, secure home automation AI assistant. You can control home assistant lights, switches, media players, calendars, and query historical data.` | 6. AGENT_SYSTEM_PROMPT: Core system prompt directing the agent's behavior and traits. |
@@ -353,7 +407,7 @@ Detailed graph node architecture explanations, custom skill configurations, and 
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_23 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_24 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
