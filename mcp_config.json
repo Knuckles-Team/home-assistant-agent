@@ -8,12 +8,20 @@
       ],
       "env": {
         "MCP_TOOL_MODE": "condensed",
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
-        "HOME_ASSISTANT_AGENT_VERIFY": "<YOUR_HOME_ASSISTANT_AGENT_VERIFY>",
-        "HOME_ASSISTANT_TOKEN": "<YOUR_HOME_ASSISTANT_TOKEN>",
-        "HOME_ASSISTANT_URL": "<YOUR_HOME_ASSISTANT_URL>"
+        "CALENDARTOOL": "True",
+        "CONFIGTOOL": "True",
+        "ENTITIESTOOL": "True",
+        "EVENTSTOOL": "True",
+        "HISTORYTOOL": "True",
+        "HOME_ASSISTANT_AGENT_VERIFY": "True",
+        "HOME_ASSISTANT_TOKEN": "your_long_lived_access_token_here",
+        "HOME_ASSISTANT_URL": "http://localhost:8123",
+        "LOGBOOKTOOL": "True",
+        "PANELSTOOL": "True",
+        "SERVICESTOOL": "True",
+        "STATESTOOL": "True",
+        "SYSTEMTOOL": "True",
+        "VOICETOOL": "True"
       }
     }
   }
