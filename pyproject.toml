@@ -31,6 +31,12 @@ home-assistant-agent = "home_assistant_agent.agent_server:agent_server"
 [project.entry-points."agent_utilities.skill_providers"]
 home-assistant-agent = "home_assistant_agent.skills"
 
+[project.entry-points."agent_utilities.ontology_providers"]
+home-assistant-agent = "home_assistant_agent.ontology"
+
+[project.entry-points."agent_utilities.source_connector_providers"]
+home-assistant-agent = "home_assistant_agent.connectors"
+
 [project.entry-points."agent_utilities.prompt_providers"]
 home-assistant-agent = "home_assistant_agent.prompts"
 
@@ -52,7 +58,7 @@ dev = [
 ]
 
 [tool.setuptools.package-data]
-home_assistant_agent = [ "mcp_config.json", "skills/**", "prompts/**",]
+home_assistant_agent = [ "mcp_config.json", "skills/**", "prompts/**", "ontology/**", "connectors/**",]
 
 [tool.ruff.lint]
 select = [ "E", "F", "I", "UP", "B",]
