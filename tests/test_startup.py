@@ -1,7 +1,7 @@
 def test_server_startup():
     """Validates that the server module can start successfully.
 
-    CONCEPT:OS-5.0
+    CONCEPT:AU-OS.safety.doom-loop-detection
     """
     # If this is not an agent, just pass
     import os

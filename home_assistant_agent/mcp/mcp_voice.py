@@ -14,7 +14,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_voice_tools(mcp: FastMCP):
-    """Register voice tools. CONCEPT:ECO-4.0"""
+    """Register voice tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"voice"})
     async def home_assistant_voice(
@@ -31,7 +31,7 @@ def register_voice_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant voice operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")

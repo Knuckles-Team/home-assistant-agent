@@ -14,7 +14,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_history_tools(mcp: FastMCP):
-    """Register history tools. CONCEPT:ECO-4.0"""
+    """Register history tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"history"})
     async def home_assistant_history(
@@ -31,7 +31,7 @@ def register_history_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant history operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")

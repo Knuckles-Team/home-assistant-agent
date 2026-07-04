@@ -1,6 +1,6 @@
 """Tests for standardized action discovery via the shared agent-utilities helper.
 
-CONCEPT:ECO-4.0
+CONCEPT:AU-ECO.messaging.native-backend-abstraction
 """
 
 import json
@@ -14,7 +14,7 @@ from mcp.shared.exceptions import McpError
 async def test_list_actions_and_did_you_mean():
     """list_actions returns the bounded action names; a bogus action raises guidance.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 

@@ -14,7 +14,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_config_tools(mcp: FastMCP):
-    """Register config tools. CONCEPT:ECO-4.0"""
+    """Register config tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"config"})
     async def home_assistant_config(
@@ -31,7 +31,7 @@ def register_config_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant config operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")

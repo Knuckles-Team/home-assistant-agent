@@ -14,7 +14,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_events_tools(mcp: FastMCP):
-    """Register events tools. CONCEPT:ECO-4.0"""
+    """Register events tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"events"})
     async def home_assistant_events(
@@ -31,7 +31,7 @@ def register_events_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant events operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")

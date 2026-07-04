@@ -14,7 +14,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_calendar_tools(mcp: FastMCP):
-    """Register calendar tools. CONCEPT:ECO-4.0"""
+    """Register calendar tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"calendar"})
     async def home_assistant_calendar(
@@ -31,7 +31,7 @@ def register_calendar_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant calendar operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")

@@ -14,7 +14,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_services_tools(mcp: FastMCP):
-    """Register services tools. CONCEPT:ECO-4.0"""
+    """Register services tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"services"})
     async def home_assistant_services(
@@ -31,7 +31,7 @@ def register_services_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant services operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")

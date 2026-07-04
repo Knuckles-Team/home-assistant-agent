@@ -115,7 +115,7 @@ home-assistant-agent
 
 This repository aligns perfectly with the standard `agent-utilities` architecture pillars:
 
-### `CONCEPT:ECO-4.0` — Tool Interface & MCP Factory
+### `CONCEPT:AU-ECO.messaging.native-backend-abstraction` — Tool Interface & MCP Factory
 Defines all 11 action-routed MCP tools: Config, States, Services, Events, History, Logbook, Calendar, Panels, Voice, Entities, and System.
 - **Source Files:**
   - [mcp_server.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/mcp_server.py)
@@ -124,7 +124,7 @@ Defines all 11 action-routed MCP tools: Config, States, Services, Events, Histor
 - **Tests:**
   - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L285-L670)
 
-### `CONCEPT:OS-5.0` — Operating System and Agents
+### `CONCEPT:AU-OS.safety.doom-loop-detection` — Operating System and Agents
 Directs the lazy loader, entry points, and CLI runtime interface.
 - **Source Files:**
   - [__init__.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/__init__.py)
@@ -135,7 +135,7 @@ Directs the lazy loader, entry points, and CLI runtime interface.
   - [test_startup.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_startup.py)
   - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L209-L229)
 
-### `CONCEPT:OS-5.1` — Security & Auth
+### `CONCEPT:AU-OS.config.secrets-authentication` — Security & Auth
 Credentials and authentication client setup.
 - **Source Files:**
   - [auth.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/auth.py)
@@ -143,7 +143,7 @@ Credentials and authentication client setup.
 - **Tests:**
   - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L230-L263)
 
-### `CONCEPT:ORCH-1.5` — Orchestration Workflows/Agents
+### `CONCEPT:AU-ORCH.planning.legal-automation-roadmap` — Orchestration Workflows/Agents
 Pydantic AI Graph Agent configuration.
 - **Source Files:**
   - [agent_server.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
@@ -307,7 +307,7 @@ alone).
 Working in parallel with other sessions/worktrees? **Reserve a concept id before you write its `CONCEPT:` marker** so two sessions never collide:
 
 ```bash
-agent-utilities --json concept reserve --ns KG-2   # or a package prefix, e.g. KEY
+agent-utilities --json concept reserve --ns EG-KG.compute.backend   # or a package prefix, e.g. KEY
 ```
 
 Full protocol (ledger, merge=union, reconcile, MCP/REST): <https://knuckles-team.github.io/agent-utilities/concept_coordination/>

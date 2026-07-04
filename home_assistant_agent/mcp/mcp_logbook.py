@@ -14,7 +14,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_logbook_tools(mcp: FastMCP):
-    """Register logbook tools. CONCEPT:ECO-4.0"""
+    """Register logbook tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"logbook"})
     async def home_assistant_logbook(
@@ -31,7 +31,7 @@ def register_logbook_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant logbook operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")

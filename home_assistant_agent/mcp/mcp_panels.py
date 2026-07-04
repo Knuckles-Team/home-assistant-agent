@@ -14,7 +14,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_panels_tools(mcp: FastMCP):
-    """Register panels tools. CONCEPT:ECO-4.0"""
+    """Register panels tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"panels"})
     async def home_assistant_panels(
@@ -31,7 +31,7 @@ def register_panels_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant panels operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")
