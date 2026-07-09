@@ -1,5 +1,6 @@
 ---
 name: home-assistant-scene-automation
+skill_type: skill
 description: >-
   Orchestrate Home Assistant scenes, events, and automations via the
   home-assistant-agent MCP server — fire events, activate scenes/scripts through

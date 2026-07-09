@@ -1,5 +1,6 @@
 ---
 name: home-assistant-entity-control
+skill_type: skill
 description: >-
   Read and control Home Assistant entities via the home-assistant-agent MCP
   server — inspect entity state, call services to actuate devices (lights,

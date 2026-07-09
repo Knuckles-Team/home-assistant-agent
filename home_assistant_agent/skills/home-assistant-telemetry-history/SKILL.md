@@ -1,5 +1,6 @@
 ---
 name: home-assistant-telemetry-history
+skill_type: skill
 description: >-
   Analyze Home Assistant sensor telemetry and push it into the knowledge graph
   via the home-assistant-agent MCP server — read a sensor's history/period
