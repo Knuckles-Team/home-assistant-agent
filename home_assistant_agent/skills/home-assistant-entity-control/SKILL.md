@@ -5,7 +5,7 @@ description: >-
   Read and control Home Assistant entities via the home-assistant-agent MCP
   server — inspect entity state, call services to actuate devices (lights,
   switches, climate, covers, media players), and set/clear state. Use when the
-  agent must answer "what is <entity> doing?", turn something on/off, adjust a
+  agent must answer "what is an entity doing?", turn something on/off, adjust a
   thermostat/brightness/cover position, or trigger a service on a device. Do NOT
   use for long-term telemetry/history analysis (use
   home-assistant-telemetry-history) or scene/automation orchestration and
