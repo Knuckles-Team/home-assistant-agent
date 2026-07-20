@@ -5,6 +5,8 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
+from agent_utilities.mcp.action_dispatch import resolve_action
+from agent_utilities.mcp.concurrency import run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -13,7 +15,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_events_tools(mcp: FastMCP):
-    """Register events tools. CONCEPT:ECO-4.0"""
+    """Register events tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"events"})
     async def home_assistant_events(
@@ -30,7 +32,7 @@ def register_events_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant events operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")
@@ -39,14 +41,20 @@ def register_events_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {"error": f"Invalid params_json: {e}"}
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
+        valid_actions = ["list_events", "fire_event", "subscribe_events"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
+
         if action == "list_events":
-            return client.list_events(**kwargs)
+            return await run_blocking(client.list_events, **kwargs)
         if action == "fire_event":
-            return client.fire_event(**kwargs)
+            return await run_blocking(client.fire_event, **kwargs)
         if action == "subscribe_events":
-            return client.subscribe_events(**kwargs)
+            return await run_blocking(client.subscribe_events, **kwargs)
         raise ValueError(f"Unknown action: {action}")

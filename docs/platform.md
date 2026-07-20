@@ -20,7 +20,7 @@ stack runs one instance on `:8123` with a persistent configuration volume:
 # docker/home-assistant.compose.yml
 services:
   homeassistant:
-    image: docker.io/homeassistant/home-assistant:latest
+    image: docker.io/homeassistant/home-assistant@sha256:<digest>
     container_name: homeassistant
     hostname: homeassistant
     restart: always
@@ -53,7 +53,7 @@ and point the connector at the instance:
 ```bash
 export HOME_ASSISTANT_URL=http://localhost:8123
 export HOME_ASSISTANT_TOKEN=your_long_lived_access_token
-export HOME_ASSISTANT_AGENT_VERIFY=False          # plain HTTP local instance
+# Configure a named AgentConfig TLS profile for private PKI; verification is mandatory.
 
 home-assistant-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ```
@@ -67,7 +67,7 @@ the server reaches Home Assistant by container name:
 # docker/stack.compose.yml
 services:
   homeassistant:
-    image: docker.io/homeassistant/home-assistant:latest
+    image: docker.io/homeassistant/home-assistant@sha256:<digest>
     hostname: homeassistant
     privileged: true
     volumes:
@@ -75,12 +75,11 @@ services:
     ports: ["8123:8123"]
 
   home-assistant-agent-mcp:
-    image: knucklessg1/home-assistant-agent:latest
+    image: example/home-assistant-agent@sha256:<digest>
     depends_on: [homeassistant]
     environment:
       - HOME_ASSISTANT_URL=http://homeassistant:8123
       - HOME_ASSISTANT_TOKEN=your_long_lived_access_token
-      - HOME_ASSISTANT_AGENT_VERIFY=False
       - TRANSPORT=streamable-http
       - HOST=0.0.0.0
       - PORT=8000

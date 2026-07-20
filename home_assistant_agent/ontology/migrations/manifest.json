@@ -1,0 +1,6 @@
+{
+  "connector": "home-assistant-agent",
+  "current_ontology_source": "homeassistant",
+  "migrations": [],
+  "schema_version": "1"
+}

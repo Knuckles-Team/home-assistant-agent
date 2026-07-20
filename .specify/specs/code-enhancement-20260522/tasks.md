@@ -59,5 +59,5 @@ Skipped informational: 6
   - Priority: P2-Medium | Effort: Medium
 - [ ] [P] **T028** [Environment Variables] Undocumented env vars: AUTH_TYPE, CALENDARTOOL, CONFIGTOOL, ENTITIESTOOL, EUNOMI
   - Priority: P2-Medium | Effort: Medium
-- [ ] [P] **T029** [Environment Variables] 3 Python env vars not in .env.example: HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTA
+- [ ] [P] **T029** [Environment Variables] 3 Python env vars not in .env.example: TLS_PROFILE, HOME_ASSISTA
   - Priority: P2-Medium | Effort: Medium

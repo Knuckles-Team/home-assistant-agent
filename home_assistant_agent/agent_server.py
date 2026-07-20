@@ -4,7 +4,7 @@ import os
 import sys
 import warnings
 
-__version__ = "0.29.0"
+__version__ = "1.0.2"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -22,8 +22,8 @@ DEFAULT_AGENT_SYSTEM_PROMPT = None
 def agent_server():
     """Start the Home Assistant Agent Server.
 
-    CONCEPT:OS-5.0
-    CONCEPT:ORCH-1.5
+    CONCEPT:AU-OS.safety.doom-loop-detection
+    CONCEPT:AU-ORCH.planning.legal-automation-roadmap
     """
     from agent_utilities import (
         build_system_prompt_from_workspace,

@@ -1,0 +1,8 @@
+{
+  "algorithm": "agent-utilities:mcp-tool-schema-compat:v1",
+  "connector": "home-assistant-agent",
+  "schema_version": "1",
+  "tools": {
+    "home_assistant_states": "51b7be8e26d9ef60091d57fdea46e78effd16d13c4fa828e95c4d2cc8ca402c5"
+  }
+}

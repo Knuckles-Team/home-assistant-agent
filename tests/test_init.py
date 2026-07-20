@@ -6,7 +6,7 @@ from home_assistant_agent.mcp_server import get_mcp_instance
 def test_mcp_instance_creation():
     """Test that the MCP instance can be created successfully.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     mcp, args, middlewares = get_mcp_instance()
     assert isinstance(mcp, FastMCP)
@@ -16,7 +16,7 @@ def test_mcp_instance_creation():
 def test_import_home_assistant_agent():
     """Test that the package can be imported.
 
-    CONCEPT:OS-5.0
+    CONCEPT:AU-OS.safety.doom-loop-detection
     """
     import home_assistant_agent
 

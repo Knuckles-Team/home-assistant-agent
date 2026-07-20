@@ -353,7 +353,7 @@
   {
     "id": "T028",
     "title": "[Environment Variables] Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST, ",
-    "description": "Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, HOME_ASSISTANT_SSL_VERIFY, OTEL_EXPORTER_OTLP_ENDPOINT",
+    "description": "Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, TLS_PROFILE_REF, OTEL_EXPORTER_OTLP_ENDPOINT",
     "domain": "Environment Variables",
     "priority": "P4-Enhancement",
     "effort": "Medium",
@@ -365,8 +365,8 @@
   },
   {
     "id": "T029",
-    "title": "[Environment Variables] 1 Python env vars not in .env.example: HOME_ASSISTANT_SSL_VERIFY",
-    "description": "1 Python env vars not in .env.example: HOME_ASSISTANT_SSL_VERIFY",
+    "title": "[Environment Variables] 1 Python env vars not in .env.example: TLS_PROFILE_REF",
+    "description": "1 Python env vars not in .env.example: TLS_PROFILE_REF",
     "domain": "Environment Variables",
     "priority": "P4-Enhancement",
     "effort": "Medium",

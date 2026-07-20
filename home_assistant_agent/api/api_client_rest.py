@@ -1,6 +1,6 @@
 from typing import Any
 
-from agent_utilities.api_utilities import require_auth
+from agent_utilities.core.decorators import require_auth
 from agent_utilities.core.exceptions import ParameterError
 
 from home_assistant_agent.api.api_client_base import BaseApiClient

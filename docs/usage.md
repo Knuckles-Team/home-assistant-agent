@@ -41,7 +41,6 @@ from home_assistant_agent.api_client import HomeAssistantApi
 api = HomeAssistantApi(
     base_url="http://your-home-assistant:8123",
     token="your_long_lived_access_token",
-    verify=True,
 )
 
 # Reads

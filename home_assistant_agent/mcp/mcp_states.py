@@ -5,6 +5,8 @@ Auto-generated from mcp_server.py during ecosystem standardization.
 
 from typing import Any
 
+from agent_utilities.mcp.action_dispatch import resolve_action
+from agent_utilities.mcp.concurrency import run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -13,7 +15,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_states_tools(mcp: FastMCP):
-    """Register states tools. CONCEPT:ECO-4.0"""
+    """Register states tools. CONCEPT:AU-ECO.messaging.native-backend-abstraction"""
 
     @mcp.tool(tags={"states"})
     async def home_assistant_states(
@@ -30,7 +32,7 @@ def register_states_tools(mcp: FastMCP):
     ) -> Any:
         """Manage home assistant states operations.
 
-        CONCEPT:ECO-4.0
+        CONCEPT:AU-ECO.messaging.native-backend-abstraction
         """
         if ctx:
             await ctx.info("Executing tool...")
@@ -39,16 +41,22 @@ def register_states_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {"error": f"Invalid params_json: {e}"}
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
+        valid_actions = ["list_states", "get_state", "update_state", "delete_state"]
+        resolved = resolve_action(action, valid_actions, service="home-assistant-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
+
         if action == "list_states":
-            return client.list_states(**kwargs)
+            return await run_blocking(client.list_states, **kwargs)
         if action == "get_state":
-            return client.get_state(**kwargs)
+            return await run_blocking(client.get_state, **kwargs)
         if action == "update_state":
-            return client.update_state(**kwargs)
+            return await run_blocking(client.update_state, **kwargs)
         if action == "delete_state":
-            return client.delete_state(**kwargs)
+            return await run_blocking(client.delete_state, **kwargs)
         raise ValueError(f"Unknown action: {action}")

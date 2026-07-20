@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 # Patch LadybugBackend to use ":memory:" database to prevent graph DB locking / race conditions
 try:
-    from agent_utilities.knowledge_graph.backends.ladybug_backend import LadybugBackend
+    from agent_utilities.knowledge_graph.backends import LadybugBackend
 
     original_ladybug_init = LadybugBackend.__init__
 
@@ -209,7 +209,7 @@ def mock_connect():
 def test_init_coverage():
     """Test package initializer coverage.
 
-    CONCEPT:OS-5.0
+    CONCEPT:AU-OS.safety.doom-loop-detection
     """
     import home_assistant_agent
     from home_assistant_agent import _import_module_safely
@@ -234,7 +234,7 @@ def test_init_coverage():
 def test_auth_coverage(mock_session):
     """Test auth configuration and client creation.
 
-    CONCEPT:OS-5.1
+    CONCEPT:AU-OS.config.secrets-authentication
     """
     import home_assistant_agent.auth as auth
     from home_assistant_agent.auth import get_client
@@ -272,8 +272,8 @@ def test_auth_coverage(mock_session):
 def test_agent_server_cli():
     """Test agent server CLI options.
 
-    CONCEPT:OS-5.0
-    CONCEPT:ORCH-1.5
+    CONCEPT:AU-OS.safety.doom-loop-detection
+    CONCEPT:AU-ORCH.planning.legal-automation-roadmap
     """
     from home_assistant_agent.agent_server import agent_server
 
@@ -298,7 +298,7 @@ def test_agent_server_cli():
 def test_api_unauthorized(mock_session):
     """Test API client unauthorized error handling.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from agent_utilities.core.exceptions import UnauthorizedError
 
@@ -316,7 +316,7 @@ def test_api_unauthorized(mock_session):
 def test_api_get_state_not_found(mock_session):
     """Test API client state not found error handling.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from agent_utilities.core.exceptions import ParameterError
 
@@ -338,7 +338,7 @@ def test_api_get_state_not_found(mock_session):
 def test_ws_call_errors(mock_connect, mock_session):
     """Test WS connection errors and exceptions.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from agent_utilities.core.exceptions import ApiError
     from websockets.exceptions import ConnectionClosed
@@ -357,7 +357,7 @@ def test_ws_call_errors(mock_connect, mock_session):
     mock_connect.side_effect = Exception("General error")
     with pytest.raises(ApiError) as exc:
         client.ping()
-    assert "WS Error: General error" in str(exc.value)
+    assert "WS Error: Exception" in str(exc.value)
 
     # 3. Bad greeting
     mock_socket = MockWebSocket(responses=['{"type": "bad_greeting"}'])
@@ -365,7 +365,7 @@ def test_ws_call_errors(mock_connect, mock_session):
     mock_connect.return_value = mock_socket
     with pytest.raises(ApiError) as exc:
         client.ping()
-    assert "Unexpected WS greeting" in str(exc.value)
+    assert "WS Error: ApiError" in str(exc.value)
 
     # 4. Auth failed
     mock_socket = MockWebSocket(
@@ -378,7 +378,7 @@ def test_ws_call_errors(mock_connect, mock_session):
     mock_connect.return_value = mock_socket
     with pytest.raises(ApiError) as exc:
         client.ping()
-    assert "WS Error: WS Auth failed" in str(exc.value)
+    assert "WS Error: UnauthorizedError" in str(exc.value)
 
     # 5. Command failed
     mock_socket = MockWebSocket(
@@ -392,13 +392,13 @@ def test_ws_call_errors(mock_connect, mock_session):
     mock_connect.return_value = mock_socket
     with pytest.raises(ApiError) as exc:
         client.ping()
-    assert "WS Command failed" in str(exc.value)
+    assert "WS Error: ApiError" in str(exc.value)
 
 
 def test_api_client_brute_force(mock_session, mock_connect):
     """Brute force test all REST and WebSocket API client methods.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from home_assistant_agent.api_client import HomeAssistantApi
 
@@ -485,14 +485,14 @@ def test_api_client_brute_force(mock_session, mock_connect):
         try:
             method(**kwargs)
         except Exception as e:
-            print(f"Introspection call failed for {name}: {e}")
+            print(f"Operation failed: {type(e).__name__}")
 
 
 @pytest.mark.asyncio
 async def test_mcp_server_tools(mock_session, mock_connect):
     """Test all registered MCP tools for valid actions.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 
@@ -643,7 +643,7 @@ async def test_mcp_server_tools(mock_session, mock_connect):
 def test_mcp_server_cli():
     """Test the MCP server CLI parser and transports.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from home_assistant_agent.mcp_server import mcp_server
 
@@ -683,7 +683,7 @@ def test_mcp_server_cli():
 def test_init_eager_and_unavailable_coverage():
     """Test package initializer eager import and unavailable states.
 
-    CONCEPT:OS-5.0
+    CONCEPT:AU-OS.safety.doom-loop-detection
     """
     import home_assistant_agent
 
@@ -700,7 +700,7 @@ def test_init_eager_and_unavailable_coverage():
 def test_main_run_entrypoints():
     """Test system main runners and dynamic module execution.
 
-    CONCEPT:OS-5.0
+    CONCEPT:AU-OS.safety.doom-loop-detection
     """
     import runpy
 
@@ -725,7 +725,7 @@ def test_main_run_entrypoints():
 async def test_mcp_server_health_and_invalid_actions(mock_session, mock_connect):
     """Test health endpoints and invalid tool actions.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 
@@ -798,7 +798,7 @@ async def test_mcp_server_health_and_invalid_actions(mock_session, mock_connect)
 def test_api_client_extra_coverage(mock_session, mock_connect):
     """Test edge cases and extra coverage for API client methods.
 
-    CONCEPT:ECO-4.0
+    CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
     from home_assistant_agent.api_client import HomeAssistantApi
 

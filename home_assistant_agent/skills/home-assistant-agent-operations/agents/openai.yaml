@@ -1,0 +1,4 @@
+interface:
+  display_name: "Home Assistant Agent Operations"
+  short_description: "Help with Home Assistant Agent Operations tasks"
+  default_prompt: "Use $home-assistant-agent-operations to complete a governed provider workflow."

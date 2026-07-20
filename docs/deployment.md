@@ -1,5 +1,67 @@
 # Deployment
 
+<!-- BEGIN GENERATED: deployment-options -->
+## Deployment Options
+
+`home-assistant-agent` supports local stdio, a loopback-only development listener, a
+least-privilege stdio container, and a remote authenticated HTTPS boundary.
+Provider endpoint, credential, selector, identity, and trust material are supplied
+at runtime through `AgentConfig`; none is stored in this repository.
+
+### Installed stdio process
+
+```json
+{
+  "mcpServers": {
+    "home-assistant": {
+      "command": "home-assistant-mcp",
+      "args": [],
+      "env": {"MCP_TOOL_MODE": "intent"}
+    }
+  }
+}
+```
+
+### Loopback development listener
+
+```bash
+home-assistant-mcp --transport streamable-http --host 127.0.0.1 --port 8000
+```
+
+Do not expose this listener beyond loopback. Network deployments require direct TLS
+or an explicitly trusted TLS-terminating ingress, configured authentication, exact
+`MCP_ALLOWED_HOSTS`, and an exact trusted-proxy CIDR policy.
+
+### Least-privilege local container
+
+```bash
+docker run -i --rm \
+  --read-only \
+  --cap-drop=ALL \
+  --security-opt=no-new-privileges \
+  --pids-limit=256 \
+  --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
+  -e TRANSPORT=stdio \
+  registry.example.invalid/home-assistant-agent@sha256:<digest> home-assistant-mcp
+```
+
+The operator projects the selected AgentConfig profile into the process at runtime;
+the image remains immutable and contains no environment connection profile.
+
+### Remote authenticated HTTPS endpoint
+
+```json
+{
+  "mcpServers": {
+    "home-assistant": {"url": "https://service.example.invalid/mcp"}
+  }
+}
+```
+
+Store the real remote URL, outbound identity reference, and TLS-profile reference in
+`AgentConfig`, not in MCP client JSON or documentation.
+<!-- END GENERATED: deployment-options -->
+
 This page covers running `home-assistant-agent` as a long-lived server: the
 transports, a Docker Compose stack, the optional A2A agent server, putting it behind
 a Caddy reverse proxy, and giving it a DNS name with Technitium. To provision the
@@ -49,7 +111,7 @@ set:
 |---|---|---|
 | `HOME_ASSISTANT_URL` | `http://localhost:8123` | Home Assistant base URL |
 | `HOME_ASSISTANT_TOKEN` | _(unset)_ | Long-lived access token |
-| `HOME_ASSISTANT_AGENT_VERIFY` | `True` | Verify TLS certificates |
+| `TLS_PROFILE` / `TLS_PROFILE_REF` | _(system trust)_ | AgentConfig private-CA/mTLS profile; verification remains mandatory |
 | `HOST` | `0.0.0.0` | Bind address (HTTP transports) |
 | `PORT` | `8000` | Bind port (HTTP transports) |
 | `TRANSPORT` | `stdio` | `stdio`, `streamable-http`, or `sse` |
@@ -69,7 +131,7 @@ It reads a sibling `.env` and publishes the HTTP server on `:8000`:
 ```yaml
 services:
   home-assistant-agent-mcp:
-    image: knucklessg1/home-assistant-agent:latest
+    image: example/home-assistant-agent@sha256:<digest>
     container_name: home-assistant-agent-mcp
     hostname: home-assistant-agent-mcp
     restart: always
@@ -115,7 +177,7 @@ the MCP server by container name via `MCP_URL` and publishes the A2A server on
 ```yaml
 services:
   home-assistant-agent-mcp:
-    image: knucklessg1/home-assistant-agent:latest
+    image: example/home-assistant-agent@sha256:<digest>
     hostname: home-assistant-agent-mcp
     env_file: ["../.env"]
     environment:
@@ -125,7 +187,7 @@ services:
     ports: ["8000:8000"]
 
   home-assistant-agent-agent:
-    image: knucklessg1/home-assistant-agent:latest
+    image: example/home-assistant-agent@sha256:<digest>
     depends_on: [home-assistant-agent-mcp]
     command: ["home-assistant-agent"]
     env_file: ["../.env"]
@@ -148,8 +210,8 @@ docker compose -f docker/agent.compose.yml up -d
 Expose the HTTP server on a hostname with automatic TLS. Add to your `Caddyfile`:
 
 ```caddy
-# Internal (self-signed) — homelab .arpa zone
-home-assistant-agent.arpa {
+# Internal (self-signed) — homelab .example.invalid zone
+home-assistant-agent.example.invalid {
     tls internal
     reverse_proxy home-assistant-agent-mcp:8000
 }
@@ -173,17 +235,17 @@ docker compose -f services/caddy/compose.yml exec caddy caddy reload --config /e
 Point the hostname at the host running Caddy. Via the Technitium API:
 
 ```bash
-curl -s "http://technitium.arpa:5380/api/zones/records/add" \
+curl -s "http://technitium.example.invalid:5380/api/zones/records/add" \
   --data-urlencode "token=$TECHNITIUM_DNS_TOKEN" \
-  --data-urlencode "domain=home-assistant-agent.arpa" \
+  --data-urlencode "domain=home-assistant-agent.example.invalid" \
   --data-urlencode "zone=arpa" \
   --data-urlencode "type=A" \
-  --data-urlencode "ipAddress=10.0.0.10" \
+  --data-urlencode "ipAddress=192.0.2.10" \
   --data-urlencode "ttl=3600"
 ```
 
-…or add an **A record** `home-assistant-agent.arpa → <caddy-host-ip>` in the
-Technitium web console (`http://technitium.arpa:5380`). The ecosystem
+…or add an **A record** `home-assistant-agent.example.invalid → <caddy-host-ip>` in the
+Technitium web console (`http://technitium.example.invalid:5380`). The ecosystem
 [`technitium-dns-mcp`](https://knuckles-team.github.io/technitium-dns-mcp/) automates
 this as a tool.
 
@@ -199,13 +261,12 @@ Add to your client's `mcp_config.json`:
       "args": ["run", "home-assistant-mcp"],
       "env": {
         "HOME_ASSISTANT_URL": "http://your-home-assistant:8123",
-        "HOME_ASSISTANT_TOKEN": "your_long_lived_access_token",
-        "HOME_ASSISTANT_AGENT_VERIFY": "True"
+        "HOME_ASSISTANT_TOKEN": "your_long_lived_access_token"
       }
     }
   }
 }
 ```
 
-For a remote HTTP server, point the client at `http://home-assistant-agent.arpa/mcp`
+For a remote HTTP server, point the client at `http://home-assistant-agent.example.invalid/mcp`
 instead.

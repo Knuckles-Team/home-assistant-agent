@@ -1,0 +1,14 @@
+{
+  "_comment": "Tier-1 mcp_tool source presets for home-assistant-agent (AU-KG.ingest.mcp-tool-connector). Syncs Home Assistant entity states into the KG as entity documents via the home-assistant-agent MCP server. Contributed presets win over the central MCP_TOOL_PRESETS. Extend with history / logbook presets as needed.",
+  "homeassistant-states": {
+    "server": "home-assistant-agent",
+    "tool": "home_assistant_states",
+    "action": "list_states",
+    "records_path": "",
+    "id_field": "entity_id",
+    "title_field": "entity_id",
+    "text_field": "state",
+    "updated_field": "last_updated",
+    "doc_type": "home_entity"
+  }
+}

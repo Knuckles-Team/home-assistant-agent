@@ -59,7 +59,7 @@ Skipped informational: 6
   - Priority: P3-Low | Effort: Medium
 - [ ] [P] **T028** [Environment Variables] Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST,
   - Priority: P4-Enhancement | Effort: Medium
-- [ ] [P] **T029** [Environment Variables] 1 Python env vars not in .env.example: HOME_ASSISTANT_SSL_VERIFY
+- [ ] [P] **T029** [Environment Variables] 1 Python env vars not in .env.example: TLS_PROFILE_REF
   - Priority: P4-Enhancement | Effort: Medium
 - [ ] [P] **T030** [analyze_xdg_kg] Analysis error: No module named 'agent_utilities.knowledge_graph'
   - Priority: P1-High | Effort: Medium

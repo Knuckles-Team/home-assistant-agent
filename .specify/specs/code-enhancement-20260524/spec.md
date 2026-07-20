@@ -42,8 +42,8 @@
 - **FR-025**: No @pytest.mark.parametrize usage — consider data-driven tests
 - **FR-026**: 2 tests have no assertions
 - **FR-027**: 1 tests exceed 100 lines — likely doing too much per test
-- **FR-028**: Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, HOME_ASSISTANT_SSL_VERIFY, OTEL_EXPORTER_OTLP_ENDPOINT
-- **FR-029**: 1 Python env vars not in .env.example: HOME_ASSISTANT_SSL_VERIFY
+- **FR-028**: Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, TLS_PROFILE_REF, OTEL_EXPORTER_OTLP_ENDPOINT
+- **FR-029**: 1 Python env vars not in .env.example: TLS_PROFILE_REF
 - **FR-030**: Analysis error: No module named 'agent_utilities.knowledge_graph'
 
 ## Success Criteria

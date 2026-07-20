@@ -2,8 +2,8 @@ import os
 import re
 
 # Paths
-ROOT_DIR = "/home/apps/workspace/agent-packages/agents/home-assistant-agent"
-WORKSPACE_DIR = "/home/apps/workspace/agent-packages"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+WORKSPACE_DIR = os.path.dirname(os.path.dirname(ROOT_DIR))
 MASTER_OVERVIEW_PATH = os.path.join(
     WORKSPACE_DIR, "agent-utilities", "docs", "overview.md"
 )
@@ -60,7 +60,7 @@ def test_concept_parity():
     Enforces that all concepts documented or used in home-assistant-agent
     exist in the master agent-utilities registry.
 
-    CONCEPT:OS-5.0
+    CONCEPT:AU-OS.safety.doom-loop-detection
     """
     master_concepts = extract_concepts_from_overview(MASTER_OVERVIEW_PATH)
 
