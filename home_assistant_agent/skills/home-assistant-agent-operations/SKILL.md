@@ -1,5 +1,6 @@
 ---
 name: home-assistant-agent-operations
+skill_type: skill
 description: >-
   Operate home-assistant-agent through its governed MCP and GraphOS capabilities, including home assistant entity control, home assistant scene automation, home assistant telemetry history. Use when a request requires this provider's read, change, automation, ingestion, troubleshooting, or evidence workflows.
 ---
