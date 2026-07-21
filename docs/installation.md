@@ -48,16 +48,16 @@ uv run home-assistant-mcp
 
 ## Prebuilt Docker image
 
-A multi-stage, slim image is published on every release (installs
+A multi-stage runtime image is published on every release (installs
 `home-assistant-agent[all]`, entrypoint `home-assistant-mcp`):
 
 ```bash
-docker pull knucklessg1/home-assistant-agent:latest
+docker pull example/home-assistant-agent@sha256:<digest>
 
 docker run --rm -i \
   -e HOME_ASSISTANT_URL=http://your-home-assistant:8123 \
   -e HOME_ASSISTANT_TOKEN=your_long_lived_access_token \
-  knucklessg1/home-assistant-agent:latest        # stdio transport (default)
+  example/home-assistant-agent@sha256:<digest>        # stdio transport (default)
 ```
 
 For an HTTP server with a published port and the agent server, see

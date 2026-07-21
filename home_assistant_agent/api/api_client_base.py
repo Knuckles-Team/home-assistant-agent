@@ -3,31 +3,39 @@ import logging
 from typing import Any
 
 import requests
-import urllib3
 from agent_utilities.core.exceptions import ApiError, UnauthorizedError
+from agent_utilities.core.transport_security import (
+    ResolvedTLSProfile,
+    resolve_configured_tls_profile,
+)
 from websockets.exceptions import ConnectionClosed
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 logger = logging.getLogger(__name__)
 
 
 class BaseApiClient:
-    def __init__(self, base_url: str, token: str, verify: bool = True):
+    def __init__(
+        self,
+        base_url: str,
+        token: str,
+        tls_profile: ResolvedTLSProfile | None = None,
+    ):
         self.raw_url = base_url.rstrip("/")
         self.base_url = self.raw_url
         if not self.base_url.endswith("/api"):
             self.base_url = f"{self.base_url}/api"
 
         self.token = token
-        self.verify = verify
-        self.session = requests.Session()
+        self.tls_profile = tls_profile or resolve_configured_tls_profile(
+            "home_assistant"
+        )
+        self.session = self.tls_profile.configure_requests_session(requests.Session())
         self.session.headers.update(
             {
                 "Authorization": f"Bearer {self.token}",
                 "Content-Type": "application/json",
             }
         )
-        self.session.verify = self.verify
         self.headers = self.session.headers
         self._message_id = 1
 
@@ -36,6 +44,11 @@ class BaseApiClient:
         except Exception as e:
             if isinstance(e, UnauthorizedError):
                 raise e
+
+    def close(self) -> None:
+        """Release transport resources and runtime-only TLS material."""
+        self.session.close()
+        self.tls_profile.cleanup()
 
     def get_api_status(self) -> dict[str, str]:
         response = self.session.get(f"{self.base_url}/")
@@ -49,7 +62,10 @@ class BaseApiClient:
 
         ws_url = self.raw_url.replace("http", "ws", 1) + "/api/websocket"
         try:
-            with connect(ws_url) as websocket:
+            ssl_context = (
+                self.tls_profile.ssl_context if ws_url.startswith("wss://") else None
+            )
+            with connect(ws_url, ssl=ssl_context) as websocket:
                 # 1. Wait for auth_required
                 greeting = json.loads(websocket.recv())
                 if greeting.get("type") != "auth_required":
@@ -80,6 +96,6 @@ class BaseApiClient:
                     elif resp.get("type") in ["event", "auth_invalid"]:
                         return resp
         except ConnectionClosed as e:
-            raise ApiError(f"WS Connection closed: {str(e)}") from e
+            raise ApiError(f"WS Connection closed: {type(e).__name__}") from e
         except Exception as e:
-            raise ApiError(f"WS Error: {str(e)}") from e
+            raise ApiError(f"WS Error: {type(e).__name__}") from e

@@ -178,12 +178,12 @@
     },
     {
       "id": "FR-028",
-      "description": "Undocumented env vars: AUTH_TYPE, CALENDARTOOL, CONFIGTOOL, ENTITIESTOOL, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, EVENTSTOOL, HISTORYTOOL, HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTANT_TOKEN",
+      "description": "Undocumented env vars: AUTH_TYPE, CALENDARTOOL, CONFIGTOOL, ENTITIESTOOL, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, EVENTSTOOL, HISTORYTOOL, TLS_PROFILE, HOME_ASSISTANT_TOKEN",
       "testable": true
     },
     {
       "id": "FR-029",
-      "description": "3 Python env vars not in .env.example: HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL",
+      "description": "3 Python env vars not in .env.example: TLS_PROFILE, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL",
       "testable": true
     }
   ],

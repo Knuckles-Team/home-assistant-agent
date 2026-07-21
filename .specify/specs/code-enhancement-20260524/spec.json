@@ -183,12 +183,12 @@
     },
     {
       "id": "FR-028",
-      "description": "Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, HOME_ASSISTANT_SSL_VERIFY, OTEL_EXPORTER_OTLP_ENDPOINT",
+      "description": "Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, TLS_PROFILE_REF, OTEL_EXPORTER_OTLP_ENDPOINT",
       "testable": true
     },
     {
       "id": "FR-029",
-      "description": "1 Python env vars not in .env.example: HOME_ASSISTANT_SSL_VERIFY",
+      "description": "1 Python env vars not in .env.example: TLS_PROFILE_REF",
       "testable": true
     },
     {

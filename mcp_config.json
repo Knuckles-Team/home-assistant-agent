@@ -7,15 +7,15 @@
         "home-assistant-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "condensed",
+        "MCP_TOOL_MODE": "intent",
         "CALENDARTOOL": "True",
         "CONFIGTOOL": "True",
         "ENTITIESTOOL": "True",
         "EVENTSTOOL": "True",
         "HISTORYTOOL": "True",
-        "HOME_ASSISTANT_AGENT_VERIFY": "True",
         "HOME_ASSISTANT_TOKEN": "your_long_lived_access_token_here",
         "HOME_ASSISTANT_URL": "http://localhost:8123",
+        "KGTOOL": "True",
         "LOGBOOKTOOL": "True",
         "PANELSTOOL": "True",
         "SERVICESTOOL": "True",

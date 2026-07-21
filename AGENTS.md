@@ -118,37 +118,37 @@ This repository aligns perfectly with the standard `agent-utilities` architectur
 ### `CONCEPT:AU-ECO.messaging.native-backend-abstraction` — Tool Interface & MCP Factory
 Defines all 11 action-routed MCP tools: Config, States, Services, Events, History, Logbook, Calendar, Panels, Voice, Entities, and System.
 - **Source Files:**
-  - [mcp_server.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/mcp_server.py)
-  - [api_client_rest.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_rest.py)
-  - [api_client_websocket.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_websocket.py)
+  - [mcp_server.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/mcp_server.py)
+  - [api_client_rest.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_rest.py)
+  - [api_client_websocket.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_websocket.py)
 - **Tests:**
-  - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L285-L670)
+  - [test_coverage.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L285-L670)
 
 ### `CONCEPT:AU-OS.safety.doom-loop-detection` — Operating System and Agents
 Directs the lazy loader, entry points, and CLI runtime interface.
 - **Source Files:**
-  - [__init__.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/__init__.py)
-  - [__main__.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/__main__.py)
-  - [agent_server.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
+  - [__init__.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/__init__.py)
+  - [__main__.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/__main__.py)
+  - [agent_server.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
 - **Tests:**
-  - [test_init.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_init.py)
-  - [test_startup.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_startup.py)
-  - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L209-L229)
+  - [test_init.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_init.py)
+  - [test_startup.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_startup.py)
+  - [test_coverage.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L209-L229)
 
 ### `CONCEPT:AU-OS.config.secrets-authentication` — Security & Auth
 Credentials and authentication client setup.
 - **Source Files:**
-  - [auth.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/auth.py)
-  - [api_client_base.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_base.py)
+  - [auth.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/auth.py)
+  - [api_client_base.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/api/api_client_base.py)
 - **Tests:**
-  - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L230-L263)
+  - [test_coverage.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L230-L263)
 
 ### `CONCEPT:AU-ORCH.planning.legal-automation-roadmap` — Orchestration Workflows/Agents
 Pydantic AI Graph Agent configuration.
 - **Source Files:**
-  - [agent_server.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
+  - [agent_server.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
 - **Tests:**
-  - [test_coverage.py](file:///home/apps/workspace/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L264-L284)
+  - [test_coverage.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L264-L284)
 
 ## Code Style & Conventions
 **Always:**
@@ -272,23 +272,23 @@ why rather than bypassing it.
 ## Working with Git Worktrees (multi-session)
 
 Multiple agents/sessions work the `agent-packages/*` repos concurrently. **Do not
-edit the canonical checkout** (`/home/apps/workspace/agent-packages/<repo>`) — a
+edit the canonical checkout** (`${WORKSPACE_ROOT}/agent-packages/<repo>`) — a
 background `repository-manager` sync can reset its working tree and discard
 uncommitted edits. Take your own git worktree on your own branch instead:
 
 ```bash
 # preferred — repository-manager MCP:
-rm_worktree add <repo> <your-branch>      # -> /home/apps/worktrees/<repo>/<your-branch>
+rm_worktree add <repo> <your-branch>      # -> ${WORKTREE_ROOT}/<repo>/<your-branch>
 
 # raw-git fallback:
 git -C agent-packages/<repo> checkout main
-git -C agent-packages/<repo> worktree add /home/apps/worktrees/<repo>/<branch> -b <branch>
+git -C agent-packages/<repo> worktree add ${WORKTREE_ROOT}/<repo>/<branch> -b <branch>
 ```
 
 Work in the worktree and **commit often** (commits survive a working-tree reset).
 Each session must use a **distinct branch** — git allows a branch in only one
 worktree, which is what keeps concurrent sessions from colliding. Worktrees live
-under `/home/apps/worktrees/` (outside the workspace scan, so the sync leaves them
+under `${WORKTREE_ROOT}/` (outside the workspace scan, so the sync leaves them
 alone).
 
 **Finishing work in a worktree** — run this sequence before calling it done:

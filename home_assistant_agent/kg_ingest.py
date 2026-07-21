@@ -3,9 +3,8 @@
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. This is the record-source twin of
 media-downloader's blob ingestion: the package natively pushes its home-automation data
 into the epistemic-graph knowledge graph as **typed OWL nodes** (`:Device`, `:Entity`,
-`:Area`, `:SensorReading`, `:HomeAssistantService`, `:LogbookEntry`) + links, using the
-lightweight engine client (``GraphComputeEngine()._client`` + ``txn``) — the same fast
-client the blob ``MediaStore`` uses, NOT the heavy in-process ingestion engine.
+`:Area`, `:SensorReading`, `:HomeAssistantService`, `:LogbookEntry`) + links through the
+canonical ``agent_utilities.knowledge_graph.memory.native_ingest`` authority.
 
 Two modalities, per the ``homeassistant`` ontology leg:
 
@@ -13,11 +12,11 @@ Two modalities, per the ``homeassistant`` ontology leg:
 * **timeseries** — each state / history point → a :SensorReading node linked :readingOf
   its :Entity, carrying :state + :measuredAt (the sensor-reading timeseries).
 
-Entirely best-effort and dependency-/engine-guarded: with no agent-utilities KG stack or
-no reachable engine, every entry point **no-ops** (returns ``None``), so the connector
-keeps working with zero KG infrastructure. Nodes carry the shared provenance
-(``domain``/``source``) and match the classes federated by ``home_assistant_agent.ontology``.
-Node ids follow ``homeassistant:<class>:<externalId>``.
+Entirely best-effort and engine-guarded: with no agent-utilities KG stack or no reachable
+engine, every entry point **no-ops** (returns ``None``), so the connector keeps working
+with zero KG infrastructure. Nodes carry shared provenance (``domain``/``source``) and
+match the classes federated by ``home_assistant_agent.ontology``. Node ids follow
+``homeassistant:<class>:<externalId>``.
 """
 
 from __future__ import annotations
@@ -25,44 +24,14 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    ingest_entities as _native_ingest_entities,
+)
+
 logger = logging.getLogger("home_assistant_agent.kg")
 
 _SOURCE = "home-assistant-agent"
 _DOMAIN = "homeassistant"
-
-
-def _client() -> tuple[Any | None, str]:
-    """Return ``(engine_client, graph_name)`` or ``(None, "")`` when unavailable.
-
-    Prefers the shared native-ingest primitive if present in the installed
-    agent_utilities; otherwise falls back to a self-contained resolution over the
-    lightweight ``GraphComputeEngine`` client. Never raises.
-    """
-    try:
-        from agent_utilities.knowledge_graph.memory.native_ingest import (
-            native_client,
-        )
-
-        return native_client()
-    except Exception as e:  # noqa: BLE001 — primitive not present; fall back
-        logger.debug("KG ingest: shared primitive unavailable (%s); self-resolving", e)
-    try:
-        from agent_utilities.knowledge_graph.core.graph_compute import (
-            GraphComputeEngine,
-        )
-    except Exception as e:  # noqa: BLE001 — KG stack absent
-        logger.debug("KG ingest unavailable (import): %s", e)
-        return None, ""
-    try:
-        engine = GraphComputeEngine()
-        client = getattr(engine, "_client", None)
-        if client is None:
-            return None, ""
-        graph = getattr(engine, "graph_name", None) or "__commons__"
-        return client, graph
-    except Exception as e:  # noqa: BLE001 — engine unreachable
-        logger.debug("KG ingest: engine unreachable: %s", e)
-        return None, ""
 
 
 def ingest_entities(
@@ -74,49 +43,28 @@ def ingest_entities(
     client: Any | None = None,
     graph: str | None = None,
 ) -> dict[str, int] | None:
-    """Write typed nodes (+ edges) into epistemic-graph via the fast engine client.
+    """Write canonical typed nodes and relationships through native ingestion.
 
-    ``entities``: ``[{"id":..., "type":<owl:Class>, ...props}]``.
-    ``relationships``: ``[{"source":id, "target":id, "type":rel}]``.
+    ``entities``: ``[{"id":..., "node_type":<owl:Class>, ...props}]``.
+    ``relationships``: ``[{"source":id, "target":id, "relationship":<link>}]``.
     Returns ``{"nodes":n, "edges":m}`` or ``None`` (no engine / failure; never raises).
     ``client``/``graph`` may be injected (tests); otherwise resolved on demand.
     """
     entities = [e for e in (entities or []) if e.get("id")]
     if not entities:
         return None
-    if client is None:
-        client, graph = _client()
-    if client is None:
-        return None
-    graph = graph or "__commons__"
-
     try:
-        txn = client.txn.begin(graph=graph)
-        for ent in entities:
-            props = {k: v for k, v in ent.items() if k != "id" and v is not None}
-            props.setdefault("source", source)
-            props.setdefault("domain", domain)
-            client.txn.add_node(txn, ent["id"], props)
-        committed = client.txn.commit(txn)
-    except Exception as e:  # noqa: BLE001 — engine/txn failure is non-fatal
-        logger.warning("KG ingest: txn failed: %s", e)
+        return _native_ingest_entities(
+            entities,
+            relationships,
+            source=source,
+            domain=domain,
+            client=client,
+            graph=graph,
+        )
+    except Exception as e:  # noqa: BLE001 — engine optional; ingestion is best-effort
+        logger.warning("KG ingest: native ingestion failed: %s", e)
         return None
-    if not committed:
-        logger.warning("KG ingest: txn not committed (conflict)")
-        return None
-
-    edges = 0
-    for rel in relationships or []:
-        try:
-            client.edges.add(
-                rel["source"], rel["target"], {"type": rel.get("type", "RELATED")}
-            )
-            edges += 1
-        except Exception as e:  # noqa: BLE001 — pure edge link, best-effort
-            logger.debug("KG ingest: edge skipped: %s", e)
-
-    logger.info("KG ingest: wrote %d nodes, %d edges", len(entities), edges)
-    return {"nodes": len(entities), "edges": edges}
 
 
 def _as_dict(record: Any) -> dict[str, Any]:
@@ -160,7 +108,7 @@ def ingest_states(
         entities.append(
             {
                 "id": node_id,
-                "type": "Entity",
+                "node_type": "Entity",
                 "entityId": entity_id,
                 "state": rec.get("state"),
                 "friendlyName": attrs.get("friendly_name"),
@@ -176,7 +124,7 @@ def ingest_states(
             entities.append(
                 {
                     "id": rid,
-                    "type": "SensorReading",
+                    "node_type": "SensorReading",
                     "entityId": entity_id,
                     "state": rec.get("state"),
                     "unitOfMeasurement": attrs.get("unit_of_measurement"),
@@ -184,7 +132,7 @@ def ingest_states(
                 }
             )
             relationships.append(
-                {"source": rid, "target": node_id, "type": "readingOf"}
+                {"source": rid, "target": node_id, "relationship": "readingOf"}
             )
     return ingest_entities(entities, relationships, client=client, graph=graph)
 
@@ -216,7 +164,7 @@ def ingest_registry(
         entities.append(
             {
                 "id": ent_node,
-                "type": "Entity",
+                "node_type": "Entity",
                 "entityId": entity_id,
                 "platform": entry.get("pl"),
                 "friendlyName": entry.get("en"),
@@ -228,20 +176,22 @@ def ingest_registry(
             dev_node = f"{_DOMAIN}:device:{device_id}"
             if device_id not in seen_devices:
                 entities.append(
-                    {"id": dev_node, "type": "Device", "deviceId": device_id}
+                    {"id": dev_node, "node_type": "Device", "deviceId": device_id}
                 )
                 seen_devices.add(device_id)
             relationships.append(
-                {"source": ent_node, "target": dev_node, "type": "onDevice"}
+                {"source": ent_node, "target": dev_node, "relationship": "onDevice"}
             )
         area_id = entry.get("ai")
         if area_id:
             area_node = f"{_DOMAIN}:area:{area_id}"
             if area_id not in seen_areas:
-                entities.append({"id": area_node, "type": "Area", "areaId": area_id})
+                entities.append(
+                    {"id": area_node, "node_type": "Area", "areaId": area_id}
+                )
                 seen_areas.add(area_id)
             relationships.append(
-                {"source": ent_node, "target": area_node, "type": "inArea"}
+                {"source": ent_node, "target": area_node, "relationship": "inArea"}
             )
     return ingest_entities(entities, relationships, client=client, graph=graph)
 
@@ -263,7 +213,7 @@ def ingest_history(
         return None
     ent_node = f"{_DOMAIN}:entity:{entity_id}"
     entities: list[dict[str, Any]] = [
-        {"id": ent_node, "type": "Entity", "entityId": entity_id}
+        {"id": ent_node, "node_type": "Entity", "entityId": entity_id}
     ]
     relationships: list[dict[str, Any]] = []
     for raw in history or []:
@@ -274,12 +224,14 @@ def ingest_history(
         entities.append(
             {
                 "id": rid,
-                "type": "SensorReading",
+                "node_type": "SensorReading",
                 "entityId": entity_id,
                 "state": rec.get("state"),
                 "unitOfMeasurement": attrs.get("unit_of_measurement"),
                 "measuredAt": ts,
             }
         )
-        relationships.append({"source": rid, "target": ent_node, "type": "readingOf"})
+        relationships.append(
+            {"source": rid, "target": ent_node, "relationship": "readingOf"}
+        )
     return ingest_entities(entities, relationships, client=client, graph=graph)

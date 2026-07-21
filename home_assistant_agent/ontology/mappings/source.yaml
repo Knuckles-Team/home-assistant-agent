@@ -1,0 +1,20 @@
+schema_version: '1'
+connector: home-assistant-agent
+ontology_source: homeassistant
+sync:
+- preset: homeassistant-states
+  server: home-assistant-agent
+  tool: home_assistant_states
+  action: list_states
+  records_path: ''
+  id_field: entity_id
+  title_field: entity_id
+  text_field: state
+  updated_field: last_updated
+  doc_type: home_entity
+  tool_schema_sha256: 51b7be8e26d9ef60091d57fdea46e78effd16d13c4fa828e95c4d2cc8ca402c5
+governance:
+  default_acl: quarantine
+  identity: opaque-reference
+  tenant: required-at-materialization
+  provenance: required-at-materialization

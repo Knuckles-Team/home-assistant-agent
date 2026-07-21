@@ -51,5 +51,5 @@ Skipped informational: 5
   - Priority: P2-Medium | Effort: Medium
 - [ ] [P] **T024** [Environment Variables] Undocumented env vars: ALLOWED_CLIENT_REDIRECT_URIS, AUTH_TYPE, EUNOMIA_POLICY_F
   - Priority: P2-Medium | Effort: Medium
-- [ ] [P] **T025** [Environment Variables] 3 Python env vars not in .env.example: HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTA
+- [ ] [P] **T025** [Environment Variables] 3 Python env vars not in .env.example: TLS_PROFILE, HOME_ASSISTA
   - Priority: P2-Medium | Effort: Medium

@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Robust environment variable configurations in `.env.example` mapping all 17 options.
-- Concept Traceability docstrings and decorators mapping code segments to five-pillar definitions (`CONCEPT:OS-5.0`, `CONCEPT:OS-5.1`, `CONCEPT:ECO-4.0`, `CONCEPT:ORCH-1.5`).
+- Concept Traceability docstrings and decorators mapping code segments to five-pillar definitions (`CONCEPT:OS-5.0`, `CONCEPT:OS-5.1`, `CONCEPT:ECO-4.0`).
 - Complete concept mapping inside `tests/test_coverage.py`, `tests/test_init.py`, and `tests/test_startup.py`.
 - Exhaustive documentation in `AGENTS.md` and `README.md`.
 

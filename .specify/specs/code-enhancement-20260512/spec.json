@@ -163,7 +163,7 @@
     },
     {
       "id": "FR-025",
-      "description": "3 Python env vars not in .env.example: HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL",
+      "description": "3 Python env vars not in .env.example: TLS_PROFILE, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL",
       "testable": true
     }
   ],

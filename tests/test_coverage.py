@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 # Patch LadybugBackend to use ":memory:" database to prevent graph DB locking / race conditions
 try:
-    from agent_utilities.knowledge_graph.backends.ladybug_backend import LadybugBackend
+    from agent_utilities.knowledge_graph.backends import LadybugBackend
 
     original_ladybug_init = LadybugBackend.__init__
 
@@ -357,7 +357,7 @@ def test_ws_call_errors(mock_connect, mock_session):
     mock_connect.side_effect = Exception("General error")
     with pytest.raises(ApiError) as exc:
         client.ping()
-    assert "WS Error: General error" in str(exc.value)
+    assert "WS Error: Exception" in str(exc.value)
 
     # 3. Bad greeting
     mock_socket = MockWebSocket(responses=['{"type": "bad_greeting"}'])
@@ -365,7 +365,7 @@ def test_ws_call_errors(mock_connect, mock_session):
     mock_connect.return_value = mock_socket
     with pytest.raises(ApiError) as exc:
         client.ping()
-    assert "Unexpected WS greeting" in str(exc.value)
+    assert "WS Error: ApiError" in str(exc.value)
 
     # 4. Auth failed
     mock_socket = MockWebSocket(
@@ -378,7 +378,7 @@ def test_ws_call_errors(mock_connect, mock_session):
     mock_connect.return_value = mock_socket
     with pytest.raises(ApiError) as exc:
         client.ping()
-    assert "WS Error: WS Auth failed" in str(exc.value)
+    assert "WS Error: UnauthorizedError" in str(exc.value)
 
     # 5. Command failed
     mock_socket = MockWebSocket(
@@ -392,7 +392,7 @@ def test_ws_call_errors(mock_connect, mock_session):
     mock_connect.return_value = mock_socket
     with pytest.raises(ApiError) as exc:
         client.ping()
-    assert "WS Command failed" in str(exc.value)
+    assert "WS Error: ApiError" in str(exc.value)
 
 
 def test_api_client_brute_force(mock_session, mock_connect):
@@ -485,7 +485,7 @@ def test_api_client_brute_force(mock_session, mock_connect):
         try:
             method(**kwargs)
         except Exception as e:
-            print(f"Introspection call failed for {name}: {e}")
+            print(f"Operation failed: {type(e).__name__}")
 
 
 @pytest.mark.asyncio

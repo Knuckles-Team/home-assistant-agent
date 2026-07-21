@@ -313,8 +313,8 @@
   },
   {
     "id": "T025",
-    "title": "[Environment Variables] 3 Python env vars not in .env.example: HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTA",
-    "description": "3 Python env vars not in .env.example: HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL",
+    "title": "[Environment Variables] 3 Python env vars not in .env.example: TLS_PROFILE, HOME_ASSISTA",
+    "description": "3 Python env vars not in .env.example: TLS_PROFILE, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL",
     "domain": "Environment Variables",
     "priority": "P2-Medium",
     "effort": "Medium",

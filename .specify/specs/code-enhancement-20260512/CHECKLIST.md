@@ -25,7 +25,7 @@
 - [ ] **FR-022**: keepachangelog not installed — pip install 'universal-skills[code-enhancer]'
 - [ ] **FR-023**: Only 21% of env vars documented in README.md
 - [ ] **FR-024**: Undocumented env vars: ALLOWED_CLIENT_REDIRECT_URIS, AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_REMOTE_URL, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, OAUTH_BASE_URL
-- [ ] **FR-025**: 3 Python env vars not in .env.example: HOME_ASSISTANT_AGENT_VERIFY, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL
+- [ ] **FR-025**: 3 Python env vars not in .env.example: TLS_PROFILE, HOME_ASSISTANT_TOKEN, HOME_ASSISTANT_URL
 
 ## User Stories / Acceptance Criteria
 - [ ] As a **developer**, I want to **address Project Analysis findings (grade: C, score: 74)**, so that **improve project project analysis from C to at least B (80+)**.
