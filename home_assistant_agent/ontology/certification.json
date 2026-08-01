@@ -1,13 +1,13 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "a2a.json": "9f7681d5a652eb6d8c1eeb42d3f6d27b87e59bc6df2ebbddb68e08493980d89f",
-    "connector_manifest.yml": "7296e16d83e85a8711a5b3434e0d496be30def9cf49c48380a31a79ab152c8ed",
-    "home_assistant_agent/connectors/mcp_source_presets.json": "9c5301c3357ab55f3141f3aa07918b7c08ba66780321ce8e8056b3cc56b77b6f",
+    "a2a.json": "a176ea2b654965a0c3f29d079440d524a73437ebb66bb5bfa13807725a1f016e",
+    "connector_manifest.yml": "674abcc1a4cfcab41f048e6693c4e790075eaaa777b151a990dd5ee74101ced1",
+    "home_assistant_agent/connectors/mcp_source_presets.json": "27c2244bb329628a58963e4fb6d0011cba090a2b09d04371fdf9d6e560d34b38",
     "home_assistant_agent/connectors/tool_schema_fingerprints.json": "970f75444b568d1d40a208dc5a36b7c98405c2050ce12d8ed53259761d1fc48e",
     "home_assistant_agent/ontology/fixtures/records.json": "df18008766675f2f37befc58650f047981d94ecb677b2439d391c59efb248172",
     "home_assistant_agent/ontology/homeassistant.ttl": "02b6254730be6928908dc718597b0e6a9256a5d3e175a7cf2327373828c2c037",
-    "home_assistant_agent/ontology/mappings/source.yaml": "cff8b5eba97f9b0c29316e27db1f45e8da0003ada7253c139936a6cdcdcdb7aa",
+    "home_assistant_agent/ontology/mappings/source.yaml": "3d84b0da52bc669c7cad10c55ac83b19cd3c08a236d3d7818c32ec7c605b5899",
     "home_assistant_agent/ontology/migrations/manifest.json": "a540e7ad8902d06da367be4ee22518c712e4f2f70ee1ef1f8f389f5c001322f0",
     "home_assistant_agent/ontology/shapes/connector.shacl.ttl": "1be5679957f217d5f87ea79c04be080653c23d29f53638d3bc1d5da1f49f19dd"
   },
@@ -19,19 +19,19 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=1.27.1,<2",
+    "agent_utilities": ">=2.1.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.23.1,<3"
+    "epistemic_graph": ">=2.23.0,<3"
   },
   "connector": "home-assistant-agent",
   "kind": "ConnectorSourceAttestation",
   "live_certified": false,
   "mode": "offline-source",
   "schema_version": "2",
-  "signature": "ymU2dJ75RPh2TSE__gPRjd4iCRop1d-9WXaKdz3_i4YI7301QBlyCGn0d8RAIsaXy1Qqg9zd9YvwaphUufjZAw",
+  "signature": "0Z46y9f9_wlwq8NYi0EcW62j4yPW7-2j4AxL8wgAqY-MlNpdoKbrxjRaD2XLZy1bENd8vwek72JNZmFQpaExDA",
   "signature_algorithm": "ed25519",
   "signer": "ontology-manifest-generator",
-  "signing_public_key": "q0Cp7bmQMqJhbofGKKw8xXC6KbFzukBDDke0UYVi8y4",
+  "signing_public_key": "QkigdPNpcUU7x7NcSkwCsUXIQpaFncMQbYSoiSgI2SY",
   "status": "source-validated",
-  "validated_at": "2026-07-18T00:00:00Z"
+  "validated_at": "2026-07-31T04:00:00Z"
 }
