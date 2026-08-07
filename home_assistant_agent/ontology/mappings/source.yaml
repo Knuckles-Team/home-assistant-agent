@@ -3,7 +3,7 @@ connector: home-assistant-agent
 ontology_source: homeassistant
 sync:
 - preset: homeassistant-states
-  server: home-assistant-agent
+  server: home-assistant-mcp
   tool: home_assistant_states
   action: list_states
   records_path: ''
