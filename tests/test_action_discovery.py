@@ -7,7 +7,7 @@ import json
 from unittest.mock import MagicMock, patch
 
 import pytest
-from mcp.shared.exceptions import McpError
+from mcp.shared.exceptions import MCPError
 
 
 @pytest.mark.asyncio
@@ -41,7 +41,7 @@ async def test_list_actions_and_did_you_mean():
         assert "get_state" in text
 
         # Unknown action raises a rich error pointing at list_actions.
-        with pytest.raises(McpError, match="list_actions"):
+        with pytest.raises(MCPError, match="list_actions"):
             await mcp.call_tool(
                 "home_assistant_states", {"action": "totally_bogus_action"}
             )
