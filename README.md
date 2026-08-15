@@ -557,15 +557,15 @@ One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
 | `knucklessg1/home-assistant-agent:mcp` | `--target mcp` | `home-assistant-agent[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `home-assistant-mcp` |
-| `knucklessg1/home-assistant-agent:latest` | `--target agent` (default) | `home-assistant-agent[agent]` — **agent runtime**, model orchestration + `epistemic-graph[full]` | `home-assistant-agent` |
+| `knucklessg1/home-assistant-agent:2.1.0` | `--target agent` (default) | `home-assistant-agent[agent]` — **agent runtime**, model orchestration + `epistemic-graph[full]` | `home-assistant-agent` |
 
 ```bash
 docker build --target mcp   -t knucklessg1/home-assistant-agent:mcp    docker/   # connector-focused MCP server
-docker build --target agent -t knucklessg1/home-assistant-agent:latest docker/   # agent runtime
+docker build --target agent -t knucklessg1/home-assistant-agent:2.1.0 docker/   # agent runtime
 ```
 
 `docker/mcp.compose.yml` runs the connector-focused `:mcp` server; `docker/agent.compose.yml` runs
-the agent (`:latest`) with a co-located `:mcp` sidecar. Both compose files require a
+the agent (`:2.1.0`) with a co-located `:mcp` sidecar. Both compose files require a
 digest-pinned image reference (`HOME_ASSISTANT_AGENT_MCP_IMAGE` / `HOME_ASSISTANT_AGENT_AGENT_IMAGE`)
 rather than trusting a floating tag — see [Deployment](docs/deployment.md).
 
