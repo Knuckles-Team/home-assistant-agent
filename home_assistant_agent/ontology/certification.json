@@ -1,8 +1,7 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "a2a.json": "a176ea2b654965a0c3f29d079440d524a73437ebb66bb5bfa13807725a1f016e",
-    "connector_manifest.yml": "674abcc1a4cfcab41f048e6693c4e790075eaaa777b151a990dd5ee74101ced1",
+    "connector_manifest.yml": "92500f024244bb2db77b3d55327eb1ceddf66338e41c0c969cf94d5aa888193d",
     "home_assistant_agent/connectors/mcp_source_presets.json": "27c2244bb329628a58963e4fb6d0011cba090a2b09d04371fdf9d6e560d34b38",
     "home_assistant_agent/connectors/tool_schema_fingerprints.json": "970f75444b568d1d40a208dc5a36b7c98405c2050ce12d8ed53259761d1fc48e",
     "home_assistant_agent/ontology/fixtures/records.json": "df18008766675f2f37befc58650f047981d94ecb677b2439d391c59efb248172",
@@ -19,19 +18,19 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.1.0,<3",
+    "agent_utilities": ">=2.4.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.23.0,<3"
+    "epistemic_graph": ">=2.26.0,<3"
   },
   "connector": "home-assistant-agent",
   "kind": "ConnectorSourceAttestation",
   "live_certified": false,
   "mode": "offline-source",
   "schema_version": "2",
-  "signature": "0Z46y9f9_wlwq8NYi0EcW62j4yPW7-2j4AxL8wgAqY-MlNpdoKbrxjRaD2XLZy1bENd8vwek72JNZmFQpaExDA",
-  "signature_algorithm": "ed25519",
-  "signer": "ontology-manifest-generator",
-  "signing_public_key": "QkigdPNpcUU7x7NcSkwCsUXIQpaFncMQbYSoiSgI2SY",
+  "signature": null,
+  "signature_algorithm": "none",
+  "signer": "UNSIGNED-PREVIEW",
+  "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-07-31T04:00:00Z"
+  "validated_at": "2026-08-21T04:30:39Z"
 }
