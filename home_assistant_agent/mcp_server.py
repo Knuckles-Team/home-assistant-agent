@@ -74,17 +74,7 @@ def register_config_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "status":
-            return await run_blocking(client.status, **kwargs)
-        if action == "config":
-            return await run_blocking(client.config, **kwargs)
-        if action == "components":
-            return await run_blocking(client.components, **kwargs)
-        if action == "check_config":
-            return await run_blocking(client.check_config, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_states_tools(mcp: FastMCP):
     """Register states tools."""
 
@@ -119,17 +109,7 @@ def register_states_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "list_states":
-            return await run_blocking(client.list_states, **kwargs)
-        if action == "get_state":
-            return await run_blocking(client.get_state, **kwargs)
-        if action == "update_state":
-            return await run_blocking(client.update_state, **kwargs)
-        if action == "delete_state":
-            return await run_blocking(client.delete_state, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_services_tools(mcp: FastMCP):
     """Register services tools."""
 
@@ -164,13 +144,7 @@ def register_services_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "list_services":
-            return await run_blocking(client.list_services, **kwargs)
-        if action == "call_service":
-            return await run_blocking(client.call_service, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_events_tools(mcp: FastMCP):
     """Register events tools."""
 
@@ -205,15 +179,7 @@ def register_events_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "list_events":
-            return await run_blocking(client.list_events, **kwargs)
-        if action == "fire_event":
-            return await run_blocking(client.fire_event, **kwargs)
-        if action == "subscribe_events":
-            return await run_blocking(client.subscribe_events, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_history_tools(mcp: FastMCP):
     """Register history tools."""
 
@@ -248,11 +214,7 @@ def register_history_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "get_history":
-            return await run_blocking(client.get_history, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_logbook_tools(mcp: FastMCP):
     """Register logbook tools."""
 
@@ -287,13 +249,7 @@ def register_logbook_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "get_logbook":
-            return await run_blocking(client.get_logbook, **kwargs)
-        if action == "get_error_log":
-            return await run_blocking(client.get_error_log, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_calendar_tools(mcp: FastMCP):
     """Register calendar tools."""
 
@@ -328,13 +284,7 @@ def register_calendar_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "list_calendars":
-            return await run_blocking(client.list_calendars, **kwargs)
-        if action == "get_calendar_events":
-            return await run_blocking(client.get_calendar_events, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_panels_tools(mcp: FastMCP):
     """Register panels tools."""
 
@@ -369,11 +319,7 @@ def register_panels_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "get_panels":
-            return await run_blocking(client.get_panels, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_voice_tools(mcp: FastMCP):
     """Register voice tools."""
 
@@ -408,13 +354,7 @@ def register_voice_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "list_exposed_entities":
-            return await run_blocking(client.list_exposed_entities, **kwargs)
-        if action == "expose_entities":
-            return await run_blocking(client.expose_entities, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_entities_tools(mcp: FastMCP):
     """Register entities tools."""
 
@@ -455,19 +395,7 @@ def register_entities_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "get_entity_registry_display":
-            return await run_blocking(client.get_entity_registry_display, **kwargs)
-        if action == "extract_from_target":
-            return await run_blocking(client.extract_from_target, **kwargs)
-        if action == "get_triggers_for_target":
-            return await run_blocking(client.get_triggers_for_target, **kwargs)
-        if action == "get_conditions_for_target":
-            return await run_blocking(client.get_conditions_for_target, **kwargs)
-        if action == "get_services_for_target":
-            return await run_blocking(client.get_services_for_target, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_system_tools(mcp: FastMCP):
     """Register system tools."""
 
@@ -502,17 +430,7 @@ def register_system_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
-        if action == "render_template":
-            return await run_blocking(client.render_template, **kwargs)
-        if action == "ping":
-            return await run_blocking(client.ping, **kwargs)
-        if action == "handle_intent":
-            return await run_blocking(client.handle_intent, **kwargs)
-        if action == "validate_config":
-            return await run_blocking(client.validate_config, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
-
-
+        return await run_blocking(getattr(client, action), **kwargs)
 def register_kg_tools(mcp: FastMCP):
     """Register native epistemic-graph ingestion tools (Wire-First).
 
