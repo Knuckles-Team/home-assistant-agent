@@ -82,7 +82,9 @@ def register_states_tools(mcp: FastMCP):
 
     @mcp.tool(tags={"states"})
     async def home_assistant_states(
-        action: Literal["check_config", "components", "config", "status"] = Field(
+        action: Literal[
+            "delete_state", "get_state", "list_states", "update_state"
+        ] = Field(
             description="Action to perform. Must be one of: 'list_states', 'get_state', 'update_state', 'delete_state'"
         ),
         params_json: str = Field(

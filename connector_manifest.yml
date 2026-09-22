@@ -159,7 +159,7 @@ sync:
   updated_field: last_updated
   pagination: null
   doc_type: home_entity
-  tool_schema_sha256: 51b7be8e26d9ef60091d57fdea46e78effd16d13c4fa828e95c4d2cc8ca402c5
+  tool_schema_sha256: e9b1576d8919eeb286500199e4bdcfcf99827f186893f88400427a2632426c43
   raw:
     server: home-assistant-mcp
     tool: home_assistant_states
