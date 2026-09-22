@@ -21,7 +21,7 @@ warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
 import logging
 import sys
-from typing import Any
+from typing import Any, Literal
 
 from agent_utilities.core.config import load_config
 from agent_utilities.mcp.action_dispatch import resolve_action
@@ -75,12 +75,14 @@ def register_config_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_states_tools(mcp: FastMCP):
     """Register states tools."""
 
     @mcp.tool(tags={"states"})
     async def home_assistant_states(
-        action: str = Field(
+        action: Literal["check_config", "components", "config", "status"] = Field(
             description="Action to perform. Must be one of: 'list_states', 'get_state', 'update_state', 'delete_state'"
         ),
         params_json: str = Field(
@@ -110,6 +112,8 @@ def register_states_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_services_tools(mcp: FastMCP):
     """Register services tools."""
 
@@ -145,6 +149,8 @@ def register_services_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_events_tools(mcp: FastMCP):
     """Register events tools."""
 
@@ -180,6 +186,8 @@ def register_events_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_history_tools(mcp: FastMCP):
     """Register history tools."""
 
@@ -215,6 +223,8 @@ def register_history_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_logbook_tools(mcp: FastMCP):
     """Register logbook tools."""
 
@@ -250,6 +260,8 @@ def register_logbook_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_calendar_tools(mcp: FastMCP):
     """Register calendar tools."""
 
@@ -285,6 +297,8 @@ def register_calendar_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_panels_tools(mcp: FastMCP):
     """Register panels tools."""
 
@@ -320,6 +334,8 @@ def register_panels_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_voice_tools(mcp: FastMCP):
     """Register voice tools."""
 
@@ -355,6 +371,8 @@ def register_voice_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_entities_tools(mcp: FastMCP):
     """Register entities tools."""
 
@@ -396,6 +414,8 @@ def register_entities_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_system_tools(mcp: FastMCP):
     """Register system tools."""
 
@@ -431,6 +451,8 @@ def register_system_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_kg_tools(mcp: FastMCP):
     """Register native epistemic-graph ingestion tools (Wire-First).
 
