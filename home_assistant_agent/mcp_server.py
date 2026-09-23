@@ -80,7 +80,18 @@ def register_config_tools(mcp: FastMCP):
 def register_states_tools(mcp: FastMCP):
     """Register states tools."""
 
-    @mcp.tool(tags={"states"})
+    @mcp.tool(
+        tags={"states"},
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": True,
+            "idempotentHint": False,
+            "openWorldHint": True,
+        },
+        meta={
+            "eg.annotations": {"modalities_in": ["text"], "modalities_out": ["text"]}
+        },
+    )
     async def home_assistant_states(
         action: Literal[
             "delete_state", "get_state", "list_states", "update_state"
