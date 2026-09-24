@@ -21,13 +21,13 @@ warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
 import logging
 import sys
-from typing import Any, Literal
+from typing import Any
 
-from agent_utilities.core.config import load_config
-from agent_utilities.mcp.action_dispatch import resolve_action
-from agent_utilities.mcp.concurrency import run_blocking
-from agent_utilities.mcp.server_factory import create_mcp_server
-from agent_utilities.mcp.verbose_tools import register_tool_surface
+from agent_connector_sdk.config import load_config
+from agent_connector_sdk.mcp.action_dispatch import resolve_action
+from agent_connector_sdk.mcp.concurrency import run_blocking
+from agent_connector_sdk.mcp.server import create_mcp_server
+from agent_connector_sdk.mcp.tool_surface import register_tool_surface
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -93,9 +93,7 @@ def register_states_tools(mcp: FastMCP):
         },
     )
     async def home_assistant_states(
-        action: Literal[
-            "delete_state", "get_state", "list_states", "update_state"
-        ] = Field(
+        action: str = Field(
             description="Action to perform. Must be one of: 'list_states', 'get_state', 'update_state', 'delete_state'"
         ),
         params_json: str = Field(
