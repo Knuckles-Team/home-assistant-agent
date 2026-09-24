@@ -220,7 +220,6 @@ def test_init_coverage():
 
     # 2. Dynamic attribute checks
     assert home_assistant_agent._MCP_AVAILABLE in (True, False)
-    assert home_assistant_agent._AGENT_AVAILABLE in (True, False)
 
     # 3. AttributeError
     with pytest.raises(AttributeError):
@@ -267,32 +266,6 @@ def test_auth_coverage(mock_session):
         with pytest.raises(RuntimeError) as exc:
             get_client()
         assert "AUTHENTICATION ERROR" in str(exc.value)
-
-
-def test_agent_server_cli():
-    """Test agent server CLI options.
-
-    CONCEPT:AU-OS.safety.doom-loop-detection
-    CONCEPT:AU-ORCH.planning.legal-automation-roadmap
-    """
-    from home_assistant_agent.agent_server import agent_server
-
-    with (
-        patch("agent_utilities.create_agent_server") as mock_create,
-        patch("agent_utilities.initialize_workspace") as mock_init,
-        patch("agent_utilities.load_identity") as mock_identity,
-    ):
-        mock_identity.return_value = {
-            "name": "Test HA",
-            "description": "Desc",
-            "content": "Prompt",
-        }
-
-        with patch("sys.argv", ["home-assistant-agent", "--debug"]):
-            agent_server()
-
-        mock_init.assert_called_once()
-        mock_create.assert_called_once()
 
 
 def test_api_unauthorized(mock_session):
@@ -694,7 +667,6 @@ def test_init_eager_and_unavailable_coverage():
     # 2. Cover lines 52 and 57 in __init__.py
     with patch.dict(home_assistant_agent.OPTIONAL_MODULES, {}, clear=True):
         assert home_assistant_agent._MCP_AVAILABLE is False
-        assert home_assistant_agent._AGENT_AVAILABLE is False
 
 
 def test_main_run_entrypoints():
@@ -706,15 +678,11 @@ def test_main_run_entrypoints():
 
     # Cover __main__.py
     with (
-        patch("home_assistant_agent.agent_server.agent_server") as mock_agent_server,
-        patch("sys.argv", ["home-assistant-agent"]),
+        patch("home_assistant_agent.mcp_server.mcp_server") as mock_mcp_server,
+        patch("sys.argv", ["home-assistant-mcp"]),
     ):
         runpy.run_module("home_assistant_agent.__main__", run_name="__main__")
-        mock_agent_server.assert_called_once()
-
-    # Cover agent_server.py __main__
-    with patch("sys.argv", ["home-assistant-agent"]):
-        runpy.run_module("home_assistant_agent.agent_server", run_name="__main__")
+        mock_mcp_server.assert_called_once()
 
     # Cover mcp_server.py __main__
     with patch("sys.argv", ["home-assistant-mcp"]):

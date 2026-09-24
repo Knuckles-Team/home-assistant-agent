@@ -3,7 +3,8 @@
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. This is the record-source twin of
 media-downloader's blob ingestion: the package natively pushes its home-automation data
 into the epistemic-graph knowledge graph as **typed OWL nodes** (`:Device`, `:Entity`,
-`:Area`, `:SensorReading`, `:HomeAssistantService`, `:LogbookEntry`) + links.
+`:Area`, `:SensorReading`, `:HomeAssistantService`, `:LogbookEntry`) + links through the
+canonical ``agent_utilities.knowledge_graph.memory.native_ingest`` authority.
 
 Two modalities, per the ``homeassistant`` ontology leg:
 
@@ -11,19 +12,11 @@ Two modalities, per the ``homeassistant`` ontology leg:
 * **timeseries** — each state / history point → a :SensorReading node linked :readingOf
   its :Entity, carrying :state + :measuredAt (the sensor-reading timeseries).
 
-Entirely best-effort and engine-guarded: with no KG stack wired or no reachable engine,
-every entry point **no-ops** (returns ``None``), so the connector keeps working with
-zero KG infrastructure. Nodes carry shared provenance (``domain``/``source``) and match
-the classes federated by ``home_assistant_agent.ontology``. Node ids follow
+Entirely best-effort and engine-guarded: with no agent-utilities KG stack or no reachable
+engine, every entry point **no-ops** (returns ``None``), so the connector keeps working
+with zero KG infrastructure. Nodes carry shared provenance (``domain``/``source``) and
+match the classes federated by ``home_assistant_agent.ontology``. Node ids follow
 ``homeassistant:<class>:<externalId>``.
-
-SDK GAP (EH-481/SDK-GAPS.md): this used to delegate to
-``agent_utilities.knowledge_graph.memory.native_ingest.ingest_entities``. The SDK's only
-epistemic-graph write path, ``agent_connector_sdk.sinks.epistemic_graph.
-EpistemicGraphSink``, requires a verified client plus a ``PackImportAuthorityResolver``
-wired at the connector's composition root — not a drop-in for this guarded free function.
-Until the gap is filled, ``_native_ingest_entities`` is a stub that always returns
-``None``; every ``ingest_*`` call site above keeps working as a documented no-op.
 """
 
 from __future__ import annotations
@@ -31,21 +24,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    ingest_entities as _native_ingest_entities,
+)
+
 logger = logging.getLogger("home_assistant_agent.kg")
-
-
-def _native_ingest_entities(
-    entities: list[dict[str, Any]],
-    relationships: list[dict[str, Any]] | None = None,
-    *,
-    source: str,
-    domain: str,
-    client: Any | None = None,
-    graph: str | None = None,
-) -> dict[str, int] | None:
-    """No native ingest primitive is wired yet; see the SDK-GAPS note above."""
-    return None
-
 
 _SOURCE = "home-assistant-agent"
 _DOMAIN = "homeassistant"
