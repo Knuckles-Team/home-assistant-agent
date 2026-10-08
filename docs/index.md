@@ -2,7 +2,7 @@
 
 Home Assistant **REST + WebSocket API, MCP Server, and A2A Agent** for the
 agent-utilities ecosystem — control lights, switches, media players, calendars,
-and query historical state across your smart home.
+and query historical state across the operator's smart home.
 
 !!! info "Official documentation"
     This site is the canonical reference for `home-assistant-agent`, maintained
@@ -28,13 +28,13 @@ typed, deterministic MCP tools and an optional Pydantic-AI agent server. It prov
   surface into a Pydantic-AI graph agent with an embedded web UI.
 
 Every tool registration is governed by an environment flag, so the server exposes
-only the capabilities you enable and remains inactive when credentials are absent.
+only the capabilities the operator enable and remains inactive when credentials are absent.
 
 ## Explore the documentation
 
 <div class="grid cards" markdown>
 
-- :material-rocket-launch: **[Installation](installation.md)** — pip, source, extras, and the prebuilt Docker image.
+- :material-rocket-start: **[Installation](installation.md)** — pip, source, extras, and the prebuilt Docker image.
 - :material-server-network: **[Deployment](deployment.md)** — run the MCP server, the agent server, Docker Compose, Caddy + Technitium.
 - :material-console: **[Usage](usage.md)** — the MCP tools, the `HomeAssistantApi` client, and the CLI.
 - :material-home-assistant: **[Backing Platform](platform.md)** — deploy Home Assistant with Docker.
