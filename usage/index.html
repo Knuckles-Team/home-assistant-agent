@@ -846,7 +846,7 @@
 
 <h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
 <p><code>home-assistant-agent</code> exposes the same capability three ways: as <strong>MCP tools</strong> an
-agent calls, as a <strong>Python API</strong> (<code>HomeAssistantApi</code>) you import, and as a <strong>CLI</strong>.
+agent calls, as a <strong>Python API</strong> (<code>HomeAssistantApi</code>) the operator import, and as a <strong>CLI</strong>.
 The full tool surface and architecture are described in <a href="../overview/">Overview</a>.</p>
 <h2 id="as-an-mcp-server">As an MCP server<a class="headerlink" href="#as-an-mcp-server" title="Permanent link">&para;</a></h2>
 <p>Once <a href="../deployment/">deployed</a>, the server registers eleven action-routed tool
@@ -925,7 +925,7 @@ to enabled):</p>
 <li><em>"List every calendar event scheduled for tomorrow"</em> → <code>calendar</code></li>
 </ul>
 <h2 id="as-a-python-api">As a Python API<a class="headerlink" href="#as-a-python-api" title="Permanent link">&para;</a></h2>
-<p><code>HomeAssistantApi</code> is a unified REST + WebSocket client. Construct it directly, or
+<p><code>HomeAssistantApi</code> is a unified REST + WebSocket client. Built it directly, or
 build one straight from the environment with <code>get_client()</code>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">home_assistant_agent.api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">HomeAssistantApi</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
