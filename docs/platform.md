@@ -95,4 +95,4 @@ docker compose -f docker/stack.compose.yml up -d
 
 With the instance running and a valid token configured, the MCP tools and the
 [Python API](usage.md#as-a-python-api) can read configuration, states, history, and
-calendars, and call services across your smart home.
+calendars, and call services across the operator's smart home.

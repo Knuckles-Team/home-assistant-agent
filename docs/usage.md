@@ -1,7 +1,7 @@
 # Usage
 
 `home-assistant-agent` exposes the same capability three ways: as **MCP tools** an
-agent calls, as a **Python API** (`HomeAssistantApi`) you import, and as a **CLI**.
+agent calls, as a **Python API** (`HomeAssistantApi`) the operator import, and as a **CLI**.
 The full tool surface and architecture are described in [Overview](overview.md).
 
 ## As an MCP server
@@ -32,7 +32,7 @@ Example agent prompts that map onto these tools:
 
 ## As a Python API
 
-`HomeAssistantApi` is a unified REST + WebSocket client. Construct it directly, or
+`HomeAssistantApi` is a unified REST + WebSocket client. Built it directly, or
 build one straight from the environment with `get_client()`.
 
 ```python

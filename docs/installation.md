@@ -1,7 +1,7 @@
 # Installation
 
 `home-assistant-agent` is a standard Python package and a prebuilt container image.
-Pick the path that matches how you want to run it.
+Pick the path that matches how the operator want to run it.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ pip install home-assistant-agent
 
 ### Optional extras
 
-The base install ships the MCP server runtime. Install the extra for what you need:
+The base install ships the MCP server runtime. Install the extra for what the operator need:
 
 | Extra | Install | Pulls in |
 |---|---|---|
