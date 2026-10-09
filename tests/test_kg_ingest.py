@@ -2,17 +2,21 @@
 
 Exercises the ``home_assistant_agent.kg_ingest`` mapping seam — the Home Assistant
 record → :Entity/:Device/:Area/:SensorReading typed-node/link mapping, and the
-best-effort no-op guarantee when no engine is reachable — against a stubbed
-``agent_utilities.knowledge_graph.memory.native_ingest.ingest_entities`` so the
-suite runs identically with zero KG infrastructure and never touches the real
-engine/session machinery. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
+best-effort no-op guarantee when no engine is reachable — against a fake
+``agent_connector_sdk.ingest`` transport boundary, so the suite runs identically
+with zero KG infrastructure, never touches the real engine/session machinery, and
+still exercises the SDK's own request-building/validation contract.
+CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 """
 
 from __future__ import annotations
 
+from types import SimpleNamespace
 from typing import Any
 
-from home_assistant_agent import kg_ingest
+import pytest
+from agent_connector_sdk.ingest import KnowledgeIngest
+
 from home_assistant_agent.kg_ingest import (
     ingest_entities,
     ingest_history,
@@ -21,65 +25,69 @@ from home_assistant_agent.kg_ingest import (
 )
 
 
-class _Recorder:
-    """Stand-in for ``native_ingest.ingest_entities`` — records the call and answers it."""
+class _FakeTransport:
+    """Stand-in for the epistemic-graph ingest transport — records every request."""
 
     def __init__(self, error: Exception | None = None):
-        self.calls: list[dict[str, Any]] = []
+        self.requests: list[Any] = []
         self._error = error
 
-    def __call__(self, entities, relationships=None, *, source, domain, client=None, graph=None):
-        self.calls.append(
-            {
-                "entities": entities,
-                "relationships": relationships or [],
-                "source": source,
-                "domain": domain,
-                "client": client,
-                "graph": graph,
-            }
-        )
+    async def source_status(self, connector, stream):
+        return SimpleNamespace(accepted_checkpoint=None)
+
+    async def submit(self, request):
         if self._error is not None:
             raise self._error
-        return {"nodes": len(entities), "edges": len(relationships or [])}
+        self.requests.append(request)
+        return SimpleNamespace(
+            affected_count=len(request.records),
+            relationship_count=len(request.relationships),
+        )
+
+    async def store_blob(self, data):
+        raise AssertionError("this connector's ingestion carries no media")
 
 
-def test_ingest_entities_delegates_to_native_ingest(monkeypatch):
-    rec = _Recorder()
-    monkeypatch.setattr(kg_ingest, "_native_ingest_entities", rec)
-    res = ingest_entities(
+def _ingest(error: Exception | None = None) -> tuple[KnowledgeIngest, _FakeTransport]:
+    transport = _FakeTransport(error=error)
+    return KnowledgeIngest(transport, loop=None), transport
+
+
+@pytest.mark.asyncio
+async def test_ingest_entities_submits_records_and_relationships():
+    service, transport = _ingest()
+    res = await ingest_entities(
         [
             {"id": "a", "node_type": "Entity", "entityId": "light.k"},
             {"id": "b", "node_type": "Device"},
         ],
         [{"source": "a", "target": "b", "relationship": "onDevice"}],
-        client="injected-client",
-        graph="__commons__",
+        ingest=service,
     )
     assert res == {"nodes": 2, "edges": 1}
-    assert len(rec.calls) == 1
-    call = rec.calls[0]
-    assert call["source"] == "home-assistant-agent"
-    assert call["domain"] == "homeassistant"
-    assert call["client"] == "injected-client"
-    assert call["graph"] == "__commons__"
-    assert {e["id"] for e in call["entities"]} == {"a", "b"}
-    assert call["relationships"] == [
-        {"source": "a", "target": "b", "relationship": "onDevice"}
-    ]
+    assert len(transport.requests) == 1
+    request = transport.requests[0]
+    assert {r.record_id for r in request.records} == {"a", "b"}
+    assert len(request.relationships) == 1
+    rel = request.relationships[0]
+    assert rel.source.record_id == "a"
+    assert rel.target.record_id == "b"
+    assert rel.relation_reference.endswith("/relations/onDevice")
 
 
-def test_ingest_entities_drops_entries_without_id(monkeypatch):
-    rec = _Recorder()
-    monkeypatch.setattr(kg_ingest, "_native_ingest_entities", rec)
-    ingest_entities([{"node_type": "Entity"}, {"id": "keep", "node_type": "Entity"}])
-    assert [e["id"] for e in rec.calls[0]["entities"]] == ["keep"]
+@pytest.mark.asyncio
+async def test_ingest_entities_drops_entries_without_id():
+    service, transport = _ingest()
+    await ingest_entities(
+        [{"node_type": "Entity"}, {"id": "keep", "node_type": "Entity"}], ingest=service
+    )
+    assert [r.record_id for r in transport.requests[0].records] == ["keep"]
 
 
-def test_ingest_states_maps_entity_and_reading(monkeypatch):
-    rec = _Recorder()
-    monkeypatch.setattr(kg_ingest, "_native_ingest_entities", rec)
-    res = ingest_states(
+@pytest.mark.asyncio
+async def test_ingest_states_maps_entity_and_reading():
+    service, transport = _ingest()
+    res = await ingest_states(
         [
             {
                 "entity_id": "sensor.temp",
@@ -91,43 +99,42 @@ def test_ingest_states_maps_entity_and_reading(monkeypatch):
                 },
                 "last_updated": "2026-07-04T10:00:00Z",
             }
-        ]
+        ],
+        ingest=service,
     )
     # one :Entity + one :SensorReading node, linked :readingOf
     assert res == {"nodes": 2, "edges": 1}
-    entities = {e["id"]: e for e in rec.calls[0]["entities"]}
-    ent = entities["homeassistant:entity:sensor.temp"]
-    assert ent["node_type"] == "Entity"
-    assert ent["entityId"] == "sensor.temp"
-    assert ent["unitOfMeasurement"] == "°C"
-    assert ent["deviceClass"] == "temperature"
+    records = {r.record_id: r for r in transport.requests[0].records}
+    ent = records["homeassistant:entity:sensor.temp"]
+    assert ent.payload["entityId"] == "sensor.temp"
+    assert ent.payload["unitOfMeasurement"] == "°C"
+    assert ent.payload["deviceClass"] == "temperature"
     reading_id = "homeassistant:reading:sensor.temp@2026-07-04T10:00:00Z"
-    assert entities[reading_id]["node_type"] == "SensorReading"
-    assert entities[reading_id]["state"] == "21.5"
-    assert rec.calls[0]["relationships"] == [
-        {
-            "source": reading_id,
-            "target": "homeassistant:entity:sensor.temp",
-            "relationship": "readingOf",
-        }
+    assert records[reading_id].payload["state"] == "21.5"
+    rel = transport.requests[0].relationships[0]
+    assert rel.source.record_id == reading_id
+    assert rel.target.record_id == "homeassistant:entity:sensor.temp"
+    assert rel.relation_reference.endswith("/relations/readingOf")
+
+
+@pytest.mark.asyncio
+async def test_ingest_states_without_readings():
+    service, transport = _ingest()
+    res = await ingest_states(
+        [{"entity_id": "light.k", "state": "on", "attributes": {}}],
+        with_readings=False,
+        ingest=service,
+    )
+    assert res == {"nodes": 1, "edges": 0}
+    assert [r.record_id for r in transport.requests[0].records] == [
+        "homeassistant:entity:light.k"
     ]
 
 
-def test_ingest_states_without_readings(monkeypatch):
-    rec = _Recorder()
-    monkeypatch.setattr(kg_ingest, "_native_ingest_entities", rec)
-    res = ingest_states(
-        [{"entity_id": "light.k", "state": "on", "attributes": {}}],
-        with_readings=False,
-    )
-    assert res == {"nodes": 1, "edges": 0}
-    assert [e["id"] for e in rec.calls[0]["entities"]] == ["homeassistant:entity:light.k"]
-
-
-def test_ingest_registry_maps_entity_device_area(monkeypatch):
-    rec = _Recorder()
-    monkeypatch.setattr(kg_ingest, "_native_ingest_entities", rec)
-    res = ingest_registry(
+@pytest.mark.asyncio
+async def test_ingest_registry_maps_entity_device_area():
+    service, transport = _ingest()
+    res = await ingest_registry(
         {
             "entities": [
                 {
@@ -138,74 +145,73 @@ def test_ingest_registry_maps_entity_device_area(monkeypatch):
                     "en": "Kitchen Light",
                 }
             ]
-        }
+        },
+        ingest=service,
     )
     # :Entity + :Device + :Area nodes; :onDevice + :inArea edges
     assert res == {"nodes": 3, "edges": 2}
-    entities = {e["id"]: e for e in rec.calls[0]["entities"]}
-    assert entities["homeassistant:entity:light.kitchen"]["platform"] == "hue"
-    assert entities["homeassistant:device:dev-1"]["node_type"] == "Device"
-    assert entities["homeassistant:area:kitchen"]["node_type"] == "Area"
-    rels = rec.calls[0]["relationships"]
-    assert {
-        "source": "homeassistant:entity:light.kitchen",
-        "target": "homeassistant:device:dev-1",
-        "relationship": "onDevice",
-    } in rels
-    assert {
-        "source": "homeassistant:entity:light.kitchen",
-        "target": "homeassistant:area:kitchen",
-        "relationship": "inArea",
-    } in rels
+    records = {r.record_id: r for r in transport.requests[0].records}
+    assert records["homeassistant:entity:light.kitchen"].payload["platform"] == "hue"
+    assert "homeassistant:device:dev-1" in records
+    assert "homeassistant:area:kitchen" in records
+    rels = {
+        (rel.source.record_id, rel.target.record_id, rel.relation_reference.rsplit("/", 1)[-1])
+        for rel in transport.requests[0].relationships
+    }
+    assert ("homeassistant:entity:light.kitchen", "homeassistant:device:dev-1", "onDevice") in rels
+    assert ("homeassistant:entity:light.kitchen", "homeassistant:area:kitchen", "inArea") in rels
 
 
-def test_ingest_history_maps_timeseries_readings(monkeypatch):
-    rec = _Recorder()
-    monkeypatch.setattr(kg_ingest, "_native_ingest_entities", rec)
-    res = ingest_history(
+@pytest.mark.asyncio
+async def test_ingest_history_maps_timeseries_readings():
+    service, transport = _ingest()
+    res = await ingest_history(
         "sensor.power",
         [
             {"state": "100", "last_updated": "2026-07-04T10:00:00Z", "attributes": {}},
             {"state": "120", "last_updated": "2026-07-04T10:05:00Z", "attributes": {}},
         ],
+        ingest=service,
     )
     # 1 :Entity + 2 :SensorReading nodes, 2 :readingOf edges
     assert res == {"nodes": 3, "edges": 2}
-    ids = {e["id"] for e in rec.calls[0]["entities"]}
+    ids = {r.record_id for r in transport.requests[0].records}
     assert "homeassistant:reading:sensor.power@2026-07-04T10:00:00Z" in ids
     assert "homeassistant:reading:sensor.power@2026-07-04T10:05:00Z" in ids
-    assert all(rel["relationship"] == "readingOf" for rel in rec.calls[0]["relationships"])
-
-
-def test_ingest_history_empty_entity_id_is_noop(monkeypatch):
-    rec = _Recorder()
-    monkeypatch.setattr(kg_ingest, "_native_ingest_entities", rec)
-    assert ingest_history("", [{"state": "1"}]) is None
-    assert rec.calls == []
-
-
-def test_ingest_empty_is_noop(monkeypatch):
-    rec = _Recorder()
-    monkeypatch.setattr(kg_ingest, "_native_ingest_entities", rec)
-    assert ingest_entities([]) is None
-    assert ingest_states([]) is None
-    assert ingest_registry({"entities": []}) is None
-    assert rec.calls == []
-
-
-def test_ingest_noops_when_native_ingest_fails(monkeypatch):
-    # Any failure from the native primitive (engine unreachable, no ambient
-    # session, txn conflict, ...) degrades to a clean no-op, never raises.
-    monkeypatch.setattr(
-        kg_ingest,
-        "_native_ingest_entities",
-        _Recorder(error=RuntimeError("engine unreachable")),
+    assert all(
+        rel.relation_reference.endswith("/relations/readingOf")
+        for rel in transport.requests[0].relationships
     )
-    assert ingest_entities([{"id": "a", "node_type": "Entity"}]) is None
 
 
-def test_ingest_noops_without_engine():
-    # No monkeypatch: exercises the real import against whatever KG stack (or
-    # lack thereof) is actually present in the test environment — must never
-    # raise, so the connector keeps working with zero KG infrastructure.
-    assert ingest_entities([{"id": "a", "node_type": "Entity"}]) is None
+@pytest.mark.asyncio
+async def test_ingest_history_empty_entity_id_is_noop():
+    service, transport = _ingest()
+    assert await ingest_history("", [{"state": "1"}], ingest=service) is None
+    assert transport.requests == []
+
+
+@pytest.mark.asyncio
+async def test_ingest_empty_is_noop():
+    service, transport = _ingest()
+    assert await ingest_entities([], ingest=service) is None
+    assert await ingest_states([], ingest=service) is None
+    assert await ingest_registry({"entities": []}, ingest=service) is None
+    assert transport.requests == []
+
+
+@pytest.mark.asyncio
+async def test_ingest_noops_when_submit_fails():
+    # Any failure from the transport (engine unreachable, no ambient session, txn
+    # conflict, ...) degrades to a clean no-op, never raises.
+    service, _transport = _ingest(error=RuntimeError("engine unreachable"))
+    assert await ingest_entities([{"id": "a", "node_type": "Entity"}], ingest=service) is None
+
+
+@pytest.mark.asyncio
+async def test_ingest_noops_without_engine():
+    # No injected service: exercises the real current_ingest() lookup against
+    # whatever KG stack (or lack thereof) is actually configured in the test
+    # environment — must never raise, so the connector keeps working with zero
+    # KG infrastructure.
+    assert await ingest_entities([{"id": "a", "node_type": "Entity"}]) is None

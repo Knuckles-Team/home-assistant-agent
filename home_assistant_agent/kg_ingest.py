@@ -4,7 +4,7 @@ CONCEPT:AU-KG.ingest.enterprise-source-extractor. This is the record-source twin
 media-downloader's blob ingestion: the package natively pushes its home-automation data
 into the epistemic-graph knowledge graph as **typed OWL nodes** (`:Device`, `:Entity`,
 `:Area`, `:SensorReading`, `:HomeAssistantService`, `:LogbookEntry`) + links through the
-canonical ``agent_utilities.knowledge_graph.memory.native_ingest`` authority.
+canonical ``agent_connector_sdk.ingest`` knowledge-ingest facade.
 
 Two modalities, per the ``homeassistant`` ontology leg:
 
@@ -12,11 +12,10 @@ Two modalities, per the ``homeassistant`` ontology leg:
 * **timeseries** — each state / history point → a :SensorReading node linked :readingOf
   its :Entity, carrying :state + :measuredAt (the sensor-reading timeseries).
 
-Entirely best-effort and engine-guarded: with no agent-utilities KG stack or no reachable
-engine, every entry point **no-ops** (returns ``None``), so the connector keeps working
-with zero KG infrastructure. Nodes carry shared provenance (``domain``/``source``) and
-match the classes federated by ``home_assistant_agent.ontology``. Node ids follow
-``homeassistant:<class>:<externalId>``.
+Entirely best-effort and engine-guarded: with no reachable engine, every entry point
+**no-ops** (returns ``None``), so the connector keeps working with zero KG infrastructure.
+Nodes carry shared provenance via the ``IngestBinding`` and match the classes federated by
+``home_assistant_agent.ontology``. Node ids follow ``homeassistant:<class>:<externalId>``.
 """
 
 from __future__ import annotations
@@ -24,46 +23,70 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_entities as _native_ingest_entities,
+from agent_connector_sdk.ingest import (
+    ChangeSet,
+    Entity,
+    IngestBinding,
+    IngestError,
+    KnowledgeIngest,
+    Relationship,
+    current_ingest,
 )
 
 logger = logging.getLogger("home_assistant_agent.kg")
 
 _SOURCE = "home-assistant-agent"
 _DOMAIN = "homeassistant"
+_BINDING = IngestBinding(connector=_SOURCE, stream=_DOMAIN)
 
 
-def ingest_entities(
+def _to_entity(record: dict[str, Any]) -> Entity:
+    return Entity(
+        id=record["id"],
+        node_type=record["node_type"],
+        properties={k: v for k, v in record.items() if k not in ("id", "node_type")},
+    )
+
+
+def _to_relationship(record: dict[str, Any]) -> Relationship:
+    props = {
+        k: v for k, v in record.items() if k not in ("source", "target", "relationship")
+    }
+    return Relationship(
+        source=record["source"],
+        target=record["target"],
+        relationship=record["relationship"],
+        properties=props or None,
+    )
+
+
+async def ingest_entities(
     entities: list[dict[str, Any]],
     relationships: list[dict[str, Any]] | None = None,
     *,
-    source: str = _SOURCE,
-    domain: str = _DOMAIN,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
-    """Write canonical typed nodes and relationships through native ingestion.
+    """Write canonical typed nodes and relationships through the knowledge-ingest facade.
 
     ``entities``: ``[{"id":..., "node_type":<owl:Class>, ...props}]``.
     ``relationships``: ``[{"source":id, "target":id, "relationship":<link>}]``.
     Returns ``{"nodes":n, "edges":m}`` or ``None`` (no engine / failure; never raises).
-    ``client``/``graph`` may be injected (tests); otherwise resolved on demand.
+    ``ingest`` may be injected (tests); otherwise the installed process-global service
+    is used.
     """
     entities = [e for e in (entities or []) if e.get("id")]
     if not entities:
         return None
     try:
-        return _native_ingest_entities(
-            entities,
-            relationships,
-            source=source,
-            domain=domain,
-            client=client,
-            graph=graph,
+        change_set = ChangeSet(
+            entities=tuple(_to_entity(e) for e in entities),
+            relationships=tuple(_to_relationship(r) for r in relationships or ()),
         )
-    except Exception as e:  # noqa: BLE001 — engine optional; ingestion is best-effort
-        logger.warning("KG ingest: native ingestion failed: %s", e)
+        service = ingest or current_ingest()
+        receipt = await service.submit(_BINDING, change_set)
+        return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
+    except (IngestError, Exception) as e:  # noqa: BLE001 — engine optional; best-effort
+        logger.warning("KG ingest: knowledge ingest failed: %s", e)
         return None
 
 
@@ -82,12 +105,11 @@ def _reading_id(entity_id: str, ts: str | None) -> str:
     return f"{_DOMAIN}:reading:{entity_id}@{stamp}"
 
 
-def ingest_states(
+async def ingest_states(
     states: list[Any],
     *,
     with_readings: bool = True,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
     """Map Home Assistant states (``HAState``) → :Entity (+ :SensorReading) nodes.
 
@@ -134,14 +156,13 @@ def ingest_states(
             relationships.append(
                 {"source": rid, "target": node_id, "relationship": "readingOf"}
             )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_registry(
+async def ingest_registry(
     display: Any,
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
     """Map the entity registry (``HAEntityRegistryDisplay``) → :Entity/:Device/:Area.
 
@@ -193,15 +214,14 @@ def ingest_registry(
             relationships.append(
                 {"source": ent_node, "target": area_node, "relationship": "inArea"}
             )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_history(
+async def ingest_history(
     entity_id: str,
     history: list[Any],
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
     """Map a Home Assistant history series → :SensorReading timeseries nodes.
 
@@ -234,4 +254,4 @@ def ingest_history(
         relationships.append(
             {"source": rid, "target": ent_node, "relationship": "readingOf"}
         )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
