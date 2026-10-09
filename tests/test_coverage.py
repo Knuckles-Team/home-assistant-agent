@@ -258,7 +258,7 @@ def test_auth_coverage(mock_session):
 
     # 2. Authentication error
     auth._client = None
-    from agent_utilities.core.exceptions import AuthError
+    from agent_connector_sdk.exceptions import AuthError
 
     with patch(
         "home_assistant_agent.auth.HomeAssistantApi",
@@ -300,7 +300,7 @@ def test_api_unauthorized(mock_session):
 
     CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
-    from agent_utilities.core.exceptions import UnauthorizedError
+    from agent_connector_sdk.exceptions import UnauthorizedError
 
     from home_assistant_agent.api_client import HomeAssistantApi
 
@@ -318,7 +318,7 @@ def test_api_get_state_not_found(mock_session):
 
     CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
-    from agent_utilities.core.exceptions import ParameterError
+    from agent_connector_sdk.exceptions import ParameterError
 
     from home_assistant_agent.api_client import HomeAssistantApi
 
@@ -340,7 +340,7 @@ def test_ws_call_errors(mock_connect, mock_session):
 
     CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
-    from agent_utilities.core.exceptions import ApiError
+    from agent_connector_sdk.exceptions import ApiError
     from websockets.exceptions import ConnectionClosed
 
     from home_assistant_agent.api_client import HomeAssistantApi

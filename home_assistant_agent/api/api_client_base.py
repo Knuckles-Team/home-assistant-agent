@@ -3,11 +3,9 @@ import logging
 from typing import Any
 
 import requests
-from agent_utilities.core.exceptions import ApiError, UnauthorizedError
-from agent_utilities.core.transport_security import (
-    ResolvedTLSProfile,
-    resolve_configured_tls_profile,
-)
+from agent_connector_sdk.exceptions import ApiError, UnauthorizedError
+from agent_connector_sdk.tls.profile import ResolvedTLSProfile
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
 from websockets.exceptions import ConnectionClosed
 
 logger = logging.getLogger(__name__)
@@ -26,9 +24,7 @@ class BaseApiClient:
             self.base_url = f"{self.base_url}/api"
 
         self.token = token
-        self.tls_profile = tls_profile or resolve_configured_tls_profile(
-            "home_assistant"
-        )
+        self.tls_profile = tls_profile or resolve_tls_profile("home_assistant")
         self.session = self.tls_profile.configure_requests_session(requests.Session())
         self.session.headers.update(
             {

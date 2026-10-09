@@ -23,11 +23,11 @@ import logging
 import sys
 from typing import Any
 
-from agent_utilities.core.config import load_config
-from agent_utilities.mcp.action_dispatch import resolve_action
-from agent_utilities.mcp.concurrency import run_blocking
-from agent_utilities.mcp.server_factory import create_mcp_server
-from agent_utilities.mcp.verbose_tools import register_tool_surface
+from agent_connector_sdk.config import load_config
+from agent_connector_sdk.mcp.action_dispatch import resolve_action
+from agent_connector_sdk.mcp.concurrency import run_blocking
+from agent_connector_sdk.mcp.server import create_mcp_server
+from agent_connector_sdk.mcp.tool_surface import register_tool_surface
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -461,7 +461,7 @@ def register_kg_tools(mcp: FastMCP):
 
         states = await run_blocking(client.list_states)
         records = states if isinstance(states, list) else [states]
-        result = ingest_states(records, with_readings=with_readings)
+        result = await ingest_states(records, with_readings=with_readings)
         return {"listed": len(records), "ingested": result}
 
     @mcp.tool(tags={"kg"})
@@ -500,7 +500,7 @@ def register_kg_tools(mcp: FastMCP):
                 points.extend(group)
             else:
                 points.append(group)
-        result = ingest_history(entity_id, points)
+        result = await ingest_history(entity_id, points)
         return {"points": len(points), "ingested": result}
 
 
