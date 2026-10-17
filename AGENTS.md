@@ -9,19 +9,10 @@
 - Key principles: Functional patterns, Pydantic for data validation, asynchronous tool execution.
 - Architecture:
     - `mcp_server.py`: Main MCP server entry point and tool registration.
-    - `agent_server.py`: Pydantic AI agent server and run configuration.
     - `auth.py`: Authentication client singleton.
     - `api/`: Multi-protocol client backend (REST and WebSocket APIs).
 
 ### Architecture Diagram
-```mermaid
-graph TD
-    User([User/A2A]) --> Server[A2A Server / FastAPI]
-    Server --> Agent[Pydantic AI Agent]
-    Agent --> MCP[MCP Server / FastMCP]
-    MCP --> Client[API Client / Wrapper]
-    Client --> ExternalAPI(["Home Assistant REST and WebSocket API"])
-```
 
 ### Workflow Diagram
 ```mermaid
@@ -66,50 +57,9 @@ home-assistant-agent
 
 ## Project Structure Quick Reference
 - MCP Entry Point → `home_assistant_agent/mcp_server.py`
-- Agent Entry Point → `home_assistant_agent/agent_server.py`
 - Source Code → `home_assistant_agent/`
 
 ### File Tree
-```text
-├── .bumpversion.cfg
-├── .dockerignore
-├── .env.example
-├── .gitattributes
-├── .gitignore
-├── .pre-commit-config.yaml
-├── AGENTS.md
-├── CHANGELOG.md
-├── Dockerfile
-├── LICENSE
-├── MANIFEST.in
-├── README.md
-├── compose.yml
-├── debug.Dockerfile
-├── home_assistant_agent/
-│   ├── __init__.py
-│   ├── __main__.py
-│   ├── api/
-│   │   ├── __init__.py
-│   │   ├── api_client_base.py
-│   │   ├── api_client_rest.py
-│   │   └── api_client_websocket.py
-│   ├── agent_server.py
-│   ├── api_client.py
-│   ├── auth.py
-│   ├── home_assistant_models.py
-│   ├── main_agent.json
-│   ├── mcp_config.json
-│   └── mcp_server.py
-├── pyproject.toml
-├── requirements.txt
-└── tests/
-    ├── conftest.py
-    ├── pytest.ini
-    ├── test_concept_parity.py
-    ├── test_coverage.py
-    ├── test_init.py
-    └── test_startup.py
-```
 
 ## Concept Registry & Traceability
 
@@ -129,7 +79,6 @@ Directs the lazy loader, entry points, and CLI runtime interface.
 - **Source Files:**
   - [__init__.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/__init__.py)
   - [__main__.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/__main__.py)
-  - [agent_server.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
 - **Tests:**
   - [test_init.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_init.py)
   - [test_startup.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_startup.py)
@@ -146,13 +95,11 @@ Credentials and authentication client setup.
 ### `CONCEPT:AU-ORCH.planning.legal-automation-roadmap` — Orchestration Workflows/Agents
 Pydantic AI Graph Agent configuration.
 - **Source Files:**
-  - [agent_server.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
 - **Tests:**
   - [test_coverage.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L264-L284)
 
 ## Code Style & Conventions
 **Always:**
-- Use `agent-connector-sdk` for common patterns (e.g., `create_mcp_server`, `create_agent_server`).
 - Define input/output models using Pydantic.
 - Include descriptive docstrings for all tools (they are used as tool descriptions for LLMs).
 - Check for optional dependencies using `try/except ImportError`.
@@ -174,7 +121,6 @@ Pydantic AI Graph Agent configuration.
 - Use `agent-connector-sdk` base classes.
 
 **Ask first:**
-- Major refactors of `mcp_server.py` or `agent_server.py`.
 - Removing or renaming public tool functions.
 
 **Never do:**

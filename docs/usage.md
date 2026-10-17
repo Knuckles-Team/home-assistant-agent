@@ -78,14 +78,6 @@ api.fire_event("custom_event", {"source": "home-assistant-agent"})
 
 Both entry points are command-line programs.
 
-```bash
-# MCP server (stdio by default; --transport for HTTP / SSE)
-home-assistant-mcp --transport streamable-http --host 0.0.0.0 --port 8000
-
-# A2A agent server (connects to the MCP server, exposes an A2A endpoint + web UI)
-home-assistant-agent --provider openai --model-id gpt-4o --api-key sk-...
-```
-
 Both honor the `HOME_ASSISTANT_*` environment variables documented in
 [Deployment](deployment.md#configuration-environment) and in
 [`.env.example`](https://github.com/Knuckles-Team/home-assistant-agent/blob/main/.env.example).
