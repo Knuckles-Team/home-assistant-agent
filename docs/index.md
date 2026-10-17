@@ -1,7 +1,7 @@
 # home-assistant-agent
 
 Home Assistant **REST + WebSocket API, MCP Server, and A2A Agent** for the
-agent-utilities ecosystem — control lights, switches, media players, calendars,
+agent-connector-sdk ecosystem — control lights, switches, media players, calendars,
 and query historical state across the operator's smart home.
 
 !!! info "Official documentation"

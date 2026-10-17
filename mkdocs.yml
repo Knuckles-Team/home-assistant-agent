@@ -1,5 +1,5 @@
 site_name: "home-assistant-agent"
-site_description: "Home Assistant REST + WebSocket API, MCP Server, and A2A Agent — smart-home automation control for the agent-utilities ecosystem."
+site_description: "Home Assistant REST + WebSocket API, MCP Server, and A2A Agent — smart-home automation control for the agent-connector-sdk ecosystem."
 site_url: "https://knuckles-team.github.io/home-assistant-agent/"
 repo_name: "Knuckles-Team/home-assistant-agent"
 repo_url: "https://github.com/Knuckles-Team/home-assistant-agent"

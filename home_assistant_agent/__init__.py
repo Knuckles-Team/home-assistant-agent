@@ -9,7 +9,6 @@ __all__: list[str] = []
 CORE_MODULES: list[str] = ["home_assistant_agent.auth"]
 
 OPTIONAL_MODULES = {
-    "home_assistant_agent.agent_server": "agent",
     "home_assistant_agent.mcp_server": "mcp",
 }
 
