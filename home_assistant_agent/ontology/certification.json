@@ -1,5 +1,5 @@
 {
-  "api_version": "graphos.io/v1",
+  "api_version": "arbora.io/v1",
   "artifacts": {
     "connector_manifest.yml": "4c108d8c677078ce77ac908d3e2114794e34c045d88edae9fde344c022c0ba3e",
     "home_assistant_agent/connectors/mcp_source_presets.json": "27c2244bb329628a58963e4fb6d0011cba090a2b09d04371fdf9d6e560d34b38",
