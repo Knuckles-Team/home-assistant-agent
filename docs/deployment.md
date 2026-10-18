@@ -132,13 +132,11 @@ proxy* and *DNS with Technitium* below for standing one up.
 <!-- END GENERATED: deployment-options -->
 
 This page covers running `home-assistant-agent` as a long-lived server: the
-transports, a Docker Compose stack, the optional A2A agent server, putting it behind
 a Caddy reverse proxy, and giving it a DNS name with Technitium. To provision the
 **Home Assistant instance** it connects to, see [Backing Platform](platform.md).
 
 > `home-assistant-agent` ships **two** entry points: an **MCP server** (console
 > script `home-assistant-mcp`) — a typed, deterministic tool surface a policy router
-> or agent calls — and an optional **A2A agent server** (console script
 > `home-assistant-agent`) that wraps that tool surface in a Pydantic-AI graph agent.
 
 ## Run the MCP server
@@ -224,54 +222,6 @@ services:
 cp .env.example .env          # then edit HOME_ASSISTANT_* values
 docker compose -f docker/mcp.compose.yml up -d
 docker compose -f docker/mcp.compose.yml logs -f
-```
-
-## Run the A2A agent server
-
-For an autonomous agent over the same tool surface, run the agent server (console
-script `home-assistant-agent`). It connects to the MCP server over HTTP and exposes
-an A2A endpoint plus an embedded web UI.
-
-```bash
-export HOME_ASSISTANT_URL=http://your-home-assistant:8123
-export HOME_ASSISTANT_TOKEN=your_long_lived_access_token
-home-assistant-agent --provider openai --model-id gpt-4o --api-key sk-...
-```
-
-The repo ships [`docker/agent.compose.yml`](https://github.com/Knuckles-Team/home-assistant-agent/blob/main/docker/agent.compose.yml),
-which runs the MCP server **and** the agent server on one network. The agent reaches
-the MCP server by container name via `MCP_URL` and publishes the A2A server on
-`:9004`:
-
-```yaml
-services:
-  home-assistant-agent-mcp:
-    image: example/home-assistant-agent@sha256:<digest>
-    hostname: home-assistant-agent-mcp
-    env_file: ["../.env"]
-    environment:
-      - TRANSPORT=streamable-http
-      - HOST=0.0.0.0
-      - PORT=8000
-    ports: ["8000:8000"]
-
-  home-assistant-agent-agent:
-    image: example/home-assistant-agent@sha256:<digest>
-    depends_on: [home-assistant-agent-mcp]
-    command: ["home-assistant-agent"]
-    env_file: ["../.env"]
-    environment:
-      - HOST=0.0.0.0
-      - PORT=9004
-      - MCP_URL=http://home-assistant-agent-mcp:8000/mcp
-      - PROVIDER=${PROVIDER:-openai}
-      - MODEL_ID=${MODEL_ID:-gpt-4o}
-      - ENABLE_WEB_UI=True
-    ports: ["9004:9004"]
-```
-
-```bash
-docker compose -f docker/agent.compose.yml up -d
 ```
 
 ## Behind a Caddy reverse proxy

@@ -1,7 +1,6 @@
 # home-assistant-agent
 
-Home Assistant **REST + WebSocket API, MCP Server, and A2A Agent** for the
-agent-utilities ecosystem — control lights, switches, media players, calendars,
+agent-connector-sdk ecosystem — control lights, switches, media players, calendars,
 and query historical state across the operator's smart home.
 
 !!! info "Official documentation"
@@ -16,7 +15,6 @@ and query historical state across the operator's smart home.
 ## Overview
 
 `home-assistant-agent` wraps the Home Assistant REST and WebSocket API surface with
-typed, deterministic MCP tools and an optional Pydantic-AI agent server. It provides:
 
 - **`HomeAssistantApi`** — a unified REST + WebSocket client over the Home Assistant
   API (configuration, states, services, events, history, logbook, calendars, and
@@ -24,7 +22,6 @@ typed, deterministic MCP tools and an optional Pydantic-AI agent server. It prov
 - **Action-routed MCP tools** across eleven domains — Config, States, Services,
   Events, History, Logbook, Calendar, Panels, Voice, Entities, and System — each
   toggled independently by environment flag.
-- **An optional A2A agent server** (`home-assistant-agent`) that wires the same tool
   surface into a Pydantic-AI graph agent with an embedded web UI.
 
 Every tool registration is governed by an environment flag, so the server exposes
@@ -35,7 +32,6 @@ only the capabilities the operator enable and remains inactive when credentials 
 <div class="grid cards" markdown>
 
 - :material-rocket-start: **[Installation](installation.md)** — pip, source, extras, and the prebuilt Docker image.
-- :material-server-network: **[Deployment](deployment.md)** — run the MCP server, the agent server, Docker Compose, Caddy + Technitium.
 - :material-console: **[Usage](usage.md)** — the MCP tools, the `HomeAssistantApi` client, and the CLI.
 - :material-home-assistant: **[Backing Platform](platform.md)** — deploy Home Assistant with Docker.
 - :material-sitemap: **[Overview](overview.md)** — architecture, tool surface, and ecosystem role.
@@ -59,5 +55,4 @@ home-assistant-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ```
 
 See **[Installation](installation.md)** and **[Deployment](deployment.md)** for the
-full matrix (PyPI extras, Docker image, all transports, the agent server, reverse
 proxy, DNS).

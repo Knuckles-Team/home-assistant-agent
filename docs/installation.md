@@ -21,15 +21,8 @@ The base install ships the MCP server runtime. Install the extra for what the op
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| _(base)_ | `pip install home-assistant-agent` | FastMCP MCP-server runtime (`agent-utilities[mcp]`) |
-| `agent` | `pip install "home-assistant-agent[agent]"` | Pydantic-AI agent server + Logfire tracing |
-| `all` | `pip install "home-assistant-agent[all]"` | MCP server, agent server, and tracing |
+| _(base)_ | `pip install home-assistant-agent` | FastMCP MCP-server runtime (`agent-connector-sdk`) |
 | `test` | `pip install "home-assistant-agent[test]"` | `pytest`, `pytest-asyncio`, `pytest-cov`, `pytest-xdist` |
-
-```bash
-# Typical: run the MCP server and the A2A agent server
-pip install "home-assistant-agent[all]"
-```
 
 ## From source
 
@@ -60,18 +53,11 @@ docker run --rm -i \
   example/home-assistant-agent@sha256:<digest>        # stdio transport (default)
 ```
 
-For an HTTP server with a published port and the agent server, see
 [Deployment](deployment.md).
 
 ## Verify the install
 
-```bash
-home-assistant-mcp --help
-home-assistant-agent --help
-```
-
 ## Next steps
 
-- **[Deployment](deployment.md)** — run it as a long-lived MCP server (and agent server) behind Caddy + DNS.
 - **[Usage](usage.md)** — call the tools, the API, and the CLI.
 - **[Configuration](deployment.md#configuration-environment)** — every environment variable.

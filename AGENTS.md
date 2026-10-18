@@ -5,23 +5,14 @@
 
 ## Tech Stack & Architecture
 - Language/Version: Python 3.10+
-- Core Libraries: `agent-utilities`, `fastmcp`, `pydantic-ai`
+- Core Libraries: `agent-connector-sdk`, `fastmcp`, `pydantic-ai`
 - Key principles: Functional patterns, Pydantic for data validation, asynchronous tool execution.
 - Architecture:
     - `mcp_server.py`: Main MCP server entry point and tool registration.
-    - `agent_server.py`: Pydantic AI agent server and run configuration.
     - `auth.py`: Authentication client singleton.
     - `api/`: Multi-protocol client backend (REST and WebSocket APIs).
 
 ### Architecture Diagram
-```mermaid
-graph TD
-    User([User/A2A]) --> Server[A2A Server / FastAPI]
-    Server --> Agent[Pydantic AI Agent]
-    Agent --> MCP[MCP Server / FastMCP]
-    MCP --> Client[API Client / Wrapper]
-    Client --> ExternalAPI(["Home Assistant REST and WebSocket API"])
-```
 
 ### Workflow Diagram
 ```mermaid
@@ -66,54 +57,13 @@ home-assistant-agent
 
 ## Project Structure Quick Reference
 - MCP Entry Point → `home_assistant_agent/mcp_server.py`
-- Agent Entry Point → `home_assistant_agent/agent_server.py`
 - Source Code → `home_assistant_agent/`
 
 ### File Tree
-```text
-├── .bumpversion.cfg
-├── .dockerignore
-├── .env.example
-├── .gitattributes
-├── .gitignore
-├── .pre-commit-config.yaml
-├── AGENTS.md
-├── CHANGELOG.md
-├── Dockerfile
-├── LICENSE
-├── MANIFEST.in
-├── README.md
-├── compose.yml
-├── debug.Dockerfile
-├── home_assistant_agent/
-│   ├── __init__.py
-│   ├── __main__.py
-│   ├── api/
-│   │   ├── __init__.py
-│   │   ├── api_client_base.py
-│   │   ├── api_client_rest.py
-│   │   └── api_client_websocket.py
-│   ├── agent_server.py
-│   ├── api_client.py
-│   ├── auth.py
-│   ├── home_assistant_models.py
-│   ├── main_agent.json
-│   ├── mcp_config.json
-│   └── mcp_server.py
-├── pyproject.toml
-├── requirements.txt
-└── tests/
-    ├── conftest.py
-    ├── pytest.ini
-    ├── test_concept_parity.py
-    ├── test_coverage.py
-    ├── test_init.py
-    └── test_startup.py
-```
 
 ## Concept Registry & Traceability
 
-This repository aligns perfectly with the standard `agent-utilities` architecture pillars:
+This repository aligns perfectly with the standard `agent-connector-sdk` architecture pillars:
 
 ### `CONCEPT:AU-ECO.messaging.native-backend-abstraction` — Tool Interface & MCP Factory
 Defines all 11 action-routed MCP tools: Config, States, Services, Events, History, Logbook, Calendar, Panels, Voice, Entities, and System.
@@ -129,7 +79,6 @@ Directs the lazy loader, entry points, and CLI runtime interface.
 - **Source Files:**
   - [__init__.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/__init__.py)
   - [__main__.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/__main__.py)
-  - [agent_server.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
 - **Tests:**
   - [test_init.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_init.py)
   - [test_startup.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_startup.py)
@@ -146,13 +95,11 @@ Credentials and authentication client setup.
 ### `CONCEPT:AU-ORCH.planning.legal-automation-roadmap` — Orchestration Workflows/Agents
 Pydantic AI Graph Agent configuration.
 - **Source Files:**
-  - [agent_server.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/home_assistant_agent/agent_server.py)
 - **Tests:**
   - [test_coverage.py](file://${WORKSPACE_ROOT}/agent-packages/agents/home-assistant-agent/tests/test_coverage.py#L264-L284)
 
 ## Code Style & Conventions
 **Always:**
-- Use `agent-utilities` for common patterns (e.g., `create_mcp_server`, `create_agent_server`).
 - Define input/output models using Pydantic.
 - Include descriptive docstrings for all tools (they are used as tool descriptions for LLMs).
 - Check for optional dependencies using `try/except ImportError`.
@@ -160,7 +107,7 @@ Pydantic AI Graph Agent configuration.
 ## Dos and Don'ts
 **Do:**
 - Run lint/test via `uv run ruff check .` and `pytest`.
-- Use existing patterns from `agent-utilities`.
+- Use existing patterns from `agent-connector-sdk`.
 - Keep tools focused and idempotent where possible.
 
 **Don't:**
@@ -171,19 +118,18 @@ Pydantic AI Graph Agent configuration.
 ## Safety & Boundaries
 **Always do:**
 - Run lint/test via `pre-commit`.
-- Use `agent-utilities` base classes.
+- Use `agent-connector-sdk` base classes.
 
 **Ask first:**
-- Major refactors of `mcp_server.py` or `agent_server.py`.
 - Removing or renaming public tool functions.
 
 **Never do:**
 - Commit `.env` files or secrets.
-- Modify `agent-utilities` or `universal-skills` files from within this package.
+- Modify `agent-connector-sdk` or `universal-skills` files from within this package.
 
 ## When Stuck
 - Propose a plan first before making large changes.
-- Check `agent-utilities` documentation for existing helpers.
+- Check `agent-connector-sdk` documentation for existing helpers.
 
 ## ⛔ No Scratch or Temporary Files in Repository
 
@@ -307,10 +253,10 @@ alone).
 Working in parallel with other sessions/worktrees? **Reserve a concept id before you write its `CONCEPT:` marker** so two sessions never collide:
 
 ```bash
-agent-utilities --json concept reserve --ns EG-KG.compute.backend   # or a package prefix, e.g. KEY
+agent-connector-sdk --json concept reserve --ns EG-KG.compute.backend   # or a package prefix, e.g. KEY
 ```
 
-Full protocol (ledger, merge=union, reconcile, MCP/REST): <https://knuckles-team.github.io/agent-utilities/concept_coordination/>
+Full protocol (ledger, merge=union, reconcile, MCP/REST): <https://knuckles-team.github.io/agent-connector-sdk/concept_coordination/>
 <!-- END concept-coordination (generated) -->
 
 ## Version & lockfile drift edict (keep the version mirrors AND the lock in sync)
@@ -338,14 +284,14 @@ is what Dependabot flags. Rules:
 ## Upstream currency edict — target the newest release; a pin is a hypothesis, not a fact (READ BEFORE capping, deferring, or opt-in-gating an upgrade)
 
 This governs how this repository treat **other people's** releases, deprecations, and version caps in
-this repo (fleet-wide edict, propagated from `agent-utilities/AGENTS.md`).
+this repo (fleet-wide edict, propagated from `agent-connector-sdk/AGENTS.md`).
 
 1. **Latest by default.** Target the newest upstream release -- including a pre-release
    where the ecosystem has already moved onto it. Sitting on an old major because the
    upgrade is work is not a reason to defer it.
 2. **A conservative upstream pin is a hypothesis, not a fact -- test it, don't inherit
    it.** Upstream maintainers cap defensively (an unreleased major, an untested surface)
-   as often as they cap for a known break. Worked example (from `agent-utilities`):
+   as often as they cap for a known break. Worked example (from `agent-connector-sdk`):
    `pydantic-ai-slim` 2.18.0 declared `fastmcp-slim[client]>=3.3.0` with no upper bound;
    2.19.0 added `<4` purely as a defensive guard while fastmcp 4 was still pre-release --
    not because of an observed incompatibility. Blocking an upgrade on that kind of cap

@@ -44,19 +44,20 @@ api = HomeAssistantApi(
 )
 
 # Reads
-config = api.get_config()                 # instance configuration
-states = api.get_states()                 # all entity states
+config = api.get_config()  # instance configuration
+states = api.get_states()  # all entity states
 one = api.get_state("light.living_room")  # a single entity
-services = api.get_services()             # available service domains
-calendars = api.get_calendars()           # configured calendars
-log = api.get_error_log()                 # the Home Assistant error log
+services = api.get_services()  # available service domains
+calendars = api.get_calendars()  # configured calendars
+log = api.get_error_log()  # the Home Assistant error log
 ```
 
 Build a client straight from the environment:
 
 ```python
 from home_assistant_agent.auth import get_client
-api = get_client()        # reads HOME_ASSISTANT_* from the environment / .env
+
+api = get_client()  # reads HOME_ASSISTANT_* from the environment / .env
 ```
 
 ### Actions
@@ -77,14 +78,6 @@ api.fire_event("custom_event", {"source": "home-assistant-agent"})
 ## As a CLI
 
 Both entry points are command-line programs.
-
-```bash
-# MCP server (stdio by default; --transport for HTTP / SSE)
-home-assistant-mcp --transport streamable-http --host 0.0.0.0 --port 8000
-
-# A2A agent server (connects to the MCP server, exposes an A2A endpoint + web UI)
-home-assistant-agent --provider openai --model-id gpt-4o --api-key sk-...
-```
 
 Both honor the `HOME_ASSISTANT_*` environment variables documented in
 [Deployment](deployment.md#configuration-environment) and in

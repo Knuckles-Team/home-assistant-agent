@@ -127,5 +127,5 @@
     rdfs:comment """Home Assistant smart-home model — physical devices, the entities they
     expose, the areas that contain them, the services that control them, and the
     timeseries of sensor/state readings and logbook events they emit — federated into
-    the agent-utilities knowledge-graph hub.""" ;
+    the agent-connector-sdk knowledge-graph hub.""" ;
     owl:imports <http://knuckles.team/kg> .
