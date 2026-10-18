@@ -5,7 +5,6 @@ import os
 from typing import Any
 from unittest.mock import MagicMock, patch
 
-
 import pytest
 
 
@@ -254,8 +253,6 @@ def test_auth_coverage(mock_session):
         with pytest.raises(RuntimeError) as exc:
             get_client()
         assert "AUTHENTICATION ERROR" in str(exc.value)
-
-
 
 
 def test_api_unauthorized(mock_session):
@@ -597,9 +594,16 @@ async def test_mcp_server_tools(mock_session, mock_connect):
                 "HOME_ASSISTANT_TOKEN": "token",
             },
         ):
-            for tool_name, params in tool_test_cases:
-                print(f"Calling MCP Tool: {tool_name} with params: {params}")
-                res = await mcp.call_tool(tool_name, params)
+            # One tool per API operation: each case calls home_assistant_<action>
+            # with its typed arguments.
+            names = {tool.name for tool in tools}
+            for _domain_tool, params in tool_test_cases:
+                if params["action"] == "invalid":
+                    continue
+                tool_name = f"home_assistant_{params['action']}"
+                assert tool_name in names, tool_name
+                arguments = json.loads(params.get("params_json", "{}"))
+                res = await mcp.call_tool(tool_name, arguments)
                 assert res is not None
 
 
@@ -657,8 +661,6 @@ def test_init_eager_and_unavailable_coverage():
     # 2. Cover lines 52 and 57 in __init__.py
     with patch.dict(home_assistant_agent.OPTIONAL_MODULES, {}, clear=True):
         assert home_assistant_agent._MCP_AVAILABLE is False
-
-
 
 
 @pytest.mark.asyncio

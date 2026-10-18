@@ -34,7 +34,7 @@ from starlette.responses import JSONResponse
 from home_assistant_agent.api_client import HomeAssistantApi
 from home_assistant_agent.auth import get_client
 
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 
 logger = get_logger(name="home-assistant-agent")
 logger.setLevel(logging.INFO)
@@ -532,7 +532,7 @@ def get_mcp_instance() -> tuple[Any, ...]:
     args, mcp, middlewares = create_mcp_server(
         name="home-assistant-agent MCP",
         version=__version__,
-        instructions="home-assistant-agent MCP Server — Condensed Action-Routed Tools.",
+        instructions="home-assistant-agent MCP Server — one tool per API operation.",
     )
 
     @mcp.custom_route("/health", methods=["GET"])
