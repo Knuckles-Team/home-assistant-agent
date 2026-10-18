@@ -34,7 +34,7 @@ from starlette.responses import JSONResponse
 from home_assistant_agent.api_client import HomeAssistantApi
 from home_assistant_agent.auth import get_client
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 
 logger = get_logger(name="home-assistant-agent")
 logger.setLevel(logging.INFO)
@@ -75,6 +75,8 @@ def register_config_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_states_tools(mcp: FastMCP):
     """Register states tools."""
 
@@ -110,6 +112,8 @@ def register_states_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_services_tools(mcp: FastMCP):
     """Register services tools."""
 
@@ -145,6 +149,8 @@ def register_services_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_events_tools(mcp: FastMCP):
     """Register events tools."""
 
@@ -180,6 +186,8 @@ def register_events_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_history_tools(mcp: FastMCP):
     """Register history tools."""
 
@@ -215,6 +223,8 @@ def register_history_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_logbook_tools(mcp: FastMCP):
     """Register logbook tools."""
 
@@ -250,6 +260,8 @@ def register_logbook_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_calendar_tools(mcp: FastMCP):
     """Register calendar tools."""
 
@@ -285,6 +297,8 @@ def register_calendar_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_panels_tools(mcp: FastMCP):
     """Register panels tools."""
 
@@ -320,6 +334,8 @@ def register_panels_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_voice_tools(mcp: FastMCP):
     """Register voice tools."""
 
@@ -355,6 +371,8 @@ def register_voice_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_entities_tools(mcp: FastMCP):
     """Register entities tools."""
 
@@ -396,6 +414,8 @@ def register_entities_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_system_tools(mcp: FastMCP):
     """Register system tools."""
 
@@ -431,6 +451,8 @@ def register_system_tools(mcp: FastMCP):
         action = resolved
 
         return await run_blocking(getattr(client, action), **kwargs)
+
+
 def register_kg_tools(mcp: FastMCP):
     """Register native epistemic-graph ingestion tools (Wire-First).
 

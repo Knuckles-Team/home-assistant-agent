@@ -44,19 +44,20 @@ api = HomeAssistantApi(
 )
 
 # Reads
-config = api.get_config()                 # instance configuration
-states = api.get_states()                 # all entity states
+config = api.get_config()  # instance configuration
+states = api.get_states()  # all entity states
 one = api.get_state("light.living_room")  # a single entity
-services = api.get_services()             # available service domains
-calendars = api.get_calendars()           # configured calendars
-log = api.get_error_log()                 # the Home Assistant error log
+services = api.get_services()  # available service domains
+calendars = api.get_calendars()  # configured calendars
+log = api.get_error_log()  # the Home Assistant error log
 ```
 
 Build a client straight from the environment:
 
 ```python
 from home_assistant_agent.auth import get_client
-api = get_client()        # reads HOME_ASSISTANT_* from the environment / .env
+
+api = get_client()  # reads HOME_ASSISTANT_* from the environment / .env
 ```
 
 ### Actions
