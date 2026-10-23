@@ -1,4 +1,4 @@
-connector: home-assistant-agent
+connector: home-assistant-mcp
 ontology_source: homeassistant
 schema_version: '1'
 resources:
