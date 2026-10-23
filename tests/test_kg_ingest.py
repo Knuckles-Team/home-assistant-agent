@@ -72,7 +72,7 @@ async def test_ingest_entities_submits_records_and_relationships():
     rel = request.relationships[0]
     assert rel.source.record_id == "a"
     assert rel.target.record_id == "b"
-    assert rel.relation_reference.endswith("/relations/onDevice")
+    assert rel.relation_reference.endswith("/onDevice")
 
 
 @pytest.mark.asyncio
@@ -114,7 +114,7 @@ async def test_ingest_states_maps_entity_and_reading():
     rel = transport.requests[0].relationships[0]
     assert rel.source.record_id == reading_id
     assert rel.target.record_id == "homeassistant:entity:sensor.temp"
-    assert rel.relation_reference.endswith("/relations/readingOf")
+    assert rel.relation_reference.endswith("/readingOf")
 
 
 @pytest.mark.asyncio
@@ -179,7 +179,7 @@ async def test_ingest_history_maps_timeseries_readings():
     assert "homeassistant:reading:sensor.power@2026-07-04T10:00:00Z" in ids
     assert "homeassistant:reading:sensor.power@2026-07-04T10:05:00Z" in ids
     assert all(
-        rel.relation_reference.endswith("/relations/readingOf")
+        rel.relation_reference.endswith("/readingOf")
         for rel in transport.requests[0].relationships
     )
 
