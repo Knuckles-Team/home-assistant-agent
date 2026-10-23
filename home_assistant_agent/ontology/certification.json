@@ -1,9 +1,6 @@
 {
   "api_version": "arbora.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "03cfbfbd6543726b779aa3238a2b3789154cdcba275edc788bc741aed2d7062e",
-    "home_assistant_agent/connectors/mcp_source_presets.json": "e29b611042636637329ce37e53e6485243c97469ad59814f9d3be685db9f881f",
-    "home_assistant_agent/connectors/tool_schema_fingerprints.json": "7f8d34564d9ef3a0e73b382891b6a0ba00941d0da579870e5959211f3f3088f9",
     "home_assistant_agent/ontology/fixtures/records.json": "df18008766675f2f37befc58650f047981d94ecb677b2439d391c59efb248172",
     "home_assistant_agent/ontology/homeassistant.ttl": "02b6254730be6928908dc718597b0e6a9256a5d3e175a7cf2327373828c2c037",
     "home_assistant_agent/ontology/mappings/source.yaml": "3d84b0da52bc669c7cad10c55ac83b19cd3c08a236d3d7818c32ec7c605b5899",

@@ -4,8 +4,6 @@
   "schema_version": "1.0",
   "prompt_version": "0.1.0",
   "source": "home-assistant-agent",
-  "extends": "agent-connector-sdk:base",
-  "compose": "append",
   "description": "Home Assistant home-automation specialist: entity control, telemetry, and scene/event orchestration over the home-assistant-agent MCP server, mapped into the knowledge graph.",
   "metadata": {
     "topic": "Home Assistant home automation",
