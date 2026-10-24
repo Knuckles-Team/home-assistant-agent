@@ -1,4 +1,3 @@
-import importlib
 import inspect
 import json
 import os
@@ -191,30 +190,6 @@ def mock_connect():
     with patch("home_assistant_agent.api_client.connect") as mock_conn:
         mock_conn.side_effect = lambda *args, **kwargs: MockWebSocket()
         yield mock_conn
-
-
-def test_init_coverage():
-    """Test package initializer coverage.
-
-    CONCEPT:AU-OS.safety.doom-loop-detection
-    """
-    import home_assistant_agent
-    from home_assistant_agent import _import_module_safely
-
-    # 1. Safe import
-    assert _import_module_safely("os") is not None
-    assert _import_module_safely("non_existent_module_foo_bar") is None
-
-    # 2. Dynamic attribute checks
-    assert home_assistant_agent._MCP_AVAILABLE in (True, False)
-
-    # 3. AttributeError
-    with pytest.raises(AttributeError):
-        _ = home_assistant_agent.non_existent_attribute_xyz
-
-    # 4. __dir__
-    d = dir(home_assistant_agent)
-    assert len(d) > 0
 
 
 def test_auth_coverage(mock_session):
@@ -456,7 +431,7 @@ async def test_mcp_server_tools(mock_session, mock_connect):
     """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 
-    from home_assistant_agent.mcp_server import get_mcp_instance
+    from agent_connector_sdk.connector import build_server
 
     # Bypass rate limiting
     async def mock_on_request(self, context, call_next):
@@ -470,7 +445,7 @@ async def test_mcp_server_tools(mock_session, mock_connect):
         patch.object(RateLimitingMiddleware, "on_request", mock_on_request),
         patch("fastmcp.Context.info", mock_info),
     ):
-        mcp, _, _ = get_mcp_instance()
+        _, mcp = build_server("home_assistant_agent", command_args=[])
         tools = await mcp.list_tools()
         assert len(tools) > 0
 
@@ -607,62 +582,6 @@ async def test_mcp_server_tools(mock_session, mock_connect):
                 assert res is not None
 
 
-def test_mcp_server_cli():
-    """Test the MCP server CLI parser and transports.
-
-    CONCEPT:AU-ECO.messaging.native-backend-abstraction
-    """
-    from home_assistant_agent.mcp_server import mcp_server
-
-    with patch("home_assistant_agent.mcp_server.get_mcp_instance") as mock_get_instance:
-        mock_mcp = MagicMock()
-        mock_args = MagicMock()
-        mock_get_instance.return_value = (mock_mcp, mock_args, [])
-
-        # 1. stdio
-        mock_args.transport = "stdio"
-        with patch("sys.argv", ["home-assistant-mcp"]):
-            mcp_server()
-        mock_mcp.run.assert_called_with(transport="stdio")
-
-        # 2. streamable-http
-        mock_args.transport = "streamable-http"
-        mock_args.host = "localhost"
-        mock_args.port = 8000
-        mcp_server()
-        mock_mcp.run.assert_called_with(
-            transport="streamable-http", host="localhost", port=8000
-        )
-
-        # 3. sse
-        mock_args.transport = "sse"
-        mock_args.host = "localhost"
-        mock_args.port = 8000
-        mcp_server()
-        mock_mcp.run.assert_called_with(transport="sse", host="localhost", port=8000)
-
-        # 4. Invalid transport
-        mock_args.transport = "invalid"
-        with pytest.raises(SystemExit):
-            mcp_server()
-
-
-def test_init_eager_and_unavailable_coverage():
-    """Test package initializer eager import and unavailable states.
-
-    CONCEPT:AU-OS.safety.doom-loop-detection
-    """
-    import home_assistant_agent
-
-    # 1. Eager import branch cover (lines 30-32 in __init__.py)
-    with patch("home_assistant_agent.CORE_MODULES", ["home_assistant_agent.auth"]):
-        importlib.reload(home_assistant_agent)
-
-    # 2. Cover lines 52 and 57 in __init__.py
-    with patch.dict(home_assistant_agent.OPTIONAL_MODULES, {}, clear=True):
-        assert home_assistant_agent._MCP_AVAILABLE is False
-
-
 @pytest.mark.asyncio
 async def test_mcp_server_health_and_invalid_actions(mock_session, mock_connect):
     """Test health endpoints and invalid tool actions.
@@ -671,7 +590,7 @@ async def test_mcp_server_health_and_invalid_actions(mock_session, mock_connect)
     """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 
-    from home_assistant_agent.mcp_server import get_mcp_instance
+    from agent_connector_sdk.connector import build_server
 
     async def mock_on_request(self, context, call_next):
         return await call_next(context)
@@ -690,7 +609,7 @@ async def test_mcp_server_health_and_invalid_actions(mock_session, mock_connect)
             },
         ),
     ):
-        mcp, _, _ = get_mcp_instance()
+        _, mcp = build_server("home_assistant_agent", command_args=[])
 
         # 1. Health check
         from starlette.datastructures import Headers

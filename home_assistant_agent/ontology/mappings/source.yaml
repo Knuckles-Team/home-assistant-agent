@@ -1,5 +1,5 @@
 schema_version: '1'
-connector: home-assistant-agent
+connector: home-assistant-mcp
 ontology_source: homeassistant
 sync:
 - preset: homeassistant-states

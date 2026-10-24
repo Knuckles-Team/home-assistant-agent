@@ -20,8 +20,6 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/home-assistant-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/home-assistant-agent)
 
-*Version: 2.3.3*
-
 > **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
 > Assistant platform are maintained in the
 > [official documentation](https://knuckles-team.github.io/home-assistant-agent/).
