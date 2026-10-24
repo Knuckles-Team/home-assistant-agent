@@ -23,6 +23,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from agent_connector_sdk.connector_identity import connector_name
 from agent_connector_sdk.ingest import (
     ChangeSet,
     Entity,
@@ -35,7 +36,7 @@ from agent_connector_sdk.ingest import (
 
 logger = logging.getLogger("home_assistant_agent.kg")
 
-_SOURCE = "home-assistant-agent"
+_SOURCE = connector_name("home_assistant_agent")
 _DOMAIN = "homeassistant"
 _BINDING = IngestBinding(connector=_SOURCE, stream=_DOMAIN)
 

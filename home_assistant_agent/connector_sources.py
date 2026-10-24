@@ -7,9 +7,6 @@ Served live as ``connector://resources``. Regenerate by editing the declarations
 from __future__ import annotations
 
 from agent_connector_sdk.ingest.live_declaration import source_meta
-from agent_connector_sdk.ingest.sources import IngestSourceDeclaration, IngestSourceSpec
-
-CONNECTOR = "home-assistant-mcp"
 
 SOURCES = (
     source_meta(
@@ -28,95 +25,46 @@ SOURCES = (
     ),
 )
 
+SCHEMA_VERSION = 2
+
+FIELD_SETS = {
+    "fields_1": {
+        "areaId": "xsd:string",
+        "deviceClass": "xsd:string",
+        "deviceId": "xsd:string",
+        "entityId": "xsd:string",
+        "friendlyName": "xsd:string",
+        "measuredAt": "xsd:dateTime",
+        "platform": "xsd:string",
+        "serviceDomain": "xsd:string",
+        "state": "xsd:string",
+        "unitOfMeasurement": "xsd:string",
+    },
+}
+
 SCHEMA_MAPPINGS = {
     "Area": {
-        "fields": {
-            "areaId": "xsd:string",
-            "deviceClass": "xsd:string",
-            "deviceId": "xsd:string",
-            "entityId": "xsd:string",
-            "friendlyName": "xsd:string",
-            "measuredAt": "xsd:dateTime",
-            "platform": "xsd:string",
-            "serviceDomain": "xsd:string",
-            "state": "xsd:string",
-            "unitOfMeasurement": "xsd:string",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": None,
     },
     "Device": {
-        "fields": {
-            "areaId": "xsd:string",
-            "deviceClass": "xsd:string",
-            "deviceId": "xsd:string",
-            "entityId": "xsd:string",
-            "friendlyName": "xsd:string",
-            "measuredAt": "xsd:dateTime",
-            "platform": "xsd:string",
-            "serviceDomain": "xsd:string",
-            "state": "xsd:string",
-            "unitOfMeasurement": "xsd:string",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": None,
     },
     "Entity": {
-        "fields": {
-            "areaId": "xsd:string",
-            "deviceClass": "xsd:string",
-            "deviceId": "xsd:string",
-            "entityId": "xsd:string",
-            "friendlyName": "xsd:string",
-            "measuredAt": "xsd:dateTime",
-            "platform": "xsd:string",
-            "serviceDomain": "xsd:string",
-            "state": "xsd:string",
-            "unitOfMeasurement": "xsd:string",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": None,
     },
     "HomeAssistantService": {
-        "fields": {
-            "areaId": "xsd:string",
-            "deviceClass": "xsd:string",
-            "deviceId": "xsd:string",
-            "entityId": "xsd:string",
-            "friendlyName": "xsd:string",
-            "measuredAt": "xsd:dateTime",
-            "platform": "xsd:string",
-            "serviceDomain": "xsd:string",
-            "state": "xsd:string",
-            "unitOfMeasurement": "xsd:string",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": "System",
     },
     "LogbookEntry": {
-        "fields": {
-            "areaId": "xsd:string",
-            "deviceClass": "xsd:string",
-            "deviceId": "xsd:string",
-            "entityId": "xsd:string",
-            "friendlyName": "xsd:string",
-            "measuredAt": "xsd:dateTime",
-            "platform": "xsd:string",
-            "serviceDomain": "xsd:string",
-            "state": "xsd:string",
-            "unitOfMeasurement": "xsd:string",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": None,
     },
     "SensorReading": {
-        "fields": {
-            "areaId": "xsd:string",
-            "deviceClass": "xsd:string",
-            "deviceId": "xsd:string",
-            "entityId": "xsd:string",
-            "friendlyName": "xsd:string",
-            "measuredAt": "xsd:dateTime",
-            "platform": "xsd:string",
-            "serviceDomain": "xsd:string",
-            "state": "xsd:string",
-            "unitOfMeasurement": "xsd:string",
-        },
+        "field_sets": ["fields_1"],
         "ontology_class": None,
     },
 }
@@ -153,22 +101,3 @@ RESOURCES = (
         "name": "SensorReading",
     },
 )
-
-
-def declaration() -> IngestSourceDeclaration:
-    """The declaration the server assembles from this module."""
-    specs = []
-    for item in SOURCES:
-        for entry in item["connector_sources"]:
-            body = {k: v for k, v in entry.items() if k not in ("tool", "mapping")}
-            specs.append(
-                IngestSourceSpec.model_validate({**body, "tools": (entry["tool"],)})
-            )
-    return IngestSourceDeclaration.model_validate(
-        {
-            "connector": CONNECTOR,
-            "sources": specs,
-            "schema_mappings": SCHEMA_MAPPINGS,
-            "resources": RESOURCES,
-        }
-    )

@@ -1,10 +1,4 @@
-#!/usr/bin/python
-"""Main entry point for running the Home Assistant agent server.
-
-CONCEPT:AU-OS.safety.doom-loop-detection
-"""
-
-from home_assistant_agent.mcp_server import mcp_server
+from agent_connector_sdk import run
 
 if __name__ == "__main__":
-    mcp_server()
+    run()

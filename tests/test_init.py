@@ -1,6 +1,6 @@
 from fastmcp import FastMCP
 
-from home_assistant_agent.mcp_server import get_mcp_instance
+from agent_connector_sdk.connector import build_server
 
 
 def test_mcp_instance_creation():
@@ -8,16 +8,6 @@ def test_mcp_instance_creation():
 
     CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
-    mcp, args, middlewares = get_mcp_instance()
+    _, mcp = build_server("home_assistant_agent", command_args=[])
     assert isinstance(mcp, FastMCP)
     assert "home-assistant" in mcp.name
-
-
-def test_import_home_assistant_agent():
-    """Test that the package can be imported.
-
-    CONCEPT:AU-OS.safety.doom-loop-detection
-    """
-    import home_assistant_agent
-
-    assert home_assistant_agent.__version__ is not None

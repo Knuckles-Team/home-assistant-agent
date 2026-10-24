@@ -17,10 +17,10 @@ async def test_one_typed_tool_per_client_operation():
     from agent_connector_sdk.mcp.action_dispatch import public_actions
 
     from home_assistant_agent.api import Api
-    from home_assistant_agent.mcp_server import get_mcp_instance
+    from agent_connector_sdk.connector import build_server
 
     with patch("home_assistant_agent.auth.get_client", return_value=MagicMock()):
-        mcp, _, _ = get_mcp_instance()
+        _, mcp = build_server("home_assistant_agent", command_args=[])
     tools = {tool.name: tool for tool in await mcp.local_provider.list_tools()}
     operations = {
         f"home_assistant_{name}"
