@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import pytest
-import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 DASHBOARD_CONFIG = ROOT / ".github/spec-dashboard.json"
@@ -14,15 +13,11 @@ DASHBOARD_CONFIG = ROOT / ".github/spec-dashboard.json"
 pytestmark = pytest.mark.spec("PIPE-CONNSPEC-R128.3")
 
 
-
-
 def _events(workflow: dict) -> dict:
     # YAML 1.1 parsers expose the unquoted `on` key as True.
     events = workflow.get("on", workflow.get(True))
     assert isinstance(events, dict)
     return events
-
-
 
 
 def test_pages_dashboard_config_is_canonical() -> None:
