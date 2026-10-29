@@ -33,7 +33,9 @@ class _FakeTransport:
         self._error = error
 
     async def source_status(self, _connector, _stream):
-        return SimpleNamespace(accepted_checkpoint=None)
+        return SimpleNamespace(
+            connector=_connector, stream=_stream, accepted_checkpoint=None
+        )
 
     async def submit(self, request):
         if self._error is not None:
@@ -155,11 +157,23 @@ async def test_ingest_registry_maps_entity_device_area():
     assert "homeassistant:device:dev-1" in records
     assert "homeassistant:area:kitchen" in records
     rels = {
-        (rel.source.record_id, rel.target.record_id, rel.relation_reference.rsplit("/", 1)[-1])
+        (
+            rel.source.record_id,
+            rel.target.record_id,
+            rel.relation_reference.rsplit("/", 1)[-1],
+        )
         for rel in transport.requests[0].relationships
     }
-    assert ("homeassistant:entity:light.kitchen", "homeassistant:device:dev-1", "onDevice") in rels
-    assert ("homeassistant:entity:light.kitchen", "homeassistant:area:kitchen", "inArea") in rels
+    assert (
+        "homeassistant:entity:light.kitchen",
+        "homeassistant:device:dev-1",
+        "onDevice",
+    ) in rels
+    assert (
+        "homeassistant:entity:light.kitchen",
+        "homeassistant:area:kitchen",
+        "inArea",
+    ) in rels
 
 
 @pytest.mark.asyncio
@@ -205,7 +219,10 @@ async def test_ingest_noops_when_submit_fails():
     # Any failure from the transport (engine unreachable, no ambient session, txn
     # conflict, ...) degrades to a clean no-op, never raises.
     service, _transport = _ingest(error=RuntimeError("engine unreachable"))
-    assert await ingest_entities([{"id": "a", "node_type": "Entity"}], ingest=service) is None
+    assert (
+        await ingest_entities([{"id": "a", "node_type": "Entity"}], ingest=service)
+        is None
+    )
 
 
 @pytest.mark.asyncio
