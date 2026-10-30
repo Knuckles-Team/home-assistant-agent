@@ -13,7 +13,7 @@ description: >-
 license: MIT
 tags: [home-assistant, iot, automation, scenes, events, registry, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Home Assistant Scenes, Events & Automation

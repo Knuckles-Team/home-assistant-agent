@@ -21,7 +21,7 @@ The base install ships the MCP server runtime. Install the extra for what the op
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| _(base)_ | `pip install home-assistant-agent` | FastMCP MCP-server runtime (`agent-connector-sdk`) |
+| _(base)_ | `pip install home-assistant-agent` | FastMCP MCP-server runtime (`scion-sdk`) |
 | `test` | `pip install "home-assistant-agent[test]"` | `pytest`, `pytest-asyncio`, `pytest-cov`, `pytest-xdist` |
 
 ## From source

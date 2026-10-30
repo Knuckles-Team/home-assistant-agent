@@ -1,6 +1,6 @@
 from typing import Any
 
-from agent_connector_sdk.exceptions import ParameterError, require_auth
+from scion_sdk.exceptions import ParameterError, require_auth
 
 from home_assistant_agent.api.api_client_base import BaseApiClient
 from home_assistant_agent.home_assistant_models import (

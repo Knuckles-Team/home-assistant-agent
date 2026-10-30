@@ -219,7 +219,7 @@ def test_auth_coverage(mock_session):
 
     # 2. Authentication error
     auth._client = None
-    from agent_connector_sdk.exceptions import AuthError
+    from scion_sdk.exceptions import AuthError
 
     with patch(
         "home_assistant_agent.auth.HomeAssistantApi",
@@ -235,7 +235,7 @@ def test_api_unauthorized(mock_session):
 
     CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
-    from agent_connector_sdk.exceptions import UnauthorizedError
+    from scion_sdk.exceptions import UnauthorizedError
 
     from home_assistant_agent.api_client import HomeAssistantApi
 
@@ -253,7 +253,7 @@ def test_api_get_state_not_found(mock_session):
 
     CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
-    from agent_connector_sdk.exceptions import ParameterError
+    from scion_sdk.exceptions import ParameterError
 
     from home_assistant_agent.api_client import HomeAssistantApi
 
@@ -275,7 +275,7 @@ def test_ws_call_errors(mock_connect, mock_session):
 
     CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
-    from agent_connector_sdk.exceptions import ApiError
+    from scion_sdk.exceptions import ApiError
     from websockets.exceptions import ConnectionClosed
 
     from home_assistant_agent.api_client import HomeAssistantApi
@@ -431,7 +431,7 @@ async def test_mcp_server_tools(mock_session, mock_connect):
     """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 
-    from agent_connector_sdk.connector import build_server
+    from scion_sdk.connector import build_server
 
     # Bypass rate limiting
     async def mock_on_request(self, context, call_next):
@@ -590,7 +590,7 @@ async def test_mcp_server_health_and_invalid_actions(mock_session, mock_connect)
     """
     from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 
-    from agent_connector_sdk.connector import build_server
+    from scion_sdk.connector import build_server
 
     async def mock_on_request(self, context, call_next):
         return await call_next(context)

@@ -1,4 +1,4 @@
-"""Tests for standardized action discovery via the shared agent-connector-sdk helper.
+"""Tests for standardized action discovery via the shared scion-sdk helper.
 
 CONCEPT:AU-ECO.messaging.native-backend-abstraction
 """
@@ -14,10 +14,10 @@ async def test_one_typed_tool_per_client_operation():
 
     CONCEPT:AU-ECO.messaging.native-backend-abstraction
     """
-    from agent_connector_sdk.mcp.action_dispatch import public_actions
+    from scion_sdk.mcp.action_dispatch import public_actions
 
     from home_assistant_agent.api import Api
-    from agent_connector_sdk.connector import build_server
+    from scion_sdk.connector import build_server
 
     with patch("home_assistant_agent.auth.get_client", return_value=MagicMock()):
         _, mcp = build_server("home_assistant_agent", command_args=[])

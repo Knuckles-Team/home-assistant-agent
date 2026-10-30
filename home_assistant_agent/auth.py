@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from agent_connector_sdk.config import setting
-from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+from scion_sdk.config import setting
+from scion_sdk.exceptions import AuthError, UnauthorizedError
 
 from home_assistant_agent.api_client import HomeAssistantApi
 

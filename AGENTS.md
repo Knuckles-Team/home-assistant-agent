@@ -17,7 +17,7 @@ Tool-neutral rules for any AI agent or human working in this repository. This bl
 
 ## Tech Stack & Architecture
 - Language/Version: Python 3.10+
-- Core Libraries: `agent-connector-sdk`, `fastmcp`, `pydantic-ai`
+- Core Libraries: `scion-sdk`, `fastmcp`, `pydantic-ai`
 - Key principles: Functional patterns, Pydantic for data validation, asynchronous tool execution.
 - Architecture:
     - `mcp_server.py`: Main MCP server entry point and tool registration.
@@ -75,7 +75,7 @@ home-assistant-agent
 
 ## Concept Registry & Traceability
 
-This repository aligns perfectly with the standard `agent-connector-sdk` architecture pillars:
+This repository aligns perfectly with the standard `scion-sdk` architecture pillars:
 
 ### `CONCEPT:AU-ECO.messaging.native-backend-abstraction` — Tool Interface & MCP Factory
 Defines all 11 action-routed MCP tools: Config, States, Services, Events, History, Logbook, Calendar, Panels, Voice, Entities, and System.
@@ -119,7 +119,7 @@ Pydantic AI Graph Agent configuration.
 ## Dos and Don'ts
 **Do:**
 - Run lint/test via `uv run ruff check .` and `pytest`.
-- Use existing patterns from `agent-connector-sdk`.
+- Use existing patterns from `scion-sdk`.
 - Keep tools focused and idempotent where possible.
 
 **Don't:**
@@ -130,18 +130,18 @@ Pydantic AI Graph Agent configuration.
 ## Safety & Boundaries
 **Always do:**
 - Run lint/test via `pre-commit`.
-- Use `agent-connector-sdk` base classes.
+- Use `scion-sdk` base classes.
 
 **Ask first:**
 - Removing or renaming public tool functions.
 
 **Never do:**
 - Commit `.env` files or secrets.
-- Modify `agent-connector-sdk` or `universal-skills` files from within this package.
+- Modify `scion-sdk` or `universal-skills` files from within this package.
 
 ## When Stuck
 - Propose a plan first before making large changes.
-- Check `agent-connector-sdk` documentation for existing helpers.
+- Check `scion-sdk` documentation for existing helpers.
 
 ## ⛔ No Scratch or Temporary Files in Repository
 
@@ -265,7 +265,7 @@ alone).
 Working in parallel with other sessions/worktrees? **Reserve a concept id before you write its `CONCEPT:` marker** so two sessions never collide:
 
 ```bash
-agent-connector-sdk --json concept reserve --ns EG-KG.compute.backend   # or a package prefix, e.g. KEY
+scion-sdk --json concept reserve --ns EG-KG.compute.backend   # or a package prefix, e.g. KEY
 ```
 
 Full protocol (ledger, merge=union, reconcile, MCP/REST): <https://knuckles-team.github.io/agent-connector-sdk/concept_coordination/>
@@ -296,14 +296,14 @@ is what Dependabot flags. Rules:
 ## Upstream currency edict — target the newest release; a pin is a hypothesis, not a fact (READ BEFORE capping, deferring, or opt-in-gating an upgrade)
 
 This governs how this repository treat **other people's** releases, deprecations, and version caps in
-this repo (fleet-wide edict, propagated from `agent-connector-sdk/AGENTS.md`).
+this repo (fleet-wide edict, propagated from `scion-sdk/AGENTS.md`).
 
 1. **Latest by default.** Target the newest upstream release -- including a pre-release
    where the ecosystem has already moved onto it. Sitting on an old major because the
    upgrade is work is not a reason to defer it.
 2. **A conservative upstream pin is a hypothesis, not a fact -- test it, don't inherit
    it.** Upstream maintainers cap defensively (an unreleased major, an untested surface)
-   as often as they cap for a known break. Worked example (from `agent-connector-sdk`):
+   as often as they cap for a known break. Worked example (from `scion-sdk`):
    `pydantic-ai-slim` 2.18.0 declared `fastmcp-slim[client]>=3.3.0` with no upper bound;
    2.19.0 added `<4` purely as a defensive guard while fastmcp 4 was still pre-release --
    not because of an observed incompatibility. Blocking an upgrade on that kind of cap

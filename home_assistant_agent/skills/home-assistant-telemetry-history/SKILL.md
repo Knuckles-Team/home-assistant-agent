@@ -13,7 +13,7 @@ description: >-
 license: MIT
 tags: [home-assistant, iot, telemetry, timeseries, knowledge-graph, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Home Assistant Telemetry & History
