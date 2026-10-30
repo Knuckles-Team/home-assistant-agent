@@ -3,7 +3,7 @@
 Exercises the ``home_assistant_agent.kg_ingest`` mapping seam — the Home Assistant
 record → :Entity/:Device/:Area/:SensorReading typed-node/link mapping, and the
 best-effort no-op guarantee when no engine is reachable — against a fake
-``agent_connector_sdk.ingest`` transport boundary, so the suite runs identically
+``scion_sdk.ingest`` transport boundary, so the suite runs identically
 with zero KG infrastructure, never touches the real engine/session machinery, and
 still exercises the SDK's own request-building/validation contract.
 CONCEPT:AU-KG.ingest.enterprise-source-extractor.
@@ -15,7 +15,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from agent_connector_sdk.ingest import KnowledgeIngest
+from scion_sdk.ingest import KnowledgeIngest
 
 from home_assistant_agent.kg_ingest import (
     ingest_entities,

@@ -4,7 +4,7 @@ CONCEPT:AU-KG.ingest.enterprise-source-extractor. This is the record-source twin
 media-downloader's blob ingestion: the package natively pushes its home-automation data
 into the epistemic-graph knowledge graph as **typed OWL nodes** (`:Device`, `:Entity`,
 `:Area`, `:SensorReading`, `:HomeAssistantService`, `:LogbookEntry`) + links through the
-canonical ``agent_connector_sdk.ingest`` knowledge-ingest facade.
+canonical ``scion_sdk.ingest`` knowledge-ingest facade.
 
 Two modalities, per the ``homeassistant`` ontology leg:
 
@@ -23,8 +23,8 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from agent_connector_sdk.connector_identity import connector_name
-from agent_connector_sdk.ingest import (
+from scion_sdk.connector_identity import connector_name
+from scion_sdk.ingest import (
     ChangeSet,
     Entity,
     IngestBinding,

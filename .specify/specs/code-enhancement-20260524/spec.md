@@ -15,7 +15,7 @@
 
 ## Functional Requirements
 
-- **FR-001**: Minor update: agent-connector-sdk 0.2.40 (installed) -> 0.16.0
+- **FR-001**: Minor update: scion-sdk 0.2.40 (installed) -> 0.16.0
 - **FR-002**: Minor update: pytest-xdist 3.6.0 (constraint — not installed) -> 3.8.0
 - **FR-003**: Needs attention: mcp_server.py (554L) — Low cohesion: 15 distinct concepts in one file
 - **FR-004**: 7 functions with nesting depth >4
@@ -44,7 +44,7 @@
 - **FR-027**: 1 tests exceed 100 lines — likely doing too much per test
 - **FR-028**: Undocumented env vars: AUTH_TYPE, EUNOMIA_POLICY_FILE, EUNOMIA_TYPE, HASS_HOST, HASS_PASSWORD, HASS_TOKEN, HASS_USERNAME, TLS_PROFILE_REF, OTEL_EXPORTER_OTLP_ENDPOINT
 - **FR-029**: 1 Python env vars not in .env.example: TLS_PROFILE_REF
-- **FR-030**: Analysis error: No module named 'agent_connector_sdk.knowledge_graph'
+- **FR-030**: Analysis error: No module named 'scion_sdk.knowledge_graph'
 
 ## Success Criteria
 

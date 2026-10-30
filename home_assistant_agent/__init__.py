@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from agent_connector_sdk.connector import Connector
+from scion_sdk.connector import Connector
 
 from home_assistant_agent.api_client import HomeAssistantApi
 from home_assistant_agent.auth import get_client

@@ -1,6 +1,6 @@
 # home-assistant-agent
 
-agent-connector-sdk ecosystem — control lights, switches, media players, calendars,
+scion-sdk ecosystem — control lights, switches, media players, calendars,
 and query historical state across the operator's smart home.
 
 !!! info "Official documentation"
