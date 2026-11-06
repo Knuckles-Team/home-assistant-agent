@@ -33,13 +33,13 @@ Connect via the `mcp-client` skill against the **`home-assistant-agent`** MCP se
 KG ingestion is authoritative: engine, validation, and transaction failures from
 the `home_ingest_*` tools are surfaced explicitly.
 
-## Tools & actions
-| Condensed tool | Actions |
-|----------------|---------|
-| `home_assistant_history` | `get_history` |
-| `home_assistant_logbook` | `get_logbook`, `get_error_log` |
+## Tools
+| Typed tools |
+|-------------|
+| `home_assistant_get_history` |
+| `home_assistant_get_logbook`, `home_assistant_get_error_log` |
 
-Wire-First KG ingestion tools (native typed-node push, not action-routed):
+Wire-First KG ingestion tools (native typed-node push, typed args):
 
 | Tool | Purpose |
 |------|---------|
@@ -55,12 +55,11 @@ Wire-First KG ingestion tools (native typed-node push, not action-routed):
 - `home_ingest_history` — `entity_id` (required), optional `timestamp` / `end_time`.
 
 ## Recipes
-Get a temperature sensor's history since a start time (`home_assistant_history`
-`params_json`):
+Get a temperature sensor's history since a start time (`home_assistant_get_history`):
 ```json
 {"entity_id":"sensor.living_room_temperature","timestamp":"2026-07-01T00:00:00Z"}
 ```
-Read the logbook for one entity over a window (`home_assistant_logbook` `params_json`):
+Read the logbook for one entity over a window (`home_assistant_get_logbook`):
 ```json
 {"entity_id":"binary_sensor.front_door","timestamp":"2026-07-03T00:00:00Z","end_time":"2026-07-04T00:00:00Z"}
 ```
@@ -74,8 +73,7 @@ Ingest one sensor's history window as timeseries readings (`home_ingest_history`
 ```
 
 ## Gotchas
-- `home_assistant_history` / `home_assistant_logbook` take a **JSON string**
-  `params_json`; the `home_ingest_*` tools take **typed args** directly.
+- All tools take typed arguments; there is no JSON-string parameter.
 - `get_history` returns a **list of lists** (one inner list per entity) — the
   `home_ingest_history` tool flattens it for you; if you parse raw output, index `[0]`.
 - Reading history is bounded by HA's recorder retention (default ~10 days); older data

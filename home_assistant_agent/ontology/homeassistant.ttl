@@ -10,8 +10,8 @@
 # that hold them, the services that act on them, and the timeseries of sensor/state
 # readings each entity emits. All classes and properties live in the shared `:` (kg#)
 # namespace; only the owl:Ontology node gets the per-package IRI. Backs the
-# home-assistant-agent MCP tool surface (home_assistant_states / home_assistant_entities
-# / home_assistant_history / home_assistant_services / home_assistant_logbook / …).
+# home-assistant-agent MCP tool surface (home_assistant_list_states / home_assistant_get_entity_registry_display
+# / home_assistant_get_history / home_assistant_call_service / home_assistant_get_logbook / …).
 
 # --- classes (owl:Class) ---
 
