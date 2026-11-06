@@ -58,20 +58,10 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 <!-- MCP-TOOLS-TABLE:START -->
 
-#### Condensed action-routed tools (`MCP_TOOL_MODE=condensed`)
+#### KG ingest tools
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
-| `home_assistant_calendar` | `CALENDARTOOL` | Manage home assistant calendar operations. |
-| `home_assistant_entities` | `ENTITIESTOOL` | Manage home assistant entities operations. |
-| `home_assistant_events` | `EVENTSTOOL` | Manage home assistant events operations. |
-| `home_assistant_history` | `HISTORYTOOL` | Manage home assistant history operations. |
-| `home_assistant_logbook` | `LOGBOOKTOOL` | Manage home assistant logbook operations. |
-| `home_assistant_panels` | `PANELSTOOL` | Manage home assistant panels operations. |
-| `home_assistant_services` | `SERVICESTOOL` | Manage home assistant services operations. |
-| `home_assistant_states` | `STATESTOOL` | Manage home assistant states operations. |
-| `home_assistant_system` | `SYSTEMTOOL` | Manage home assistant system operations. |
-| `home_assistant_voice` | `VOICETOOL` | Manage home assistant voice operations. |
 | `home_ingest_history` | `KGTOOL` | Ingest a Home Assistant history series for one entity as timeseries readings. |
 | `home_ingest_states` | `KGTOOL` | Ingest all Home Assistant entity states into epistemic-graph. |
 
@@ -126,7 +116,7 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 </details>
 
-_12 action-routed tool(s) · 41 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_41 per-operation tool(s) + 2 ingest tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/usage.md](docs/usage.md).
@@ -174,21 +164,9 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
         "home-assistant-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "intent",
-        "CALENDARTOOL": "True",
-        "CONFIGTOOL": "True",
-        "ENTITIESTOOL": "True",
-        "EVENTSTOOL": "True",
-        "HISTORYTOOL": "True",
         "HOME_ASSISTANT_TOKEN": "your_long_lived_access_token_here",
         "HOME_ASSISTANT_URL": "http://localhost:8123",
-        "KGTOOL": "True",
-        "LOGBOOKTOOL": "True",
-        "PANELSTOOL": "True",
-        "SERVICESTOOL": "True",
-        "STATESTOOL": "True",
-        "SYSTEMTOOL": "True",
-        "VOICETOOL": "True"
+        "KGTOOL": "True"
       }
     }
   }
@@ -219,21 +197,9 @@ own runtime secret boundary.
         "TRANSPORT": "streamable-http",
         "HOST": "127.0.0.1",
         "PORT": "8000",
-        "MCP_TOOL_MODE": "intent",
-        "CALENDARTOOL": "True",
-        "CONFIGTOOL": "True",
-        "ENTITIESTOOL": "True",
-        "EVENTSTOOL": "True",
-        "HISTORYTOOL": "True",
         "HOME_ASSISTANT_TOKEN": "your_long_lived_access_token_here",
         "HOME_ASSISTANT_URL": "http://localhost:8123",
-        "KGTOOL": "True",
-        "LOGBOOKTOOL": "True",
-        "PANELSTOOL": "True",
-        "SERVICESTOOL": "True",
-        "STATESTOOL": "True",
-        "SYSTEMTOOL": "True",
-        "VOICETOOL": "True"
+        "KGTOOL": "True"
       }
     }
   }
@@ -263,21 +229,9 @@ docker run -i --rm \
   --pids-limit=256 \
   --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
   -e TRANSPORT=stdio \
-  -e MCP_TOOL_MODE=intent \
-  -e CALENDARTOOL=True \
-  -e CONFIGTOOL=True \
-  -e ENTITIESTOOL=True \
-  -e EVENTSTOOL=True \
-  -e HISTORYTOOL=True \
   -e HOME_ASSISTANT_TOKEN=your_long_lived_access_token_here \
   -e HOME_ASSISTANT_URL=http://localhost:8123 \
   -e KGTOOL=True \
-  -e LOGBOOKTOOL=True \
-  -e PANELSTOOL=True \
-  -e SERVICESTOOL=True \
-  -e STATESTOOL=True \
-  -e SYSTEMTOOL=True \
-  -e VOICETOOL=True \
   registry.example.invalid/home-assistant-agent@sha256:<digest> home-assistant-mcp
 ```
 

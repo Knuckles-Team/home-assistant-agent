@@ -31,17 +31,14 @@ Connect via the `mcp-client` skill against the **`home-assistant-agent`** MCP se
 | `HOME_ASSISTANT_TLS_PROFILE` | optional | Named AgentConfig TLS profile; peer and hostname verification are mandatory. |
 | `HOME_ASSISTANT_TLS_PROFILE_REF` | optional | Reference-backed AgentConfig TLS profile selector. |
 
-`MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed action-routed
-surface (used below) vs. the one-to-one verbose tools.
-
-## Tools & actions
-Prefer the **condensed** tools; each takes `action` + a `params_json` **JSON string**
+## Tools
+Each operation is its own tool named `home_assistant_<operation>`; arguments are typed tool parameters.
 whose keys are passed straight to the client method.
 
-| Condensed tool | Actions |
-|----------------|---------|
-| `home_assistant_states` | `list_states`, `get_state`, `update_state`, `delete_state` |
-| `home_assistant_services` | `list_services`, `call_service` |
+| Typed tools |
+|-------------|
+| `home_assistant_list_states`, `home_assistant_get_state`, `home_assistant_update_state`, `home_assistant_delete_state` |
+| `home_assistant_list_services`, `home_assistant_call_service` |
 
 ### Key parameters
 - `entity_id` — required for `get_state` / `update_state` / `delete_state`
@@ -50,7 +47,7 @@ whose keys are passed straight to the client method.
   parameters), plus optional `return_response`.
 - `update_state` takes `entity_id`, `state`, and optional `attributes`.
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 Read one entity's state:
 ```json
 {"entity_id":"sensor.living_room_temperature"}
@@ -69,7 +66,6 @@ Open a cover to 50%:
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object — serialize it.
 - The service `domain` is the integration (`light`), not the entity's — derive it
   from the `entity_id` prefix (`light.kitchen` → domain `light`).
 - `call_service` returns the list of states it changed (or a `service_response` when

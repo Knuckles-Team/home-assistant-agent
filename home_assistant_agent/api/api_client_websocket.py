@@ -16,7 +16,9 @@ class Api(BaseApiClient):
     @require_auth
     def get_panels(self) -> list[HAPanel]:
         res = self._ws_call({"type": "get_panels"})
-        return [HAPanel(url_path=k, **v) for k, v in res.items()]
+        return [
+            HAPanel(**{**v, "url_path": v.get("url_path", k)}) for k, v in res.items()
+        ]
 
     @require_auth
     def ping(self) -> str:

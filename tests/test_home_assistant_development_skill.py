@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import re
-import tomllib
 from pathlib import Path
 
 import pytest
+import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = (
@@ -56,9 +56,7 @@ def test_development_skill_has_rapid_contract_and_package_binding() -> None:
 
     assert "verify=False" not in text
     assert "--no-verify" not in text
-    package_data = project["tool"]["setuptools"]["package-data"][
-        "home_assistant_agent"
-    ]
+    package_data = project["tool"]["setuptools"]["package-data"]["home_assistant_agent"]
     assert "skills/**" in package_data
     assert project["project"]["entry-points"]["scion_sdk.connector"] == {
         "home-assistant-mcp": "home_assistant_agent:connector"

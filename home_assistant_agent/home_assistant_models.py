@@ -26,7 +26,7 @@ class HAState(BaseModel):
 
 class HAService(BaseModel):
     domain: str
-    services: list[str]
+    services: dict[str, Any]
 
 
 class HAEvent(BaseModel):
@@ -36,10 +36,11 @@ class HAEvent(BaseModel):
 
 class HALogbookEntry(BaseModel):
     when: str
-    name: str
-    message: str
-    entity_id: str
-    domain: str
+    name: str | None = None
+    message: str | None = None
+    state: str | None = None
+    entity_id: str | None = None
+    domain: str | None = None
     context_user_id: str | None = None
 
 

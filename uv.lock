@@ -704,7 +704,7 @@ wheels = [
 
 [[package]]
 name = "home-assistant-agent"
-version = "2.3.6"
+version = "2.3.8"
 source = { editable = "." }
 dependencies = [
     { name = "requests" },

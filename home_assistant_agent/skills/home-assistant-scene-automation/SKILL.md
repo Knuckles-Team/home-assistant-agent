@@ -35,7 +35,7 @@ automation building reliable.
 - Reading/actuating a single entity → `home-assistant-entity-control`.
 - History, logbook, or KG telemetry ingestion → `home-assistant-telemetry-history`.
 - Rendering templates / validating config / handling intents — those are on the
-  `home_assistant_system` tool (adjacent, not covered here).
+  typed `home_assistant_*` system tools (`home_assistant_render_template`, `home_assistant_ping`, `home_assistant_handle_intent`, `home_assistant_validate_config`) (adjacent, not covered here).
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`home-assistant-agent`** MCP server.
@@ -46,12 +46,12 @@ Connect via the `mcp-client` skill against the **`home-assistant-agent`** MCP se
 | `HOME_ASSISTANT_TOKEN` | ✅ | Long-lived access token |
 | `HOME_ASSISTANT_SSL_VERIFY` | optional | TLS verification toggle |
 
-## Tools & actions
-| Condensed tool | Actions |
-|----------------|---------|
-| `home_assistant_events` | `list_events`, `fire_event`, `subscribe_events` |
-| `home_assistant_services` | `list_services`, `call_service` |
-| `home_assistant_entities` | `get_entity_registry_display`, `extract_from_target`, `get_triggers_for_target`, `get_conditions_for_target`, `get_services_for_target` |
+## Tools
+| Typed tools |
+|-------------|
+| `home_assistant_list_events`, `home_assistant_fire_event`, `home_assistant_subscribe_events` |
+| `home_assistant_list_services`, `home_assistant_call_service` |
+| `home_assistant_get_entity_registry_display`, `home_assistant_extract_from_target`, `home_assistant_get_triggers_for_target`, `home_assistant_get_conditions_for_target`, `home_assistant_get_services_for_target` |
 
 ### Key parameters
 - `fire_event` — `event_type` (required) + optional `event_data`.
@@ -60,7 +60,7 @@ Connect via the `mcp-client` skill against the **`home-assistant-agent`** MCP se
   resolve referenced + missing entities/devices/areas.
 - `get_*_for_target` — a `target` to enumerate valid services/triggers/conditions.
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 Activate a scene:
 ```json
 {"domain":"scene","service":"turn_on","service_data":{"entity_id":"scene.movie_night"}}
@@ -83,7 +83,6 @@ List the entity registry (entity_id → platform / device / area):
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object.
 - The entity registry uses **compact keys** — `ei`=entity_id, `pl`=platform,
   `di`=device_id, `ai`=area_id, `en`=name; map them when reading `get_entity_registry_display`.
 - Scenes/scripts are activated **through `call_service`** (domain `scene`/`script`),

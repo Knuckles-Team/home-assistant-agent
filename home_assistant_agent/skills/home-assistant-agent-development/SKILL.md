@@ -18,7 +18,7 @@ metadata:
 # home-assistant-agent development
 
 This repository owns the Home Assistant REST and WebSocket API clients, their
-Pydantic models, action-routed MCP tools, source declarations and knowledge-graph
+Pydantic models, per-operation MCP tools, source declarations and knowledge-graph
 ingestion mappings, and packaged connector content. Shared connector contracts,
 transports, TLS profiles, and credential helpers belong to
 `scion-sdk`; admission, serving, and durable graph state belong to
@@ -44,7 +44,7 @@ owning spec row in the commit trailer.
   `home_assistant_agent/api/api_client_rest.py` and
   `home_assistant_agent/api/api_client_websocket.py`. Never hardcode a secret,
   endpoint, or TLS-verification bypass.
-- Keep the action-routed registrations in `home_assistant_agent/mcp_server.py`
+- Keep the KG ingest registrations in `home_assistant_agent/mcp_server.py`
   aligned with the SDK dynamic surface. Preserve the source declarations in
   `home_assistant_agent/connector_sources.py` and the typed mappings in
   `home_assistant_agent/kg_ingest.py`; keep tenant and installation data
