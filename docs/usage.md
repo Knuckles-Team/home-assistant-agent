@@ -6,28 +6,16 @@ The full tool surface and architecture are described in [Overview](overview.md).
 
 ## As an MCP server
 
-Once [deployed](deployment.md), the server registers eleven action-routed tool
-domains. Each domain is enabled independently by its environment flag (all default
-to enabled):
-
-| Tool domain | Flag | Covers |
-|---|---|---|
-| `config` | `CONFIGTOOL` | Instance configuration, components, config validation |
-| `states` | `STATESTOOL` | Read, set, and delete entity states |
-| `services` | `SERVICESTOOL` | List and call Home Assistant services |
-| `events` | `EVENTSTOOL` | List event types and fire events |
-| `history` | `HISTORYTOOL` | Historical state queries over a time window |
-| `logbook` | `LOGBOOKTOOL` | Logbook entries and the error log |
-| `calendar` | `CALENDARTOOL` | List calendars and calendar events |
-| `panels` | `PANELSTOOL` | Custom Lovelace panels |
-| `voice` | `VOICETOOL` | Voice-exposed entities and settings |
-| `entities` | `ENTITIESTOOL` | Entity registry lookup |
-| `system` | `SYSTEMTOOL` | Templates, intents, and system health |
+Once [deployed](deployment.md), the server registers one typed tool per Home Assistant
+client operation, named `home_assistant_<operation>` (for example
+`home_assistant_get_state`, `home_assistant_call_service`, `home_assistant_get_history`),
+plus the `home_ingest_*` KG tools. Arguments are typed tool parameters; there is no
+`action` router and no `params_json` string.
 
 Example agent prompts that map onto these tools:
 
-- *"Turn on the living-room lights"* → `services` (call `light.turn_on`)
-- *"What was the thermostat set to yesterday afternoon?"* → `history`
+- *"Turn on the living-room lights"* -> `home_assistant_call_service` (`light.turn_on`)
+- *"What was the thermostat set to yesterday afternoon?"* -> `home_assistant_get_history`
 - *"List every calendar event scheduled for tomorrow"* → `calendar`
 
 ## As a Python API
