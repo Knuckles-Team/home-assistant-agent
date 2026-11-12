@@ -26,7 +26,7 @@ from home_assistant_agent.auth import get_client
 
 
 def register_kg_tools(mcp: FastMCP):
-    """Register native epistemic-graph ingestion tools (Wire-First).
+    """Register native medulla ingestion tools (Wire-First).
 
     CONCEPT:AU-KG.ingest.enterprise-source-extractor. Lists Home Assistant records via
     the real client and pushes them into the knowledge graph as typed :Entity/:Device/
@@ -43,7 +43,7 @@ def register_kg_tools(mcp: FastMCP):
         client=Depends(get_client),
         ctx: Context | None = None,
     ) -> Any:
-        """Ingest all Home Assistant entity states into epistemic-graph.
+        """Ingest all Home Assistant entity states into medulla.
 
         Lists live states via the HA API and pushes them as typed :Entity nodes (plus a
         :SensorReading ``:readingOf`` each entity when ``with_readings``) into the KG via

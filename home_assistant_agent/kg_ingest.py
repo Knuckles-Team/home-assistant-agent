@@ -1,8 +1,8 @@
-"""Native epistemic-graph ingestion for Home Assistant records (typed graph nodes).
+"""Native medulla ingestion for Home Assistant records (typed graph nodes).
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. This is the record-source twin of
 media-downloader's blob ingestion: the package natively pushes its home-automation data
-into the epistemic-graph knowledge graph as **typed OWL nodes** (`:Device`, `:Entity`,
+into the medulla knowledge graph as **typed OWL nodes** (`:Device`, `:Entity`,
 `:Area`, `:SensorReading`, `:HomeAssistantService`, `:LogbookEntry`) + links through the
 canonical ``scion_sdk.ingest`` knowledge-ingest facade.
 
