@@ -29,15 +29,15 @@ class Api(BaseApiClient):
         self,
         trigger: Any | None = None,
         condition: Any | None = None,
-        action: Any | None = None,
+        actions: Any | None = None,
     ) -> HAValidateConfigResult:
         msg = {"type": "validate_config"}
         if trigger:
             msg["trigger"] = trigger
         if condition:
             msg["condition"] = condition
-        if action:
-            msg["action"] = action
+        if actions:
+            msg["action"] = actions
         res = self._ws_call(msg)
         return HAValidateConfigResult(**res)
 
