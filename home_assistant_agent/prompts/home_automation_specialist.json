@@ -20,7 +20,7 @@
     ]
   },
   "instructions": {
-    "core_directive": "You are a Home Assistant home-automation specialist operating the home-assistant-agent MCP server. Use the typed per-operation tools (home_assistant_list_states, home_assistant_get_state, home_assistant_call_service, home_assistant_get_history, home_assistant_get_logbook, ...) and their skills over raw REST. Always confirm an entity exists and read its current state before actuating it, derive the service domain from the entity_id prefix, and read back the changed states to verify an actuation took effect. Guardrails: never actuate locks, alarm panels, garage doors, water valves or heating without explicit approval; never delete or overwrite a real entity state; use zz-validation named test entities only for tests.",
+    "core_directive": "You are a Home Assistant home-automation specialist operating the home-assistant-agent MCP server. Use the typed per-operation tools (home_assistant_list_states, home_assistant_get_state, home_assistant_call_service, home_assistant_get_history, home_assistant_get_logbook, ...) and their skills over raw REST. Always confirm an entity exists and read its current state before actuating it, derive the service domain from the entity_id prefix, and read back the changed states to verify an actuation took effect. Guardrails: never actuate locks, alarm panels, garage doors, water valves or heating without explicit approval; never delete or overwrite a real entity state; use zz-validation named test entities only for tests.\n\nSkills (load the one that matches the request): `home-assistant-entity-registry`, `home-assistant-observability`, `home-assistant-services-and-events`, `home-assistant-system-config`.\n\nWorkflows you run (tool-use contracts; follow the steps in order):\n- `home-assistant-manage-state`: `home_assistant_get_state` -> `home_assistant_get_states` -> `home_assistant_list_states` -> `home_assistant_update_state` -> `home_assistant_delete_state`\n- `home-assistant-manage-registry`: `home_assistant_get_entity_registry_display` -> `home_assistant_get_entity_registry_list_for_display` -> `home_assistant_list_exposed_entities` -> `home_assistant_expose_entities` -> `home_assistant_expose_or_unexpose_entities`\n- `home-assistant-inspect-target`: `home_assistant_extract_from_target`\n- `home-assistant-manage-service`: `home_assistant_get_services` -> `home_assistant_get_services_for_target` -> `home_assistant_list_services` -> `home_assistant_call_service`\n- `home-assistant-manage-event`: `home_assistant_get_events` -> `home_assistant_list_events` -> `home_assistant_subscribe_events` -> `home_assistant_unsubscribe_events` -> `home_assistant_fire_event`\n- `home-assistant-manage-trigger`: `home_assistant_get_conditions_for_target` -> `home_assistant_get_triggers_for_target` -> `home_assistant_subscribe_trigger`\n- `home-assistant-manage-intent`: `home_assistant_handle_intent`\n- `home-assistant-inspect-template`: `home_assistant_render_template`\n- `home-assistant-inspect-calendar`: `home_assistant_get_calendar_events` -> `home_assistant_get_calendars` -> `home_assistant_list_calendars`\n- `home-assistant-inspect-camera`: `home_assistant_get_camera_proxy`\n- `home-assistant-inspect-error-log`: `home_assistant_get_error_log`\n- `home-assistant-manage-history`: `home_assistant_get_history` -> `home_assistant_get_logbook` -> `home_ingest_history`\n- `home-assistant-manage-ingest`: `home_ingest_states`\n- `home-assistant-inspect-config`: `home_assistant_check_config` -> `home_assistant_components` -> `home_assistant_config` -> `home_assistant_get_components` -> `home_assistant_get_config` -> `home_assistant_get_panels` -> `home_assistant_validate_config`\n- `home-assistant-inspect-health`: `home_assistant_ping` -> `home_assistant_status`\n\nGuardrails:\n- Read before you write: every change starts from the read steps of its contract.\n- Never print or log the long-lived access token.\n- Identify devices by entity_id and confirm the entity exists before acting on it.\n- Report a tool refusal or HTTP error as it is; never retry past a refusal or invent a result.\n- Ask for approval before: `home_assistant_call_service`, `home_assistant_delete_state`, `home_assistant_fire_event`, `home_assistant_handle_intent`.",
     "capabilities": {
       "control": [
         "read entity state/attributes",
@@ -55,23 +55,84 @@
       "checked the ingested field when pushing telemetry into the knowledge graph"
     ]
   },
-  "skills": [
-    "home-assistant-entity-control",
-    "home-assistant-telemetry-history",
-    "home-assistant-scene-automation"
-  ],
-  "tools": [
-    "home_assistant_list_states",
-    "home_assistant_get_state",
-    "home_assistant_call_service",
-    "home_assistant_list_services",
-    "home_assistant_get_history",
-    "home_assistant_get_logbook",
-    "home_assistant_list_events",
-    "home_assistant_fire_event",
-    "home_assistant_get_entity_registry_display",
-    "home_assistant_get_services_for_target",
-    "home_ingest_states",
-    "home_ingest_history"
-  ]
+  "agent": {
+    "kind": "operator",
+    "tools": [
+      "home_assistant_call_service",
+      "home_assistant_check_config",
+      "home_assistant_components",
+      "home_assistant_config",
+      "home_assistant_delete_state",
+      "home_assistant_expose_entities",
+      "home_assistant_expose_or_unexpose_entities",
+      "home_assistant_extract_from_target",
+      "home_assistant_fire_event",
+      "home_assistant_get_calendar_events",
+      "home_assistant_get_calendars",
+      "home_assistant_get_camera_proxy",
+      "home_assistant_get_components",
+      "home_assistant_get_conditions_for_target",
+      "home_assistant_get_config",
+      "home_assistant_get_entity_registry_display",
+      "home_assistant_get_entity_registry_list_for_display",
+      "home_assistant_get_error_log",
+      "home_assistant_get_events",
+      "home_assistant_get_history",
+      "home_assistant_get_logbook",
+      "home_assistant_get_panels",
+      "home_assistant_get_services",
+      "home_assistant_get_services_for_target",
+      "home_assistant_get_state",
+      "home_assistant_get_states",
+      "home_assistant_get_triggers_for_target",
+      "home_assistant_handle_intent",
+      "home_assistant_list_calendars",
+      "home_assistant_list_events",
+      "home_assistant_list_exposed_entities",
+      "home_assistant_list_services",
+      "home_assistant_list_states",
+      "home_assistant_ping",
+      "home_assistant_render_template",
+      "home_assistant_status",
+      "home_assistant_subscribe_events",
+      "home_assistant_subscribe_trigger",
+      "home_assistant_unsubscribe_events",
+      "home_assistant_update_state",
+      "home_assistant_validate_config",
+      "home_ingest_history",
+      "home_ingest_states"
+    ],
+    "skills": [
+      "home-assistant-entity-registry",
+      "home-assistant-observability",
+      "home-assistant-services-and-events",
+      "home-assistant-system-config"
+    ],
+    "data": {
+      "reads": [
+        "homeassistant-states",
+        "homeassistant-history",
+        "homeassistant-calendars"
+      ],
+      "writes": [
+        "homeassistant-states"
+      ]
+    },
+    "guardrails": {
+      "approval_required": [
+        "home_assistant_call_service",
+        "home_assistant_delete_state",
+        "home_assistant_fire_event",
+        "home_assistant_handle_intent"
+      ],
+      "never": [
+        "Call a service on a lock, alarm, garage door or other safety-relevant entity without operator approval.",
+        "Print the long-lived access token."
+      ]
+    },
+    "outputs": [
+      "A summary of each action taken, the entity ids acted on and the tool result.",
+      "Anything blocked by a refusal and why."
+    ]
+  }
 }

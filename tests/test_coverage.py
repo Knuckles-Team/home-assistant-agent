@@ -499,7 +499,7 @@ def test_api_client_extra_coverage(mock_session, mock_connect):
     client.get_camera_proxy("camera.front", time="12:00:00")
 
     # 5. validate_config with optional params
-    client.validate_config(trigger={"a": 1}, condition={"b": 2}, action={"c": 3})
+    client.validate_config(trigger={"a": 1}, condition={"b": 2}, actions={"c": 3})
 
     # 5.5 update_state with and without attributes
     client.update_state("light.living_room", "on", attributes=None)

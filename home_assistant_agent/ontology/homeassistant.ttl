@@ -132,3 +132,7 @@
 # ontology-codemod R3
 <http://knuckles.team/kg#Device> rdfs:subClassOf <http://knuckles.team/kg/infrastructure#Device> .
 <http://knuckles.team/kg#Entity> rdfs:subClassOf <http://knuckles.team/kg/infrastructure#Entity> .
+<http://knuckles.team/kg#Area> rdfs:subClassOf <http://knuckles.team/kg#Place> .
+<http://knuckles.team/kg#SensorReading> rdfs:subClassOf <http://knuckles.team/kg#Observation> .
+<http://knuckles.team/kg#HomeAssistantService> rdfs:subClassOf <http://knuckles.team/kg#Action> .
+<http://knuckles.team/kg#LogbookEntry> rdfs:subClassOf <http://knuckles.team/kg#Event> .
