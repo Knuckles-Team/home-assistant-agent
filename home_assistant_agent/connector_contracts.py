@@ -15,36 +15,34 @@ CONTRACTS = (
         (
             ToolStep(
                 "home_assistant_get_state",
-                params=(
-                    "entity_id",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("entity_id",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_get_states",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_list_states",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -55,12 +53,14 @@ CONTRACTS = (
                     "entity_id",
                     "state",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -69,13 +69,18 @@ CONTRACTS = (
                     "confirm",
                     "entity_id",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -86,33 +91,33 @@ CONTRACTS = (
             ToolStep(
                 "home_assistant_get_entity_registry_display",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_get_entity_registry_list_for_display",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_list_exposed_entities",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -123,12 +128,14 @@ CONTRACTS = (
                     "entity_ids",
                     "should_expose",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -138,12 +145,14 @@ CONTRACTS = (
                     "entity_ids",
                     "should_expose",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -157,11 +166,11 @@ CONTRACTS = (
                     "expand_group",
                     "target",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -173,11 +182,11 @@ CONTRACTS = (
             ToolStep(
                 "home_assistant_get_services",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -187,22 +196,22 @@ CONTRACTS = (
                     "expand_group",
                     "target",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_list_services",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -214,13 +223,18 @@ CONTRACTS = (
                     "service",
                     "service_data",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -231,49 +245,49 @@ CONTRACTS = (
             ToolStep(
                 "home_assistant_get_events",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_list_events",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_subscribe_events",
-                params=(
-                    "event_type",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("event_type",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "home_assistant_unsubscribe_events",
-                params=(
-                    "subscription_id",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("subscription_id",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -282,13 +296,18 @@ CONTRACTS = (
                     "event_data",
                     "event_type",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -302,11 +321,11 @@ CONTRACTS = (
                     "expand_group",
                     "target",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -316,25 +335,25 @@ CONTRACTS = (
                     "expand_group",
                     "target",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_subscribe_trigger",
-                params=(
-                    "trigger",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("trigger",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -348,13 +367,18 @@ CONTRACTS = (
                     "data",
                     "name",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -364,14 +388,12 @@ CONTRACTS = (
         (
             ToolStep(
                 "home_assistant_render_template",
-                params=(
-                    "template",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("template",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -387,33 +409,33 @@ CONTRACTS = (
                     "entity_id",
                     "start",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_get_calendars",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_list_calendars",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -428,11 +450,11 @@ CONTRACTS = (
                     "entity_id",
                     "time",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -444,11 +466,11 @@ CONTRACTS = (
             ToolStep(
                 "home_assistant_get_error_log",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -464,11 +486,11 @@ CONTRACTS = (
                     "entity_id",
                     "timestamp",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -479,11 +501,11 @@ CONTRACTS = (
                     "entity_id",
                     "timestamp",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -494,12 +516,14 @@ CONTRACTS = (
                     "entity_id",
                     "timestamp",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -509,15 +533,15 @@ CONTRACTS = (
         (
             ToolStep(
                 "home_ingest_states",
-                params=(
-                    "with_readings",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("with_readings",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -528,66 +552,66 @@ CONTRACTS = (
             ToolStep(
                 "home_assistant_check_config",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_components",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_config",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_get_components",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_get_config",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_get_panels",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -598,11 +622,11 @@ CONTRACTS = (
                     "condition",
                     "trigger",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -614,22 +638,22 @@ CONTRACTS = (
             ToolStep(
                 "home_assistant_ping",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "home_assistant_status",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -651,9 +675,7 @@ LINKS = (
             "home-assistant-home-automation-operator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-entity-registry",
-        ),
+        skills=("home-assistant-entity-registry",),
     ),
     SurfaceLink(
         "home-assistant-manage-registry",
@@ -668,22 +690,16 @@ LINKS = (
             "home-assistant-home-automation-operator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-entity-registry",
-        ),
+        skills=("home-assistant-entity-registry",),
     ),
     SurfaceLink(
         "home-assistant-inspect-target",
-        tools=(
-            "home_assistant_extract_from_target",
-        ),
+        tools=("home_assistant_extract_from_target",),
         prompts=(
             "home-assistant-home-automation-operator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-entity-registry",
-        ),
+        skills=("home-assistant-entity-registry",),
     ),
     SurfaceLink(
         "home-assistant-manage-service",
@@ -697,9 +713,7 @@ LINKS = (
             "home-assistant-home-automation-operator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-services-and-events",
-        ),
+        skills=("home-assistant-services-and-events",),
     ),
     SurfaceLink(
         "home-assistant-manage-event",
@@ -714,9 +728,7 @@ LINKS = (
             "home-assistant-home-automation-operator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-services-and-events",
-        ),
+        skills=("home-assistant-services-and-events",),
     ),
     SurfaceLink(
         "home-assistant-manage-trigger",
@@ -729,35 +741,25 @@ LINKS = (
             "home-assistant-home-automation-operator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-services-and-events",
-        ),
+        skills=("home-assistant-services-and-events",),
     ),
     SurfaceLink(
         "home-assistant-manage-intent",
-        tools=(
-            "home_assistant_handle_intent",
-        ),
+        tools=("home_assistant_handle_intent",),
         prompts=(
             "home-assistant-home-automation-operator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-services-and-events",
-        ),
+        skills=("home-assistant-services-and-events",),
     ),
     SurfaceLink(
         "home-assistant-inspect-template",
-        tools=(
-            "home_assistant_render_template",
-        ),
+        tools=("home_assistant_render_template",),
         prompts=(
             "home-assistant-home-automation-operator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-services-and-events",
-        ),
+        skills=("home-assistant-services-and-events",),
     ),
     SurfaceLink(
         "home-assistant-inspect-calendar",
@@ -770,35 +772,25 @@ LINKS = (
             "home-assistant-home-insights-analyst",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-observability",
-        ),
+        skills=("home-assistant-observability",),
     ),
     SurfaceLink(
         "home-assistant-inspect-camera",
-        tools=(
-            "home_assistant_get_camera_proxy",
-        ),
+        tools=("home_assistant_get_camera_proxy",),
         prompts=(
             "home-assistant-home-insights-analyst",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-observability",
-        ),
+        skills=("home-assistant-observability",),
     ),
     SurfaceLink(
         "home-assistant-inspect-error-log",
-        tools=(
-            "home_assistant_get_error_log",
-        ),
+        tools=("home_assistant_get_error_log",),
         prompts=(
             "home-assistant-home-insights-analyst",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-observability",
-        ),
+        skills=("home-assistant-observability",),
     ),
     SurfaceLink(
         "home-assistant-manage-history",
@@ -811,22 +803,16 @@ LINKS = (
             "home-assistant-home-insights-analyst",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-observability",
-        ),
+        skills=("home-assistant-observability",),
     ),
     SurfaceLink(
         "home-assistant-manage-ingest",
-        tools=(
-            "home_ingest_states",
-        ),
+        tools=("home_ingest_states",),
         prompts=(
             "home-assistant-home-insights-analyst",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-observability",
-        ),
+        skills=("home-assistant-observability",),
     ),
     SurfaceLink(
         "home-assistant-inspect-config",
@@ -843,9 +829,7 @@ LINKS = (
             "home-assistant-home-platform-administrator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-system-config",
-        ),
+        skills=("home-assistant-system-config",),
     ),
     SurfaceLink(
         "home-assistant-inspect-health",
@@ -857,9 +841,7 @@ LINKS = (
             "home-assistant-home-platform-administrator",
             "home_automation_specialist",
         ),
-        skills=(
-            "home-assistant-system-config",
-        ),
+        skills=("home-assistant-system-config",),
     ),
     SurfaceLink(
         "home-assistant-agent-operations",
@@ -867,12 +849,8 @@ LINKS = (
             "home_assistant_get_states",
             "home_assistant_ping",
         ),
-        prompts=(
-            "home_automation_specialist",
-        ),
-        skills=(
-            "home-assistant-agent-operations",
-        ),
+        prompts=("home_automation_specialist",),
+        skills=("home-assistant-agent-operations",),
     ),
     SurfaceLink(
         "home-assistant-entity-control",
@@ -884,12 +862,8 @@ LINKS = (
             "home_assistant_list_states",
             "home_assistant_update_state",
         ),
-        prompts=(
-            "home_automation_specialist",
-        ),
-        skills=(
-            "home-assistant-entity-control",
-        ),
+        prompts=("home_automation_specialist",),
+        skills=("home-assistant-entity-control",),
     ),
     SurfaceLink(
         "home-assistant-scene-automation",
@@ -910,12 +884,8 @@ LINKS = (
             "home_assistant_validate_config",
             "home_ingest_states",
         ),
-        prompts=(
-            "home_automation_specialist",
-        ),
-        skills=(
-            "home-assistant-scene-automation",
-        ),
+        prompts=("home_automation_specialist",),
+        skills=("home-assistant-scene-automation",),
     ),
     SurfaceLink(
         "home-assistant-telemetry-history",
@@ -926,37 +896,27 @@ LINKS = (
             "home_ingest_history",
             "home_ingest_states",
         ),
-        prompts=(
-            "home_automation_specialist",
-        ),
-        skills=(
-            "home-assistant-telemetry-history",
-        ),
+        prompts=("home_automation_specialist",),
+        skills=("home-assistant-telemetry-history",),
     ),
 )
 
 LOCATIONS = (
     DataLocation(
         "homeassistant-states",
-        (
-            "Device",
-        ),
+        ("Device",),
         "HOME_ASSISTANT_URL",
         "home_assistant_list_states",
     ),
     DataLocation(
         "homeassistant-history",
-        (
-            "Observation",
-        ),
+        ("Observation",),
         "HOME_ASSISTANT_URL",
         "home_assistant_get_history",
     ),
     DataLocation(
         "homeassistant-calendars",
-        (
-            "Event",
-        ),
+        ("Event",),
         "HOME_ASSISTANT_URL",
         "home_assistant_get_calendars",
     ),
