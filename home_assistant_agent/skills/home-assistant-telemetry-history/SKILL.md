@@ -43,7 +43,7 @@ Connect via the `mcp-client` skill against the **`home-assistant-agent`** MCP se
 | `HOME_ASSISTANT_TOKEN` | ✅ | Long-lived access token |
 | `HOME_ASSISTANT_SSL_VERIFY` | optional | TLS verification toggle |
 
-KG ingestion is **best-effort**: with no reachable epistemic-graph engine the
+KG ingestion is **best-effort**: with no reachable medulla engine the
 `home_ingest_*` tools return `{"ingested": null}` and the rest still works.
 
 ## Tools

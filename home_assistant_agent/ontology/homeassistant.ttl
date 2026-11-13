@@ -1,7 +1,8 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix core: <https://knuckles-team.github.io/ontology/core#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dc: <http://purl.org/dc/terms/> .
-@prefix : <http://knuckles.team/kg#> .
+@prefix : <https://knuckles-team.github.io/ontology/connector/home-assistant#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -16,10 +17,12 @@
 # --- classes (owl:Class) ---
 
 :Device a owl:Class ;
+    rdfs:subClassOf core:InfrastructureEntity ;
     rdfs:label "Home Assistant Device" ;
     rdfs:comment "A physical device registered in Home Assistant (e.g. a smart bulb, thermostat, sensor hub) that groups one or more entities. Keyed by the registry device id (HAEntityRegistryEntry.di)." .
 
 :Entity a owl:Class ;
+    rdfs:subClassOf core:DomainEntity ;
     rdfs:label "Home Assistant Entity" ;
     rdfs:comment "A single controllable/observable entity exposed by Home Assistant, identified by its entity_id (e.g. light.kitchen, sensor.living_room_temperature). The atomic unit of state." .
 
@@ -122,7 +125,7 @@
     rdfs:comment "The integration domain a HomeAssistantService belongs to (e.g. light, climate)." ;
     rdfs:range xsd:string .
 
-<http://knuckles.team/kg/homeassistant> a owl:Ontology ;
+<https://knuckles-team.github.io/ontology/connector/homeassistant> a owl:Ontology ;
     rdfs:label "Home Assistant Home-Automation Ontology" ;
     rdfs:comment """Home Assistant smart-home model — physical devices, the entities they
     expose, the areas that contain them, the services that control them, and the
@@ -130,9 +133,9 @@
     the scion-sdk knowledge-graph hub.""" .
 
 # ontology-codemod R3
-<http://knuckles.team/kg#Device> rdfs:subClassOf <http://knuckles.team/kg/infrastructure#Device> .
-<http://knuckles.team/kg#Entity> rdfs:subClassOf <http://knuckles.team/kg/infrastructure#Entity> .
-<http://knuckles.team/kg#Area> rdfs:subClassOf <http://knuckles.team/kg#Place> .
-<http://knuckles.team/kg#SensorReading> rdfs:subClassOf <http://knuckles.team/kg#Observation> .
-<http://knuckles.team/kg#HomeAssistantService> rdfs:subClassOf <http://knuckles.team/kg#Action> .
-<http://knuckles.team/kg#LogbookEntry> rdfs:subClassOf <http://knuckles.team/kg#Event> .
+<https://knuckles-team.github.io/ontology/connector/home-assistant#Device> rdfs:subClassOf <https://knuckles-team.github.io/ontology/infrastructure#Device> .
+<https://knuckles-team.github.io/ontology/connector/home-assistant#Entity> rdfs:subClassOf <https://knuckles-team.github.io/ontology/infrastructure#Entity> .
+<https://knuckles-team.github.io/ontology/connector/home-assistant#Area> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Place> .
+<https://knuckles-team.github.io/ontology/connector/home-assistant#SensorReading> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Observation> .
+<https://knuckles-team.github.io/ontology/connector/home-assistant#HomeAssistantService> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Action> .
+<https://knuckles-team.github.io/ontology/connector/home-assistant#LogbookEntry> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Event> .

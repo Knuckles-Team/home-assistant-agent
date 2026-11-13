@@ -63,7 +63,7 @@ _Auto-generated from the live MCP server — do not edit by hand._
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
 | `home_ingest_history` | `KGTOOL` | Ingest a Home Assistant history series for one entity as timeseries readings. |
-| `home_ingest_states` | `KGTOOL` | Ingest all Home Assistant entity states into epistemic-graph. |
+| `home_ingest_states` | `KGTOOL` | Ingest all Home Assistant entity states into medulla. |
 
 #### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
 
@@ -148,7 +148,7 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `home-assistant-agent[mcp]` to add
 > FastMCP / FastAPI through `scion-sdk`; the required Scion SDK core
-> still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
+> still carries `medulla[full]`. The `[agent-runtime]` extra additionally
 > enables model orchestration.
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)

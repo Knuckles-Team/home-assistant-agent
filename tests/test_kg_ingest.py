@@ -1,4 +1,4 @@
-"""Native epistemic-graph typed-node ingestion — Wire-First coverage.
+"""Native medulla typed-node ingestion — Wire-First coverage.
 
 Exercises the ``home_assistant_agent.kg_ingest`` mapping seam — the Home Assistant
 record → :Entity/:Device/:Area/:SensorReading typed-node/link mapping, and the
@@ -26,7 +26,7 @@ from home_assistant_agent.kg_ingest import (
 
 
 class _FakeTransport:
-    """Stand-in for the epistemic-graph ingest transport — records every request."""
+    """Stand-in for the medulla ingest transport — records every request."""
 
     def __init__(self, error: Exception | None = None):
         self.requests: list[Any] = []
