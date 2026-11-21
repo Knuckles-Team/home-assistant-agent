@@ -6,6 +6,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix infra: <https://knuckles-team.github.io/ontology/infrastructure#> .
 
 # Home Assistant home-automation ontology — physical devices, their entities, the areas
 # that hold them, the services that act on them, and the timeseries of sensor/state
@@ -15,16 +16,6 @@
 # / home_assistant_get_history / home_assistant_call_service / home_assistant_get_logbook / …).
 
 # --- classes (owl:Class) ---
-
-:Device a owl:Class ;
-    rdfs:subClassOf core:InfrastructureEntity ;
-    rdfs:label "Home Assistant Device" ;
-    rdfs:comment "A physical device registered in Home Assistant (e.g. a smart bulb, thermostat, sensor hub) that groups one or more entities. Keyed by the registry device id (HAEntityRegistryEntry.di)." .
-
-:Entity a owl:Class ;
-    rdfs:subClassOf core:DomainEntity ;
-    rdfs:label "Home Assistant Entity" ;
-    rdfs:comment "A single controllable/observable entity exposed by Home Assistant, identified by its entity_id (e.g. light.kitchen, sensor.living_room_temperature). The atomic unit of state." .
 
 :Area a owl:Class ;
     rdfs:label "Area" ;
@@ -47,8 +38,8 @@
 :onDevice a owl:ObjectProperty ;
     rdfs:label "on device" ;
     rdfs:comment "Links an Entity to the physical Device that provides it." ;
-    rdfs:domain :Entity ;
-    rdfs:range :Device .
+    rdfs:domain infra:Entity ;
+    rdfs:range infra:Device .
 
 :inArea a owl:ObjectProperty ;
     rdfs:label "in area" ;
@@ -59,19 +50,19 @@
     rdfs:label "reading of" ;
     rdfs:comment "Links a SensorReading to the Entity it observes." ;
     rdfs:domain :SensorReading ;
-    rdfs:range :Entity .
+    rdfs:range infra:Entity .
 
 :aboutEntity a owl:ObjectProperty ;
     rdfs:label "about entity" ;
     rdfs:comment "Links a LogbookEntry to the Entity whose change or action it records." ;
     rdfs:domain :LogbookEntry ;
-    rdfs:range :Entity .
+    rdfs:range infra:Entity .
 
 :actsOnEntity a owl:ObjectProperty ;
     rdfs:label "acts on entity" ;
     rdfs:comment "Links a HomeAssistantService to an Entity it can control." ;
     rdfs:domain :HomeAssistantService ;
-    rdfs:range :Entity .
+    rdfs:range infra:Entity .
 
 # --- fields (owl:DatatypeProperty) ---
 
@@ -90,11 +81,6 @@
     rdfs:comment "The Home Assistant registry area id." ;
     rdfs:range xsd:string .
 
-:state a owl:DatatypeProperty ;
-    rdfs:label "state" ;
-    rdfs:comment "The observed state value of an Entity or SensorReading (e.g. 'on', '21.5', 'home')." ;
-    rdfs:range xsd:string .
-
 :measuredAt a owl:DatatypeProperty ;
     rdfs:label "measured at" ;
     rdfs:comment "ISO-8601 timestamp when a SensorReading's state was last updated/changed." ;
@@ -108,11 +94,6 @@
 :deviceClass a owl:DatatypeProperty ;
     rdfs:label "device class" ;
     rdfs:comment "The Home Assistant device_class of an Entity (e.g. temperature, humidity, motion)." ;
-    rdfs:range xsd:string .
-
-:platform a owl:DatatypeProperty ;
-    rdfs:label "platform" ;
-    rdfs:comment "The integration platform that provides an Entity (e.g. mqtt, zwave_js, hue)." ;
     rdfs:range xsd:string .
 
 :friendlyName a owl:DatatypeProperty ;

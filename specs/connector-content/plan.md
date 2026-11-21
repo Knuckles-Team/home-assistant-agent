@@ -53,6 +53,7 @@ The repository pre-commit hooks apply: `ruff-format`, `connector-standard`, `sec
 ## Production caller chain
 
 1. `CONN-HOME-ASSISTANT-AGENT-CONNECTOR-CONTENT-R001`: the home-assistant-mcp console script (scion_sdk.cli:serve) loads the scion_sdk.connector entry point home_assistant_agent:connector (home_assistant_agent/__init__.py:8), and the SDK build_server serves the packaged skills, ontology and prompts as resources and prompts.
+2. `CONN-HOME-ASSISTANT-AGENT-CONNECTOR-CONTENT-R004`: the ontology loader reads `home_assistant_agent/ontology/` at server start; the engine imports the served pack and finds no redeclared core term.
 
 ## Cross-repo seams
 
