@@ -20,8 +20,8 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/home-assistant-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/home-assistant-agent)
 
-> **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
-> Assistant platform are maintained in the
+> **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
+> and A2A agent interfaces are maintained in the
 > [official documentation](https://knuckles-team.github.io/home-assistant-agent/).
 
 ---
@@ -258,6 +258,8 @@ the detailed transport contract.
   `MCP_ALLOWED_HOSTS` in `AgentConfig`.
 <!-- END GENERATED: additional-deployment-options -->
 
+---
+
 ## Agent
 
 # Set credentials
@@ -280,3 +282,30 @@ One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
 |-----------|--------------|----------|------------|
 
 ```bash
+
+---
+
+## Documentation
+
+The complete documentation is published as the
+[official documentation site](https://knuckles-team.github.io/home-assistant-agent/) and is
+the recommended reference for installation, deployment, and day-to-day operation.
+
+---
+
+## Repository Owners
+
+<img width="100%" height="180em" src="https://github-readme-stats.vercel.app/api?username=example&show_icons=true&hide_border=true&&count_private=true&include_all_commits=true" />
+
+![GitHub followers](https://img.shields.io/github/followers/example)
+![GitHub User's stars](https://img.shields.io/github/stars/example)
+
+---
+
+## Contribute
+
+Contributions are welcome! Please ensure code quality by running local checks before submitting pull requests:
+- Format code using `ruff format .`
+- Lint code using `ruff check .`
+- Validate type-safety with `mypy .`
+- Run test suites using `pytest`
