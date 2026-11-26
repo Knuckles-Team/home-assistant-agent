@@ -2,14 +2,7 @@
 name: home-assistant-scene-automation
 skill_type: skill
 description: >-
-  Orchestrate Home Assistant scenes, events, and automations via the
-  home-assistant-agent MCP server — fire events, activate scenes/scripts through
-  services, introspect the entity registry and areas, and discover which
-  services/triggers/conditions a target supports. Use when the agent must set up
-  or trigger multi-entity flows, drive event-based automations, or map devices
-  to areas/registry metadata. Do NOT use for single-entity reads/actuation (use
-  home-assistant-entity-control) or history/telemetry analysis (use
-  home-assistant-telemetry-history).
+  Orchestrate Home Assistant scenes, events and automations via the home-assistant-agent MCP server: fire events, activate scenes and scripts, inspect the entity registry and areas, discover supported services, triggers and conditions. Use for multi-entity flows. Do NOT use for single-entity reads or actuation (home-assistant-entity-control) or history (home-assistant-telemetry-history).
 license: MIT
 tags: [home-assistant, iot, automation, scenes, events, registry, mcp]
 metadata:
@@ -17,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # Home Assistant Scenes, Events & Automation
+
+Scope: Orchestrate Home Assistant scenes, events, and automations via the home-assistant-agent MCP server — fire events, activate scenes/scripts through services, introspect the entity registry and areas, and discover which services/triggers/conditions a target supports. Use when the agent must set up or trigger multi-entity flows, drive event-based automations, or map devices to areas/registry metadata. Do NOT use for single-entity reads/actuation (use home-assistant-entity-control) or history/telemetry analysis (use home-assistant-telemetry-history).
 
 Multi-entity orchestration on Home Assistant: fire **events**, activate **scenes /
 scripts** via services, and introspect the **entity registry** + **areas** and the
@@ -36,6 +31,22 @@ automation building reliable.
 - History, logbook, or KG telemetry ingestion → `home-assistant-telemetry-history`.
 - Rendering templates / validating config / handling intents — those are on the
   typed `home_assistant_*` system tools (`home_assistant_render_template`, `home_assistant_ping`, `home_assistant_handle_intent`, `home_assistant_validate_config`) (adjacent, not covered here).
+
+## Steps
+
+1. Resolve what the flow touches with `home_assistant_extract_from_target`(target) and verify the referenced entities, devices and areas are all listed.
+2. Discover what the target supports with `home_assistant_get_services_for_target`(target) and verify the service you plan to call is in the result.
+3. Activate the scene or script with `home_assistant_call_service`(domain, service, service_data) after approval, and verify the call returns without an error.
+4. Fire any needed event with `home_assistant_fire_event`(event_type, event_data) after approval, and verify the call returns success.
+5. Read the affected entities with `home_assistant_get_state`(entity_id) and verify each reached the expected state.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Calls answer 401 or 403 | `HOME_ASSISTANT_TOKEN` is missing, expired or revoked | Create a new long-lived access token in the Home Assistant profile page, set `HOME_ASSISTANT_TOKEN`, and confirm with `home_assistant_status` |
+| The scene or script does not run | The scene or script entity_id does not exist or the service name is wrong | List the entities with `home_assistant_list_states` and the services with `home_assistant_list_services`, then use the exact names |
+| `home_assistant_fire_event` or `home_assistant_call_service` is refused | The destructive call was sent without confirm=true | Obtain the requester's approval of the event or service, then send the call with confirm=true |
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`home-assistant-agent`** MCP server.

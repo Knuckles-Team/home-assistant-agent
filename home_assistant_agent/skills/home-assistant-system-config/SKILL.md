@@ -15,6 +15,22 @@ metadata:
 
 Use the typed tools of the `home-assistant-agent` connector: one tool per upstream API operation, named `home_assistant_<operation>`. Each tool takes typed parameters; there is no `action` or `params_json` routing.
 
+## Steps
+
+1. Check the instance with `home_assistant_ping` and verify the reply is a success.
+2. Read the status with `home_assistant_status` and verify it reports the instance as running.
+3. Read the configuration with `home_assistant_get_config` and verify the location and version fields are present.
+4. Validate the configuration with `home_assistant_check_config` and verify the result reports no errors.
+5. List the loaded components with `home_assistant_get_components` and verify the integration you expect is loaded.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Calls answer 401 or 403 | `HOME_ASSISTANT_TOKEN` is missing, expired or revoked | Create a new long-lived access token in the Home Assistant profile page, set `HOME_ASSISTANT_TOKEN`, and confirm with `home_assistant_status` |
+| Calls time out or the connection is refused | `HOME_ASSISTANT_URL` is wrong or the instance is down | Correct `HOME_ASSISTANT_URL` including the port and scheme, then confirm with `home_assistant_ping` |
+| `home_assistant_check_config` reports errors | A configuration file holds an invalid entry | Read the reported error, correct the named entry in the Home Assistant configuration, and call `home_assistant_check_config` again to confirm it is clean |
+
 ## Where the data lives
 
 - **homeassistant-states** (`HOME_ASSISTANT_URL`): holds Device; read with `home_assistant_list_states`.
