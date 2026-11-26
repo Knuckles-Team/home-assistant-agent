@@ -15,6 +15,22 @@ metadata:
 
 Use the typed tools of the `home-assistant-agent` connector: one tool per upstream API operation, named `home_assistant_<operation>`. Each tool takes typed parameters; there is no `action` or `params_json` routing.
 
+## Steps
+
+1. Read the current states with `home_assistant_list_states` and verify the target entity_id is present.
+2. Inspect the registry with `home_assistant_get_entity_registry_display` and verify the entity's area and name.
+3. List what assistants may control with `home_assistant_list_exposed_entities` and verify whether the entity is exposed.
+4. Change exposure with `home_assistant_expose_entities`(assistants, entity_ids, should_expose) after approval, and verify the call returns without an error.
+5. Read the exposure list with `home_assistant_list_exposed_entities` and verify the entity now appears or disappears as intended.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Calls answer 401 or 403 | `HOME_ASSISTANT_TOKEN` is missing, expired or revoked | Create a new long-lived access token in the Home Assistant profile page, set `HOME_ASSISTANT_TOKEN`, and confirm with `home_assistant_status` |
+| An entity_id is not found | The entity_id is misspelled or the entity was renamed | List candidates with `home_assistant_list_states` and use the exact entity_id |
+| `home_assistant_delete_state` is refused | The destructive call was sent without confirm=true | Obtain the requester's approval of the entity_id and call `home_assistant_delete_state`(entity_id, confirm=true) |
+
 ## Where the data lives
 
 - **homeassistant-states** (`HOME_ASSISTANT_URL`): holds Device; read with `home_assistant_list_states`.

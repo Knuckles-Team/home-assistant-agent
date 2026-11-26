@@ -16,6 +16,22 @@ metadata:
 
 Use the typed tools of the `home-assistant-agent` connector: one tool per upstream API operation, named `home_assistant_<operation>`. Each tool takes typed parameters; there is no `action` or `params_json` routing.
 
+## Steps
+
+1. List the available services with `home_assistant_get_services` and verify the domain and service you need are present.
+2. Narrow to the target with `home_assistant_get_services_for_target`(target) and verify the service applies to it.
+3. Call the service with `home_assistant_call_service`(domain, service, service_data) after approval, and verify the call returns without an error.
+4. Watch events with `home_assistant_subscribe_events`(event_type) and verify the reply carries a subscription id.
+5. Release the subscription with `home_assistant_unsubscribe_events`(subscription_id) and verify the call succeeds.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Calls answer 401 or 403 | `HOME_ASSISTANT_TOKEN` is missing, expired or revoked | Create a new long-lived access token in the Home Assistant profile page, set `HOME_ASSISTANT_TOKEN`, and confirm with `home_assistant_status` |
+| A service call is rejected | The service_data does not match the service's fields | Read the fields from `home_assistant_get_services_for_target`(target) and resend with matching service_data |
+| `home_assistant_fire_event` or `home_assistant_handle_intent` is refused | The destructive call was sent without confirm=true | Obtain the requester's approval of the event or intent, then send the call with confirm=true |
+
 ## Where the data lives
 
 - **homeassistant-states** (`HOME_ASSISTANT_URL`): holds Device; read with `home_assistant_list_states`.

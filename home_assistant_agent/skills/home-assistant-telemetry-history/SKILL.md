@@ -2,14 +2,7 @@
 name: home-assistant-telemetry-history
 skill_type: skill
 description: >-
-  Analyze Home Assistant sensor telemetry and push it into the knowledge graph
-  via the home-assistant-agent MCP server — read a sensor's history/period
-  timeseries, browse the logbook of state changes, and natively ingest entity
-  states + history as typed :Entity/:SensorReading nodes for cross-session
-  reasoning. Use when the agent must chart a sensor over time, explain what
-  changed and when, or make home telemetry queryable in the KG. Do NOT use for
-  live actuation/state reads (use home-assistant-entity-control) or scene/event
-  orchestration (use home-assistant-scene-automation).
+  Analyze Home Assistant sensor telemetry and ingest it into the knowledge graph via the home-assistant-agent MCP server: sensor history, logbook, and typed entity and reading nodes. Use to chart a sensor, explain what changed and when, or make telemetry queryable. Do NOT use for live actuation (home-assistant-entity-control) or scenes and events (home-assistant-scene-automation).
 license: MIT
 tags: [home-assistant, iot, telemetry, timeseries, knowledge-graph, mcp]
 metadata:
@@ -17,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # Home Assistant Telemetry & History
+
+Scope: Analyze Home Assistant sensor telemetry and push it into the knowledge graph via the home-assistant-agent MCP server — read a sensor's history/period timeseries, browse the logbook of state changes, and natively ingest entity states + history as typed :Entity/:SensorReading nodes for cross-session reasoning. Use when the agent must chart a sensor over time, explain what changed and when, or make home telemetry queryable in the KG. Do NOT use for live actuation/state reads (use home-assistant-entity-control) or scene/event orchestration (use home-assistant-scene-automation).
 
 Timeseries + logbook analysis of Home Assistant entities, and the **native KG
 ingestion** path that maps states and history into typed `:Entity` / `:SensorReading`
@@ -33,6 +28,22 @@ nodes (the `homeassistant` ontology leg) for durable, cross-session reasoning.
 - Firing events, scenes, or registry/area introspection → `home-assistant-scene-automation`.
 - Ad-hoc source-sync of entity documents (non-timeseries) — that is handled by the
   Tier-1 `homeassistant-states` connector preset, not this skill's ingest tools.
+
+## Steps
+
+1. Confirm the connector reaches Home Assistant with `home_assistant_ping` and verify the reply is a success.
+2. Read the series with `home_assistant_get_history`(entity_id, timestamp, end_time) and verify the inner list holds readings inside the requested window.
+3. Read what changed and when with `home_assistant_get_logbook`(entity_id, timestamp, end_time) and verify the entries cover the same window.
+4. Write the series to the knowledge graph with `home_ingest_history`(entity_id, timestamp, end_time) and verify the returned `ingested` field is not null.
+5. Write the current states with `home_ingest_states`(with_readings) and verify the returned `ingested` field is not null.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Calls answer 401 or 403 | `HOME_ASSISTANT_TOKEN` is missing, expired or revoked | Create a new long-lived access token in the Home Assistant profile page, set `HOME_ASSISTANT_TOKEN`, and confirm with `home_assistant_status` |
+| `home_assistant_get_history` returns an empty list | The window is older than the recorder retention or the entity_id is wrong | Shorten the window to the last few days and confirm the entity_id with `home_assistant_list_states` |
+| An ingest tool returns `{"ingested": null}` | No medulla engine is reachable, so the ingest was a no-op | Restore the engine connection in the connector's environment settings and call the ingest tool again once `home_assistant_status` and the engine both answer |
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`home-assistant-agent`** MCP server.
